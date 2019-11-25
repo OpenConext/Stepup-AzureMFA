@@ -6,16 +6,16 @@ Feature: When an user needs to register for a new token
   @remote
   Scenario: When an user needs to register for a new token
     Given I am on "https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp"
-    And I select "https://gssp.stepup.example.com/saml/metadata" from "idp"
+    And I select "https://azure-mfa.stepup.example.com/saml/metadata" from "idp"
     When I press "Login"
     Then I should see "Registration"
-    And I should be on "https://gssp.stepup.example.com/registration"
+    And I should be on "https://azure-mfa.stepup.example.com/registration"
 
     Given I fill in "Subject NameID" with "test-name-id-1234"
     When I press "Register user"
     Then I press "Submit"
     And I should see "You are logged in to SP:default-sp"
-    And I should see "IdP EnitytID:https://gssp.stepup.example.com/saml/metadata"
+    And I should see "IdP EnitytID:https://azure-mfa.stepup.example.com/saml/metadata"
     And I should see "test-name-id-1234"
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page

@@ -1,28 +1,19 @@
 service_provider: Service provider
 
-page.title: GSSP SDK
+page.title: Azure MFA GSSP
 
 page.header.stepup-gateway-gssp: Wiki
-page.header.stepup-gssp-bundle: GSSP-bundel
 
 page.navigation.route.homepage: Home
 page.navigation.route.app_identity_registration: Registratie
 page.navigation.route.app_identity_authentication: Authenticatie
-page.navigation.route.gssp_saml_sso: SSO
-page.navigation.route.gssp_saml_sso_return: SSO return
 page.navigation.route.gssp_saml_metadata: Metadata
 page.navigation.route.sp_demo: Demo SP
 
-page.footer.terms: Algemene voorwaarden
+page.footer.terms: Terms and Conditions
 
-page.index.title: Welkom bij Generieke SAML Stepup Provider SDK
-page.index.body.intro: |
-    De applicatie is klaar voor gebruik. Dit voorbeeldproject kan gebruikt worden om een eigen implementatie van een GSSP verificatiemiddel te ontwikkelen.
-    Het demonstreert registratie en authenticatie van second factor tokens geïnitieerd door een dummy service provider.
-
-page.index.body.sdk_discription: |
-    Deze Symfony Framework applicatie bestaat uit een AppBundle waar de voorbeeld registratie- en verificatie-endpoints zijn geïmplementeerd. Dit is het startpunt van de applicatie. Zie DefaultController::registrationAction en DefaultController::authenticateAction.
-    Dit is de plaats om de logica van de GSSP identity provider te implementeren. Lees voor meer informatie de README.md van dit project.
+page.index.title: Welcome to the Azure MFA GSSP
+page.index.body.intro: TODO Introduction
 
 page.index.external_sp: External service provider
 page.index.internal_sp: Internal service provider

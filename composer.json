@@ -1,7 +1,7 @@
 {
-  "name": "surfnet/stepup-gssp-example",
+  "name": "surfnet/stepup-Azure-MFA",
   "license": "Apache-2.0",
-  "description": "Example Generic SAML Stepup Provider.",
+  "description": "GSSP for Microsoft Azure Multi-factor authentication",
   "type": "project",
   "minimum-stability": "stable",
   "prefer-stable": true,
@@ -89,7 +89,10 @@
     ],
     "phpunit": "vendor/bin/phpunit",
     "behat": "vendor/bin/behat  --config behat.yml --tags '~@remote'",
-    "security-tests": "vendor/bin/security-checker security:check",
+    "security-tests": [
+      "vendor/bin/security-checker security:check",
+      "yarn audit"
+    ],
     "coverage": [
       "@phpunit-coverage",
       "mkdir -p coverage/reports",

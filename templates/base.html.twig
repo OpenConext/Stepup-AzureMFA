@@ -37,14 +37,6 @@
             <li class="title">
                 <span>{{ 'page.title'|trans }}</span>
             </li>
-            <li class="border-left">
-                <a href="https://github.com/OpenConext/Stepup-Gateway/blob/develop/docs/GSSP.md"
-                   target="_blank">{{ 'page.header.stepup-gateway-gssp'|trans }}</a>
-            </li>
-            <li class="border-left">
-                <a href="https://github.com/OpenConext/Stepup-gssp-bundle"
-                   target="_blank">{{ 'page.header.stepup-gssp-bundle'|trans }}</a>
-            </li>
             <li class="push-right">
                 <ul class="language-selector">
                     {% for lang in ['en', 'nl_NL'] %}
@@ -59,7 +51,7 @@
 </div>
 <div class="navigation-container">
     <div class="navigation">
-        {% for route in ['homepage', 'app_identity_registration', 'app_identity_authentication', 'gssp_saml_sso', 'gssp_saml_sso_return', 'gssp_saml_metadata'] %}
+        {% for route in ['homepage', 'app_identity_registration', 'app_identity_authentication', 'gssp_saml_metadata'] %}
             {% set translatekey = "page.navigation.route." ~ route %}
             <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
         {% endfor %}
@@ -69,38 +61,6 @@
     </div>
 </div>
 <div class="page-container">
-
-    {% if current_route == 'app_identity_registration' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.app_identity_registration'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'app_identity_authentication' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.app_identity_authentication'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'gssp_saml_sso' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.gssp_saml_sso'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'gssp_saml_sso_return' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.gssp_saml_sso_return'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'sp_demo' %}
-        <div class='alert'>
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-            <pre style="display: inline">{{ 'page.route.description.sp_demo'|trans }}</pre>
-        </div>
-    {% endif %}
-
     {% block body_container %}
         <h1>{% block page_heading %}{% endblock %}</h1>
         <div class="card">
@@ -110,8 +70,6 @@
 </div>
 <div class="footer">
     <div class="footer-inner">
-        <span><a href="https://wiki.surfnet.nl/display/conextsupport/Terms+of+Service+%28NL%29"
-                 target="_blank">{{ 'page.footer.terms'|trans }}</a></span>
         <span><a href="mailto:help@surfconext.nl"
                  target="_blank">help@surfconext.nl</a></span></div>
 </div>

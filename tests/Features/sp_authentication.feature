@@ -6,17 +6,17 @@ Feature: When an user needs to authenticate
   Scenario: When an user needs to register for a new token
 
     # The user clicks on authenticate button from the SP
-    Given I am on "https://gssp.stepup.example.com/demo/sp"
+    Given I am on "https://azure-mfa.stepup.example.com/demo/sp"
     Then I should see "Demo service provider"
     And I fill in "Subject NameID" with "test-name-id-1234"
     Given I press "Authenticate user"
 
     # The user clicks on authenticate button from the GSSP IdP
-    Then I should be on "https://gssp.stepup.example.com/authentication"
+    Then I should be on "https://azure-mfa.stepup.example.com/authentication"
     Given I press "Authenticate user"
 
     # The SSO return page
-    Then I should be on "https://gssp.stepup.example.com/saml/sso_return"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     Given I press "Submit"
 
     # Returns to the SP

@@ -4,7 +4,7 @@ dist: trusty
 
 addons:
   hosts:
-    - gssp.stepup.example.com
+    - azure-mfa.stepup.example.com
   apt:
     packages:
       - cmake
@@ -19,7 +19,7 @@ cache:
 
 before_script:
   # configure ssl
-  - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/gssp.key -out /etc/ssl/certs/gssp.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=gssp.stepup.example.com"
+  - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/azure-mfa.key -out /etc/ssl/certs/azure-mfa.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=azure-mfa.stepup.example.com"
 
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
@@ -54,8 +54,8 @@ before_script:
   - ps aux | grep php-fpm
   - netstat -an | grep :9000
   # Test if the website is actually running
-  - curl --insecure https://gssp.stepup.example.com
-  - curl --insecure https://gssp.stepup.example.com/fonts/FontAwesome.otf
+  - curl --insecure https://azure-mfa.stepup.example.com
+  - curl --insecure https://azure-mfa.stepup.example.com/fonts/FontAwesome.otf
 
 script:
   - composer test

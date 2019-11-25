@@ -70,6 +70,7 @@ vulnerabilities as part of every CI build. If any of the dependencies contains a
 fail.
 
 Tools: SensioLabs Security Checker
+       Yarn audit
 
 You can run these tools manually with composer:
 

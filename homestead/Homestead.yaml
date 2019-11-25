@@ -13,8 +13,8 @@ folders:
         to: /home/vagrant/code
 sites:
     -
-        map: gssp.stepup.example.com
+        map: azure-mfa.stepup.example.com
         to: /home/vagrant/code/public
         type: symfony4
-name: gsspexample
-hostname: gsspexample
+name: azure-mfa
+hostname: azure-mfa
