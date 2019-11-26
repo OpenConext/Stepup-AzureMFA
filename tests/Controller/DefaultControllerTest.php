@@ -28,6 +28,6 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Welcome to the Generic SAML Stepup Provider SDK', $crawler->filter('h2')->text());
+        $this->assertStringContainsString('Welcome to the Azure MFA GSSP', $crawler->filter('h2')->text());
     }
 }

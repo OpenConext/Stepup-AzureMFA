@@ -1,5 +1,5 @@
 {
-  "name": "surfnet/stepup-Azure-MFA",
+  "name": "surfnet/stepup-azure-mfa",
   "license": "Apache-2.0",
   "description": "GSSP for Microsoft Azure Multi-factor authentication",
   "type": "project",
