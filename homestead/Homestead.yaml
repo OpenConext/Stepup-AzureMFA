@@ -1,4 +1,4 @@
-ip: 192.168.77.53
+ip: 192.168.77.54
 memory: 4096
 cpus: 2
 provider: virtualbox

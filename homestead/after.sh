@@ -9,8 +9,8 @@
 # which will be run after this script.
 
 sudo apt update
-sudo apt upgrade -y
-sudo apt install plantuml -y
+DEBIAN_FRONTEND=noninteractive sudo apt upgrade -y
+DEBIAN_FRONTEND=noninteractive sudo apt install plantuml -y
 
 cd /home/vagrant/code
 
