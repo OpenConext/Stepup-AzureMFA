@@ -1,6 +1,6 @@
 <?php
 
-use App\Kernel;
+use Surfnet\AzureMfa\Infrastructure\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

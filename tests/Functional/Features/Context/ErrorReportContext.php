@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Test\Features\Context;
+namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;

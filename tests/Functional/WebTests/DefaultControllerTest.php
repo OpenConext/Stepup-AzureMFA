@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Tests\AppBundle\Controller;
+namespace Surfnet\AzureMfa\Test\WebTest\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

@@ -7,13 +7,15 @@
   "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "App\\": "src"
+      "Surfnet\\": "src\\Surfnet"
     }
   },
   "autoload-dev": {
     "psr-4": {
       "Dev\\": "dev",
-      "Test\\Features\\": "tests\\Features"
+      "Surfnet\\AzureMfa\\Test\\Features\\": "tests\\Functional\\Features",
+      "Surfnet\\AzureMfa\\Test\\Unit\\": "tests\\Unit",
+      "Surfnet\\AzureMfa\\Test\\WebTest\\": "tests\\Functional\\WebTests"
     }
   },
   "require": {
@@ -87,7 +89,10 @@
       "vendor/bin/phpcpd  ./src",
       "vendor/bin/phpcpd  ./tests"
     ],
-    "phpunit": "vendor/bin/phpunit",
+    "phpunit": [
+      "vendor/bin/phpunit --testsuite=Unit",
+      "vendor/bin/phpunit --testsuite=WebTests"
+    ],
     "behat": "vendor/bin/behat  --config behat.yml --tags '~@remote'",
     "security-tests": [
       "vendor/bin/security-checker security:check",
