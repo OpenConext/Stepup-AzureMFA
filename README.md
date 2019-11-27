@@ -2,7 +2,7 @@ Stepup-Azure-MFA
 ===================
 
 <a href="#">
-    <img src="https://travis-ci.org/OpenConext/Stepup-Azure-MFA.svg?branch=master" alt="build:">
+    <img src="https://travis-ci.org/OpenConext/Stepup-Azure-MFA.svg?branch=develop" alt="build:">
 </a></br>
 
 GSSP for Microsoft Azure MFA (Multi-factor authentication)
