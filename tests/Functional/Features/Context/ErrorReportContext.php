@@ -1,6 +1,7 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +22,8 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\StepScope;
+use Behat\Gherkin\Node\NodeInterface;
+use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
 use Behat\MinkExtension\Context\MinkContext;
@@ -40,7 +43,7 @@ final class ErrorReportContext implements Context
     /**
      * Fetch the required contexts.
      *
-     * @param \Behat\Behat\Hook\Scope\BeforeScenarioScope $scope
+     * @param BeforeScenarioScope $scope
      *
      * @BeforeScenario
      */
@@ -54,7 +57,7 @@ final class ErrorReportContext implements Context
     /**
      * This will print the failed html result.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
+     * @param AfterStepScope $scope
      *
      * @AfterStep
      */
@@ -85,7 +88,7 @@ final class ErrorReportContext implements Context
      *
      * @param string $fileName
      *
-     * @throws \Behat\Mink\Exception\DriverException
+     * @throws DriverException
      */
     private function takeScreenShotAfterFailedStep($fileName)
     {
@@ -105,7 +108,7 @@ final class ErrorReportContext implements Context
     /**
      * Save the page result file to disk.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
+     * @param AfterStepScope $scope
      * @param string $fileName
      */
     private function saveErrorFile(AfterStepScope $scope, $fileName)
@@ -125,7 +128,7 @@ TEXT;
     /**
      * Check if test is successful.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
+     * @param AfterStepScope $scope
      *   The test scope.
      *
      * @return bool
@@ -139,9 +142,9 @@ TEXT;
     /**
      * Returns the scenaro for a given step.
      *
-     * @param \Behat\Behat\Hook\Scope\StepScope $scope
+     * @param StepScope $scope
      *
-     * @return \Behat\Gherkin\Node\ScenarioInterface
+     * @return ScenarioInterface
      */
     private function getScenario(StepScope $scope)
     {
@@ -162,9 +165,9 @@ TEXT;
     /**
      * Returns the scenario for a given step.
      *
-     * @param \Behat\Behat\Hook\Scope\StepScope $scope
+     * @param StepScope $scope
      *
-     * @return \Behat\Gherkin\Node\NodeInterface|null
+     * @return NodeInterface|null
      */
     private function getBackGroundStep(StepScope $scope)
     {

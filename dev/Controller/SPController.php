@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 namespace Dev\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use DOMDocument;
@@ -61,7 +62,7 @@ final class SPController extends AbstractController
      *
      * See @see RegistrationService for a more clean example.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function demoSpAction(Request $request)
     {
@@ -161,7 +162,7 @@ final class SPController extends AbstractController
      * @param array $queryParams
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function signRequestQuery(array $queryParams)
     {
@@ -179,7 +180,7 @@ final class SPController extends AbstractController
      *
      * @return XMLSecurityKey
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function loadServiceProviderPrivateKey()
     {
@@ -198,7 +199,7 @@ final class SPController extends AbstractController
      *
      * @return Message
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function toUnsignedErrorResponse($xml)
     {
