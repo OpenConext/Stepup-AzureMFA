@@ -80,35 +80,13 @@ $ vagrant up
 
 If everything goes as intended, you can develop in the virtual machine.
 
-**If vagrant up failed**
-
-Chances are that the provisioning script was not able to install all distribution updates unattended. In that case apt upgrade probably halted on a dialog, asking how to deal with overwriting a php.ini file. Best way to deal with this scenario:
-
-1. Break of the `vagrant up` command that is hanging by issuing the termination signal (`ctrl`+`c`)
-2. SSH into the machine `$ vagrant ssh`
-3. Continue the upgrade process:
-    1. Find the PID that locks dpkg fontend: `$ sudo lsof /var/lib/dpkg/lock`
-    2. Kill that process `$ kill PID_FROM_PREVIOUS_OUTPUT`
-    3. You can skip step 4 and 5 by rebooting the machine alternatively
-7. Continue the configuration process: `$ sudo dpkg --configure -a`
-8. The defaults that are proposed in the configuration dialogs can be safely used
-9. Finally re-run the `after.sh` provisioning script: `$ bash ~/code/homestead/after.sh`
-
 **Upgrade Homestead regularly**
 
 Issues described in the previous section can be prevented if the base box is up to date.
 
 For detailed instructions, please visit the excellent Homestead [documentation pages](https://laravel.com/docs/5.8/homestead#updating-homestead).
 
-**Build frontend assets:**
-
-```
-$ vagrant ssh
-$ cd ~/code # If not already in that directory
-$ yarn install
-```
-
-Followed by either
+**Building frontend assets:**
 
 `$ yarn encore dev` 
 
