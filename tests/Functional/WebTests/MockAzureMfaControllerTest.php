@@ -25,9 +25,9 @@ use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\SAML2\AuthnRequest;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
-class MockAzureMfaControllerTest extends WebTestCase
+class MockAzureMfaControllerTest extends PantherTestCase
 {
     /**
      * @var \Symfony\Bundle\FrameworkBundle\KernelBrowser

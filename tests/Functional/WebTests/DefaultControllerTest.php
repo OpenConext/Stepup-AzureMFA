@@ -17,17 +17,17 @@
 
 namespace Surfnet\AzureMfa\Test\Functional\WebTests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends PantherTestCase
 {
     public function testIndex()
     {
-        $client = static::createClient();
+        $client = static::createPantherClient();
 
         $crawler = $client->request('GET', '/');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getInternalResponse()->getStatusCode());
         $this->assertStringContainsString('Welcome to the Azure MFA GSSP', $crawler->filter('h2')->text());
     }
 }

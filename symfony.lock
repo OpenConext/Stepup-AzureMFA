@@ -69,6 +69,9 @@
     "fabpot/goutte": {
         "version": "v3.2.3"
     },
+    "facebook/webdriver": {
+        "version": "1.7.1"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
     },
@@ -110,6 +113,9 @@
     },
     "phar-io/version": {
         "version": "2.0.1"
+    },
+    "php": {
+        "version": "7.2"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
@@ -409,6 +415,9 @@
     "symfony/options-resolver": {
         "version": "v4.3.3"
     },
+    "symfony/panther": {
+        "version": "v0.6.0"
+    },
     "symfony/phpunit-bridge": {
         "version": "4.3",
         "recipe": {
@@ -442,6 +451,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.11.0"
+    },
+    "symfony/process": {
+        "version": "v4.4.0"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.4"

@@ -3,6 +3,8 @@ language: php
 dist: xenial
 
 addons:
+  chrome: stable
+
   hosts:
     - azure-mfa.stepup.example.com
   apt:

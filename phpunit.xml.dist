@@ -41,5 +41,10 @@
                 </array>
             </arguments>
         </listener>
+        <listener class="Symfony\Component\Panther\ServerListener" />
     </listeners>
+
+    <extensions>
+        <extension class="Symfony\Component\Panther\ServerExtension" />
+    </extensions>
 </phpunit>
