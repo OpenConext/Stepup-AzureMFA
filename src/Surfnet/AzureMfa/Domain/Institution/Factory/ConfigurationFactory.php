@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Application\Institution;
+namespace Surfnet\AzureMfa\Domain\Institution\Factory;
 
+use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\ConfigurationValidatorInterface;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\InstitutionConfigurationInterface;
-use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomain;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainInterface;

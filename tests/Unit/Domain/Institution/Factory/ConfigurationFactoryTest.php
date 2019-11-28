@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Test\Unit\Application\Institution;
+namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\Factory;
 
 use PHPUnit\Framework\TestCase;
-use Surfnet\AzureMfa\Application\Institution\ConfigurationFactory;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
+use Surfnet\AzureMfa\Domain\Institution\Factory\ConfigurationFactory;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
@@ -43,7 +43,7 @@ class ConfigurationFactoryTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->fixtureDirectory = dirname(__DIR__, 3) . '/fixtures/';
+        $this->fixtureDirectory = dirname(__DIR__, 4) . '/fixtures/';
     }
 
     public function test_happy_flow() : void

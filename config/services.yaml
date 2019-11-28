@@ -14,9 +14,6 @@ services:
     Surfnet\AzureMfa\Domain\:
         resource: '../src/Surfnet/AzureMfa/Domain/*'
 
-    Surfnet\AzureMfa\Application\:
-        resource: '../src/Surfnet/AzureMfa/Application/*'
-
     Surfnet\AzureMfa\Infrastructure\Controller\:
         resource: '../src/Surfnet/AzureMfa/Infrastructure/Controller/*'
         tags: ['controller.service_arguments']
