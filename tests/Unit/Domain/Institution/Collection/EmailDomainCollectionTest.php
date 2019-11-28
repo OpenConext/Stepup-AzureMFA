@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
+use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomain;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainWildcard;
 

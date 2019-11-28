@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Test\WebTest\Controller;
+namespace Surfnet\AzureMfa\Test\Functional\WebTests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

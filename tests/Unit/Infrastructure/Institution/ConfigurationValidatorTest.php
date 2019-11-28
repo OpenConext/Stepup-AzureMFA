@@ -19,6 +19,7 @@
 namespace Surfnet\AzureMfa\Test\Unit\Infrastructure\Institution;
 
 use PHPUnit\Framework\TestCase;
+use Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationDefinition;
 use Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationValidator;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Yaml\Yaml;
