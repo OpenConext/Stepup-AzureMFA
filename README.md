@@ -55,12 +55,12 @@ Requirements
     - vagrant-hostsupdater (1.1.1.160, global)
     - vagrant-vbguest (0.19.0, global)
 - Virtualbox
+- Composer
 
 Install
 -------------------
 **Create a .env file**
 
-1. `$ cd ~/code`
 1. `$ cp .env.ci .env`
 1. Edit the `.env` file with the editor of your choice and update the `APP_SECRET` to a value of your liking. See [Symfony docs](https://symfony.com/doc/current/reference/configuration/framework.html#secret) for more details about this secret. 
 
@@ -71,9 +71,12 @@ Install
 
 **Bring up Homestead**
 
-```$ cd homestead && composer install ```
-
-``` vagrant up ```
+```
+$ cd homestead
+$ composer install
+$ cd ..
+$ vagrant up
+```
 
 If everything goes as intended, you can develop in the virtual machine.
 
@@ -99,7 +102,11 @@ For detailed instructions, please visit the excellent Homestead [documentation p
 
 **Build frontend assets:**
 
-` $ yarn install `
+```
+$ vagrant ssh
+$ cd ~/code # If not already in that directory
+$ yarn install
+```
 
 Followed by either
 
