@@ -19,7 +19,8 @@ sudo cp /home/vagrant/code/homestead/php.ini /etc/php/7.2/mods-available/custom.
 
 # Use PHP 7.2 by default in our environment
 sudo phpenmod -v 7.2 custom
-xon xdebug
+php72
+xon
 
 echo "\n########\n# Update environment settings\n######\n"
 # Aplly the following changes in the code directory
