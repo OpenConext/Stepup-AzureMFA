@@ -185,6 +185,6 @@ TEXT;
 
     private function getOutputPath()
     {
-        return __DIR__ . '/../../build';
+        return __DIR__ . '/../../../../build';
     }
 }

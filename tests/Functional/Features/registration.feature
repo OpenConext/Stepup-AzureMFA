@@ -3,20 +3,22 @@ Feature: When an user needs to register for a new token
   As a service provider
   I need to send an AuthnRequest to the identity provider
 
-  @remote
-  Scenario: When an user needs to register for a new token
-    Given I am on "https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp"
-    And I select "https://azure-mfa.stepup.example.com/saml/metadata" from "idp"
-    When I press "Login"
+  Scenario: When a user is registering a new token
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
+    And I fill in "Subject NameID" with "test-user@institution-a.example.com"
     Then I should see "Registration"
-    And I should be on "https://azure-mfa.stepup.example.com/registration"
-
-    Given I fill in "Subject NameID" with "test-name-id-1234"
     When I press "Register user"
-    Then I press "Submit"
-    And I should see "You are logged in to SP:default-sp"
-    And I should see "IdP EnitytID:https://azure-mfa.stepup.example.com/saml/metadata"
-    And I should see "test-name-id-1234"
+    And I press "Submit"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+
+  Scenario: Registration fails when an invalid email address is provided by the user
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/registration"
+    # Fill an email address that does not match any of the configured email domains
+    And I fill in "Subject NameID" with "test-user@institution-x.example.com"
+    Then I should see "Registration"
+    When I press "Register user"
+    Then I should be on "https://azure-mfa.stepup.example.com/registration"
+    And I should see "test-user@institution-x.example.com is not known"
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page
     Given a normal SAML 2.0 AuthnRequest form a unknown service provider
