@@ -1,0 +1,6 @@
+data:
+  institutions:
+    institution-a.example.com:
+      destination: 'https://adfs.stepup.example.com/adfs/ls/'
+      mail_domain:
+        - 'stepup.example.com'

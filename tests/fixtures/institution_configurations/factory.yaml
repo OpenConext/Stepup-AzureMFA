@@ -1,0 +1,11 @@
+data:
+  institutions:
+    institution-a.example.com:
+      destination: 'https://adfs.stepup.example.com/adfs/ls/'
+      email_domains:
+        - 'stepup.example.com'
+        - '*.example.com'
+        - 'example.com'
+    harting-college.nl:
+      destination: 'https://adfs.harting-college.nl/adfs/ls/'
+      email_domains: ['harting-college.nl']

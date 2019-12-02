@@ -1,0 +1,11 @@
+data:
+  institutions:
+    institution-a.example.com:
+      destination: 'https://adfs.stepup.example.com/adfs/ls/'
+      email_domains:
+        - 'stepup.example.com'
+        - 'stepup2.example.com'
+    institution-b.example.com:
+      hostname: 'https://foobar.example.com'
+      username: 'foobar'
+      password: 'supersecret'
