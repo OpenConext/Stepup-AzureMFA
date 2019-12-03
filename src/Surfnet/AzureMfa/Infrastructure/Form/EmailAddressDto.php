@@ -21,11 +21,12 @@ namespace Surfnet\AzureMfa\Infrastructure\Form;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class EmailAddressModel
+final class EmailAddressDto
 {
     /**
      * @Assert\NotBlank
      * @Assert\Email
+     * @Surfnet\AzureMfa\Infrastructure\Validator\Constraint\EmailDomainInConfiguration
      */
     private $emailAddress = '';
 

@@ -19,8 +19,7 @@
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
-use Surfnet\AzureMfa\Domain\EmailAddress;
-use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressModel;
+use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
@@ -72,27 +71,17 @@ class DefaultController extends AbstractController
         $requiresRegistration = $this->registrationService->registrationRequired();
         $response = new Response(null, $requiresRegistration ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
 
-        $emailAddress = new EmailAddressModel();
+        $emailAddress = new EmailAddressDto();
         $form = $this->createForm(EmailAddressType::class, $emailAddress);
         $form->handleRequest($request);
 
-        $errorMessage = null;
         if ($form->isSubmitted() && $form->isValid()) {
-            $institution = $this->domainMatchingService->findInstitutionByEmail(
-                $emailAddress->getEmailAddressValueObject()
-            );
-            // Todo MVP: This should be turned into a custom form constraint
-            if ($institution) {
-                $this->registrationService->register($emailAddress->getEmailAddress());
-                return $this->registrationService->replyToServiceProvider();
-            }
-            // Todo MVP: This message should be translatable
-            $errorMessage = 'The provided email address did not match any of our configured email domains.';
+            $this->registrationService->register($emailAddress->getEmailAddress());
+            return $this->registrationService->replyToServiceProvider();
         }
 
         return $this->render('default/registration.html.twig', [
             'requiresRegistration' => $requiresRegistration,
-            'customErrorMessage' => $errorMessage,
             'form' => $form->createView()
         ], $response);
     }
