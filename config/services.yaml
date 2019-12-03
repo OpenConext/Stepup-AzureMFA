@@ -21,3 +21,10 @@ services:
     Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationValidator:
         arguments:
             $configuration: '%institution_configuration%'
+
+    Dev\Mock\MockConfiguration:
+        arguments:
+            $identityProviderEntityId: 'https://azure-mfa.stepup.example.com/mock/idp/metadata'
+            $serviceProviderEntityId: 'https://azure-mfa.stepup.example.com/saml/metadata'
+            $privateKeyPath: '%saml_idp_privatekey%'
+            $publicCertPath: '%saml_idp_publickey%'

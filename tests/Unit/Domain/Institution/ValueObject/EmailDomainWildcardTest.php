@@ -76,6 +76,7 @@ class EmailDomainWildcardTest extends TestCase
     {
         return [
             ['*.example.com', 'stybar@stepup.example.com'],
+            ['*.example.com', 'stybar@stepup.example.com'],
             ['*.example.com', 'stybar@openconext.example.com'],
             ['*.example.com', 'stybar@openconext.stepup.example.com'],
             ['*.example.com', 'StYbAr@sTepUp.eXaMpLe.cOm'],
