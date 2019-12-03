@@ -12,6 +12,6 @@ surfnet_saml:
       private_key: "%saml_metadata_privatekey%"
   remote:
     service_providers:
-      - entity_id: https://service_provider_unkown/saml/metadata
+      - entity_id: https://service_provider/saml/metadata
         certificate_file: /home/vagrant/code/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer
-        assertion_consumer_service_url: https://service_provider_unkown/saml/sso_return
+        assertion_consumer_service_url: https://service_provider/saml/sso_return

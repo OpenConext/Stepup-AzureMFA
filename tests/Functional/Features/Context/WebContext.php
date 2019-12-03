@@ -142,9 +142,9 @@ class WebContext implements Context, KernelAwareContext
     public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider()
     {
         $authnRequest = new AuthnRequest();
-        $authnRequest->setAssertionConsumerServiceURL('https://service_provider_unkown/saml/acs');
+        $authnRequest->setAssertionConsumerServiceURL('https://unkown_service_provider/saml/acs');
         $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
-        $authnRequest->setIssuer('https://service_provider_unkown/saml/metadata');
+        $authnRequest->setIssuer('https://unkown_service_provider/saml/metadata');
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -179,9 +179,9 @@ class WebContext implements Context, KernelAwareContext
     public function iSendARegistrationRequestRequestTo($destination)
     {
         $authnRequest = new AuthnRequest();
-        $authnRequest->setAssertionConsumerServiceURL('https://service_provider_unkown/saml/acs');
+        $authnRequest->setAssertionConsumerServiceURL('https://service_provider/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://service_provider_unkown/saml/metadata');
+        $authnRequest->setIssuer('https://service_provider/saml/metadata');
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.

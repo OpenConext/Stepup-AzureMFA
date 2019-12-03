@@ -18,12 +18,17 @@
 
 namespace Surfnet\AzureMfa\Domain\Institution\Collection;
 
+use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 
 class InstitutionCollection
 {
+    /**
+     * @var Institution[]
+     */
     private $institutions = [];
 
     public function add(Institution $institution)
@@ -45,5 +50,19 @@ class InstitutionCollection
             throw new InstitutionNotFoundException(sprintf('Unable to get the institution identified by "%s".', $name));
         }
         return $this->institutions[$name];
+    }
+
+    public function getByEmailDomain(EmailAddress $address) : Institution
+    {
+        foreach ($this->institutions as $institution) {
+            /** @var EmailDomainInterface $domain */
+            $domainCollection = $institution->getEmailDomainCollection();
+            foreach ($domainCollection as $domain) {
+                if ($domain->domainMatches($address)) {
+                    return $institution;
+                }
+            }
+        }
+        throw new InstitutionNotFoundException('Unable to find an institution that matches the provided email address');
     }
 }
