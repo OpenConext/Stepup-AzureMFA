@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -18,6 +18,10 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
+use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
+use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressModel;
+use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,13 +33,16 @@ class DefaultController extends AbstractController
 {
     private $authenticationService;
     private $registrationService;
+    private $domainMatchingService;
 
     public function __construct(
         AuthenticationService $authenticationService,
-        RegistrationService $registrationService
+        RegistrationService $registrationService,
+        EmailDomainMatchingService $domainMatchingService
     ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
+        $this->domainMatchingService = $domainMatchingService;
     }
 
     /**
@@ -62,17 +69,31 @@ class DefaultController extends AbstractController
             return $this->registrationService->replyToServiceProvider();
         }
 
-        if ($request->get('action') === 'register') {
-            $this->registrationService->register($request->get('NameID'));
-            return $this->registrationService->replyToServiceProvider();
-        }
-
         $requiresRegistration = $this->registrationService->registrationRequired();
         $response = new Response(null, $requiresRegistration ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
 
+        $emailAddress = new EmailAddressModel();
+        $form = $this->createForm(EmailAddressType::class, $emailAddress);
+        $form->handleRequest($request);
+
+        $errorMessage = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $institution = $this->domainMatchingService->findInstitutionByEmail(
+                $emailAddress->getEmailAddressValueObject()
+            );
+            // Todo MVP: This should be turned into a custom form constraint
+            if ($institution) {
+                $this->registrationService->register($emailAddress->getEmailAddress());
+                return $this->registrationService->replyToServiceProvider();
+            }
+            // Todo MVP: This message should be translatable
+            $errorMessage = 'The provided email address did not match any of our configured email domains.';
+        }
+
         return $this->render('default/registration.html.twig', [
             'requiresRegistration' => $requiresRegistration,
-            'NameID' => uniqid('test-prefix-', 'test-entropy'),
+            'customErrorMessage' => $errorMessage,
+            'form' => $form->createView()
         ], $response);
     }
 

@@ -20,6 +20,7 @@ namespace Surfnet\AzureMfa\Application\Institution\Service;
 
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
+use Surfnet\AzureMfa\Domain\Institution\Factory\ConfigurationFactory;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
@@ -30,9 +31,9 @@ class EmailDomainMatchingService
      */
     private $configuration;
 
-    public function __construct(InstitutionConfiguration $configuration)
+    public function __construct(ConfigurationFactory $factory)
     {
-        $this->configuration = $configuration;
+        $this->configuration = $factory->build();
     }
 
     /**
