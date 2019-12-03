@@ -19,7 +19,6 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\ValueObject;
 
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
@@ -28,8 +27,6 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 
 class InstitutionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function test_happy_flow()
     {
         $destination = m::mock(Destination::class);

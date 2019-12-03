@@ -19,7 +19,6 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\Collection;
 
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
@@ -31,8 +30,6 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 
 class InstitutionCollectionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function test_happy_flow()
     {
         $collection = new InstitutionCollection();
@@ -73,6 +70,7 @@ class InstitutionCollectionTest extends TestCase
         $emailAddress = m::mock(EmailAddress::class);
         $emailAddress
             ->shouldReceive('getDomain')
+            ->zeroOrMoreTimes()
             ->andReturn('match.com');
 
         $institution = $collection->getByEmailDomain($emailAddress);
@@ -89,6 +87,7 @@ class InstitutionCollectionTest extends TestCase
         $emailAddress = m::mock(EmailAddress::class);
         $emailAddress
             ->shouldReceive('getDomain')
+            ->zeroOrMoreTimes()
             ->andReturn('no-match.com');
 
         $this->expectException(InstitutionNotFoundException::class);
@@ -112,20 +111,22 @@ class InstitutionCollectionTest extends TestCase
         $institution = m::mock(Institution::class);
         $institution
             ->shouldReceive('getName')
+            ->zeroOrMoreTimes()
             ->andReturn($name);
 
         $institution
             ->shouldReceive('getEmailDomainCollection')
-            ->andReturn($this->buildEmailDomainCollectionMock());
+            ->zeroOrMoreTimes()
+            ->andReturn($this->buildEmailDomainCollection());
 
         return $institution;
     }
 
-    private function buildEmailDomainCollectionMock()
+    private function buildEmailDomainCollection()
     {
         $data = [new EmailDomain('match.com')];
         $collection = new EmailDomainCollection($data);
 
-        return m::mock($collection)->makePartial();
+        return m::mock($collection);
     }
 }
