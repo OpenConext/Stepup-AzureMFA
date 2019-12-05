@@ -36,6 +36,6 @@ final class EmailAddressType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('data_class', EmailAddressModel::class);
+        $resolver->setDefault('data_class', EmailAddressDto::class);
     }
 }

@@ -12,10 +12,11 @@ Feature: When an user needs to register for a new token
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
 
   Scenario: Registration fails when an invalid email address is provided by the user
-    Given I send a registration request request to "https://azure-mfa.stepup.example.com/registration"
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
     # Fill an email address that does not match any of the configured email domains
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-x.example.com"
+    And I fill in "Email address" with "test-user@institution-xample.com"
+    When I press "Submit"
     When I press "Submit"
     Then I should be on "https://azure-mfa.stepup.example.com/registration"
     And I should see "The provided email address did not match any of our configured email domains."
