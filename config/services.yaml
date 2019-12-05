@@ -7,15 +7,12 @@ services:
         autowire: true
         autoconfigure: true
 
+    Surfnet\AzureMfa\:
+        resource: '../src/Surfnet/AzureMfa/*'
+
     Surfnet\AzureMfa\Infrastructure\:
         resource: '../src/Surfnet/AzureMfa/Infrastructure/*'
         exclude: '../src/Surfnet/AzureMfa/Infrastructure/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-
-    Surfnet\AzureMfa\Application\:
-        resource: '../src/Surfnet/AzureMfa/Application/*'
-
-    Surfnet\AzureMfa\Domain\:
-        resource: '../src/Surfnet/AzureMfa/Domain/*'
 
     Surfnet\AzureMfa\Infrastructure\Controller\:
         resource: '../src/Surfnet/AzureMfa/Infrastructure/Controller/*'
