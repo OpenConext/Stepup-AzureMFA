@@ -62,8 +62,9 @@ Install
 **Create a .env file**
 
 1. `$ cp .env.ci .env`
-1. Edit the `.env` file with the editor of your choice and update the `APP_SECRET` to a value of your liking. See [Symfony docs](https://symfony.com/doc/current/reference/configuration/framework.html#secret) for more details about this secret. 
-
+1. Edit the `.env` file with the editor of your choice and: 
+    1. Update the `APP_SECRET` to a value of your liking. See [Symfony docs](https://symfony.com/doc/current/reference/configuration/framework.html#secret) for more details about this secret. 
+    1. Set the `APP_ENV` to 'dev'
 
 **Copy the parameters.yaml**
 
