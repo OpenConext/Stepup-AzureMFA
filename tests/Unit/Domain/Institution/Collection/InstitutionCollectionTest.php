@@ -19,17 +19,17 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\Collection;
 
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
+use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomain;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 
 class InstitutionCollectionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function test_happy_flow()
     {
         $collection = new InstitutionCollection();
@@ -61,6 +61,40 @@ class InstitutionCollectionTest extends TestCase
         $this->assertEquals('mock1', $institution1->getName());
     }
 
+    public function test_get_by_email_domain()
+    {
+        $collection = new InstitutionCollection();
+        $collection->add($this->buildInstitutionMock('mock1'));
+        $collection->add($this->buildInstitutionMock('mock2'));
+
+        $emailAddress = m::mock(EmailAddress::class);
+        $emailAddress
+            ->shouldReceive('getDomain')
+            ->zeroOrMoreTimes()
+            ->andReturn('match.com');
+
+        $institution = $collection->getByEmailDomain($emailAddress);
+        $this->assertInstanceOf(Institution::class, $institution);
+        $this->assertEquals('mock1', $institution->getName());
+    }
+
+    public function test_get_by_email_domain_no_result()
+    {
+        $collection = new InstitutionCollection();
+        $collection->add($this->buildInstitutionMock('mock1'));
+        $collection->add($this->buildInstitutionMock('mock2'));
+
+        $emailAddress = m::mock(EmailAddress::class);
+        $emailAddress
+            ->shouldReceive('getDomain')
+            ->zeroOrMoreTimes()
+            ->andReturn('no-match.com');
+
+        $this->expectException(InstitutionNotFoundException::class);
+        $this->expectExceptionMessage('Unable to find an institution that matches the provided email address');
+        $collection->getByEmailDomain($emailAddress);
+    }
+
     public function test_rejects_invalid_name_when_using_get_by_name()
     {
         $collection = new InstitutionCollection();
@@ -77,7 +111,22 @@ class InstitutionCollectionTest extends TestCase
         $institution = m::mock(Institution::class);
         $institution
             ->shouldReceive('getName')
+            ->zeroOrMoreTimes()
             ->andReturn($name);
+
+        $institution
+            ->shouldReceive('getEmailDomainCollection')
+            ->zeroOrMoreTimes()
+            ->andReturn($this->buildEmailDomainCollection());
+
         return $institution;
+    }
+
+    private function buildEmailDomainCollection()
+    {
+        $data = [new EmailDomain('match.com')];
+        $collection = new EmailDomainCollection($data);
+
+        return m::mock($collection);
     }
 }

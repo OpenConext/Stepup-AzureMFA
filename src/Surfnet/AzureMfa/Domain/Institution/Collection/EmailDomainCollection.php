@@ -18,10 +18,12 @@
 
 namespace Surfnet\AzureMfa\Domain\Institution\Collection;
 
+use ArrayIterator;
+use IteratorAggregate;
 use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainInterface;
 
-class EmailDomainCollection
+class EmailDomainCollection implements IteratorAggregate
 {
     /**
      * @var EmailDomainInterface[]
@@ -38,5 +40,10 @@ class EmailDomainCollection
             }
         }
         $this->emailDomains = $domains;
+    }
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->emailDomains);
     }
 }

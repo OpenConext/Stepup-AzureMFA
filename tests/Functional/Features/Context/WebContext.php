@@ -27,6 +27,7 @@ use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
+use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -141,9 +142,9 @@ class WebContext implements Context, KernelAwareContext
     public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider()
     {
         $authnRequest = new AuthnRequest();
-        $authnRequest->setAssertionConsumerServiceURL('https://service_provider_unkown/saml/acs');
+        $authnRequest->setAssertionConsumerServiceURL('https://unkown_service_provider/saml/acs');
         $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
-        $authnRequest->setIssuer('https://service_provider_unkown/saml/metadata');
+        $authnRequest->setIssuer('https://unkown_service_provider/saml/metadata');
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -151,7 +152,7 @@ class WebContext implements Context, KernelAwareContext
             $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
         );
 
-        $request = \Surfnet\SamlBundle\SAML2\AuthnRequest::createNew($authnRequest);
+        $request = Saml2AuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath('/saml/sso?' . $query);
     }
@@ -170,5 +171,26 @@ class WebContext implements Context, KernelAwareContext
         $key->loadKey($privateKey->getKeyAsString());
 
         return $key;
+    }
+
+    /**
+     * @Given /^I send a registration request request to "(?P<destination>(?:[^"]|\\")*)"$/
+     */
+    public function iSendARegistrationRequestRequestTo($destination)
+    {
+        $authnRequest = new AuthnRequest();
+        $authnRequest->setAssertionConsumerServiceURL('https://service_provider/saml/acs');
+        $authnRequest->setDestination($destination);
+        $authnRequest->setIssuer('https://service_provider/saml/metadata');
+        $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
+
+        // Sign with random key, does not mather for now.
+        $authnRequest->setSignatureKey(
+            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
+        );
+
+        $request = Saml2AuthnRequest::createNew($authnRequest);
+        $query = $request->buildRequestQuery();
+        $this->minkContext->visitPath($destination.'?' . $query);
     }
 }

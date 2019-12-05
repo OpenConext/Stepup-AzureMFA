@@ -19,7 +19,6 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\Collection;
 
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
@@ -29,8 +28,6 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainWildcard;
 
 class EmailDomainCollectionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function test_happy_flow()
     {
         $items = [

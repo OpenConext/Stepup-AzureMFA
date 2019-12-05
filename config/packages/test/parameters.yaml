@@ -1,0 +1,3 @@
+parameters:
+    # overridden for test (behat)
+    saml_remote_sp_certificate: '%kernel.root_dir%/../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'

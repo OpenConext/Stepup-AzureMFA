@@ -29,6 +29,7 @@ class EmailDomainWildcardTest extends TestCase
     {
         $domain = new EmailDomainWildcard('*.example.com');
         $this->assertInstanceOf(EmailDomainWildcard::class, $domain);
+        $this->assertEquals('*.example.com', $domain->getEmailDomain());
     }
 
     /**

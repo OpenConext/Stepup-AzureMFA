@@ -18,7 +18,6 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\ValueObject;
 
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionConfigurationException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
@@ -27,8 +26,6 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
 class InstitutionConfigurationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function test_happy_flow() : void
     {
         $institutions = [
