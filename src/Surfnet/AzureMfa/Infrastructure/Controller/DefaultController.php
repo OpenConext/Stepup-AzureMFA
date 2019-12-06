@@ -18,22 +18,13 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
-use Exception;
-use RobRichards\XMLSecLibs\XMLSecurityKey;
-use SAML2\Assertion;
-use SAML2\Certificate\PrivateKeyLoader;
-use SAML2\Configuration\PrivateKey;
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
+use Surfnet\AzureMfa\Application\Service\AzureMfaService;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
-use Surfnet\SamlBundle\Entity\IdentityProvider;
-use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
-use Surfnet\SamlBundle\Http\PostBinding;
-use Surfnet\SamlBundle\SAML2\AuthnRequest;
-use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,33 +37,20 @@ class DefaultController extends AbstractController
     private $registrationService;
     private $domainMatchingService;
     /**
-     * @var PostBinding
+     * @var AzureMfaService
      */
-    private $postBinding;
-    /**
-     * @var string
-     */
-    private $publicKey;
-    /**
-     * @var string
-     */
-    private $privateKey;
+    private $azureMfaService;
 
     public function __construct(
         AuthenticationService $authenticationService,
         RegistrationService $registrationService,
         EmailDomainMatchingService $domainMatchingService,
-        PostBinding $postBinding
-    )
-    {
+        AzureMfaService $azureMfaService
+    ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
         $this->domainMatchingService = $domainMatchingService;
-        $this->postBinding = $postBinding;
-
-        // Todo: make keys configurable
-        $this->publicKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
-        $this->privateKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem';
+        $this->azureMfaService = $azureMfaService;
     }
 
     /**
@@ -109,7 +87,7 @@ class DefaultController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->registrationService->register($emailAddress->getEmailAddress());
 
-            return $this->handleAuthnRequestToAdfs($emailAddress->getEmailAddress(), $this->createServiceProvider(), $this->createIdentityProvider());
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($emailAddress->getEmailAddress()));
         }
 
         return $this->render('default/registration.html.twig', [
@@ -138,7 +116,7 @@ class DefaultController extends AbstractController
             // The application should very if the user matches the nameId.
             $this->authenticationService->authenticate();
 
-            return $this->handleAuthnRequestToAdfs($nameId, $this->createServiceProvider(), $this->createIdentityProvider());
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($nameId));
         }
 
         $requiresAuthentication = $this->authenticationService->authenticationRequired();
@@ -155,133 +133,14 @@ class DefaultController extends AbstractController
      */
     public function acsAction(Request $request)
     {
-
-        $xmlResponse = $request->request->get('SAMLResponse');
-        $xml = base64_decode($xmlResponse);
         try {
-            /** @var Assertion $response */
-            $response = $this->postBinding->processResponse($request, $this->createIdentityProvider(), $this->createServiceProvider());
-
-            //TODO: do we need additional validation?
-
+            $this->azureMfaService->handleResponse($request);
         } catch (AuthnFailedSamlResponseException $e) {
-            $this->registrationService->reject($request->get('message'));
-        } catch (\Exception $e) {
             $this->registrationService->reject($request->get('message'));
         }
 
+        // Todo: find out if we do need to handle different exceptions / responses ?
+
         return $this->registrationService->replyToServiceProvider();
     }
-
-    /**
-     * @param string $nameId
-     * @param ServiceProvider $serviceProvider
-     * @param IdentityProvider $identityProvider
-     * @return RedirectResponse
-     * @throws Exception
-     */
-    private function handleAuthnRequestToAdfs(string $nameId, ServiceProvider $serviceProvider, IdentityProvider $identityProvider)
-    {
-        $authnRequest = AuthnRequestFactory::createNewRequest($serviceProvider, $identityProvider);
-
-        // Use emailaddress as subject
-        $authnRequest->setSubject($nameId);
-
-        // Set authnContextClassRef to force MFA
-        $authnRequest->setAuthenticationContextClassRef('http://schemas.microsoft.com/claims/multipleauthn');
-
-        // Build request query parameters.
-        $requestAsXml = $authnRequest->getUnsignedXML();
-        $encodedRequest = base64_encode(gzdeflate($requestAsXml));
-        $queryParams = [AuthnRequest::PARAMETER_REQUEST => $encodedRequest];
-
-        // Create redirect response.
-        $query = $this->signRequestQuery($queryParams);
-        $url = sprintf('%s?%s', $identityProvider->getSsoUrl(), $query);
-
-        return new RedirectResponse($url);
-    }
-
-    /**
-     * Sign AuthnRequest query parameters.
-     *
-     * @param array $queryParams
-     * @return string
-     *
-     * @throws Exception
-     */
-    private function signRequestQuery(array $queryParams)
-    {
-        /** @var  $securityKey */
-        $securityKey = $this->loadServiceProviderPrivateKey();
-        $queryParams[AuthnRequest::PARAMETER_SIGNATURE_ALGORITHM] = $securityKey->type;
-        $toSign = http_build_query($queryParams);
-        $signature = $securityKey->signData($toSign);
-
-        return $toSign . '&Signature=' . urlencode(base64_encode($signature));
-    }
-
-    /**
-     * Loads the private key from the service provider.
-     *
-     * @return XMLSecurityKey
-     *
-     * @throws Exception
-     */
-    private function loadServiceProviderPrivateKey()
-    {
-        $keyLoader = new PrivateKeyLoader();
-        $privateKey = $keyLoader->loadPrivateKey(
-            new PrivateKey(
-                $this->privateKey,
-                'default'
-            )
-        );
-        $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
-        $key->loadKey($privateKey->getKeyAsString());
-
-        return $key;
-    }
-
-
-    private function createServiceProvider(): ServiceProvider
-    {
-        // TODO: make configurable
-        $samlBundle = '';
-        return new ServiceProvider(
-            [
-                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/acs',
-                'certificateFile' => $this->publicKey,
-                'privateKeys' => [
-                    new PrivateKey(
-                        $this->privateKey,
-                        'default'
-                    ),
-                ],
-                'sharedKey' => sprintf('%s/src/Resources/keys/development_publickey.cer', $samlBundle),
-            ]
-        );
-    }
-
-    private function createIdentityProvider(): IdentityProvider
-    {
-        // TODO: make configurable
-        $samlBundle = '';
-        return new IdentityProvider(
-            [
-                'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
-                'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
-                'certificateFile' => $this->publicKey,
-                'privateKeys' => [
-                    new PrivateKey(
-                        $this->privateKey,
-                        'default'
-                    ),
-                ],
-                'sharedKey' => sprintf('%s/src/Resources/keys/development_publickey.cer', $samlBundle),
-            ]
-        );
-    }
-
 }
