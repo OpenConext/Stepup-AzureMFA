@@ -5,8 +5,8 @@ page.title: Azure MFA GSSP
 page.header.stepup-gateway-gssp: Wiki
 
 page.navigation.route.homepage: Home
-page.navigation.route.app_identity_registration: Registration
-page.navigation.route.app_identity_authentication: Authentication
+page.navigation.route.azure_mfa_registration: Registration
+page.navigation.route.azure_mfa_authentication: Authentication
 page.navigation.route.gssp_saml_metadata: Metadata
 page.navigation.route.sp_demo: Demo SP
 
