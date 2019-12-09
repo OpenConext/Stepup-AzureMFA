@@ -68,7 +68,7 @@ class DefaultController extends AbstractController
      *
      * See @see RegistrationService for a more clean example.
      *
-     * @Route("/registration", name="app_identity_registration")
+     * @Route("/registration", name="azure_mfa_registration")
      */
     public function registrationAction(Request $request)
     {
@@ -101,7 +101,7 @@ class DefaultController extends AbstractController
      *
      * See @see AuthenticationService for a more clean example.
      *
-     * @Route("/authentication", name="app_identity_authentication")
+     * @Route("/authentication", name="azure_mfa_authentication")
      */
     public function authenticationAction(Request $request)
     {
@@ -129,7 +129,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/acs", name="app_identity_acs")
+     * @Route("/saml/acs", name="azure_mfa_acs")
      */
     public function acsAction(Request $request)
     {

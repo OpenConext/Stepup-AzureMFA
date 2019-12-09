@@ -19,42 +19,30 @@
 namespace Surfnet\AzureMfa\Application\Service;
 
 use Exception;
-use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Assertion;
-use SAML2\Certificate\PrivateKeyLoader;
-use SAML2\Configuration\PrivateKey;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
-use Surfnet\SamlBundle\SAML2\AuthnRequest;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class AzureMfaService
 {
-
-    /**
-     * @var string
-     */
-    private $publicKey;
-    /**
-     * @var string
-     */
-    private $privateKey;
     /**
      * @var PostBinding
      */
     private $postBinding;
 
-    public function __construct(
-        PostBinding $postBinding
-    ) {
-        $this->postBinding = $postBinding;
+    /**
+     * @var ServiceProvider
+     */
+    private $serviceProvider;
 
-        // Todo: make keys configurable
-        $this->publicKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
-        $this->privateKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem';
+    public function __construct(ServiceProvider $serviceProvider, PostBinding $postBinding)
+    {
+        $this->serviceProvider = $serviceProvider;
+        $this->postBinding = $postBinding;
     }
 
     /**
@@ -64,7 +52,7 @@ class AzureMfaService
      */
     public function createAuthnRequest(string $nameId): string
     {
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->getServiceProvider(), $this->getIdentityProvider());
+        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->getIdentityProvider());
 
         // Use emailaddress as subject
         $authnRequest->setSubject($nameId);
@@ -83,27 +71,8 @@ class AzureMfaService
     public function handleResponse(Request $request)
     {
         /** @var Assertion $response */
-        $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->getServiceProvider());
-
+        $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->serviceProvider);
         //TODO: do we need additional validation?
-    }
-
-    private function getServiceProvider(): ServiceProvider
-    {
-        // TODO: make configurable
-        return new ServiceProvider(
-            [
-                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/acs',
-                'certificateFile' => $this->publicKey,
-                'privateKeys' => [
-                    new PrivateKey(
-                        $this->privateKey,
-                        'default'
-                    ),
-                ],
-            ]
-        );
     }
 
     private function getIdentityProvider(): IdentityProvider
@@ -113,13 +82,8 @@ class AzureMfaService
             [
                 'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
                 'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
-                'certificateFile' => $this->publicKey,
-                'privateKeys' => [
-                    new PrivateKey(
-                        $this->privateKey,
-                        'default'
-                    ),
-                ],
+                'certificateFile' => $this->serviceProvider->getCertificateFile(),
+                'privateKeys' => [$this->serviceProvider->getPrivateKey('default')],
             ]
         );
     }
