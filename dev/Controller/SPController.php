@@ -76,17 +76,8 @@ final class SPController extends AbstractController
             $authnRequest->setSubject($request->get('NameID'));
         }
 
-        // Build request query parameters.
-        $requestAsXml = $authnRequest->getUnsignedXML();
-        $encodedRequest = base64_encode(gzdeflate($requestAsXml));
-        $queryParams = [AuthnRequest::PARAMETER_REQUEST => $encodedRequest];
-        $relayState = $request->get(AuthnRequest::PARAMETER_RELAY_STATE);
-        if (!empty($relayState)) {
-            $queryParams[AuthnRequest::PARAMETER_RELAY_STATE] = $relayState;
-        }
-
         // Create redirect response.
-        $query = $this->signRequestQuery($queryParams);
+        $query = $authnRequest->buildRequestQuery();
         $url = sprintf('%s?%s', $this->identityProvider->getSsoUrl(), $query);
         $response = new RedirectResponse($url);
 
@@ -154,44 +145,6 @@ final class SPController extends AbstractController
         $domxml->loadXML($xml);
 
         return $domxml->saveXML();
-    }
-
-    /**
-     * Sign AuthnRequest query parameters.
-     *
-     * @param array $queryParams
-     * @return string
-     *
-     * @throws Exception
-     */
-    private function signRequestQuery(array $queryParams)
-    {
-        /** @var  $securityKey */
-        $securityKey = $this->loadServiceProviderPrivateKey();
-        $queryParams[AuthnRequest::PARAMETER_SIGNATURE_ALGORITHM] = $securityKey->type;
-        $toSign = http_build_query($queryParams);
-        $signature = $securityKey->signData($toSign);
-
-        return $toSign.'&Signature='.urlencode(base64_encode($signature));
-    }
-
-    /**
-     * Loads the private key from the service provider.
-     *
-     * @return XMLSecurityKey
-     *
-     * @throws Exception
-     */
-    private function loadServiceProviderPrivateKey()
-    {
-        $keyLoader = new PrivateKeyLoader();
-        $privateKey = $keyLoader->loadPrivateKey(
-            $this->serviceProvider->getPrivateKey(PrivateKey::NAME_DEFAULT)
-        );
-        $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
-        $key->loadKey($privateKey->getKeyAsString());
-
-        return $key;
     }
 
     /**

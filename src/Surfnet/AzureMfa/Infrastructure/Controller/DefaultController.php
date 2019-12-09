@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -19,11 +19,14 @@
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
+use Surfnet\AzureMfa\Application\Service\AzureMfaService;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
+use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,15 +36,21 @@ class DefaultController extends AbstractController
     private $authenticationService;
     private $registrationService;
     private $domainMatchingService;
+    /**
+     * @var AzureMfaService
+     */
+    private $azureMfaService;
 
     public function __construct(
         AuthenticationService $authenticationService,
         RegistrationService $registrationService,
-        EmailDomainMatchingService $domainMatchingService
+        EmailDomainMatchingService $domainMatchingService,
+        AzureMfaService $azureMfaService
     ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
         $this->domainMatchingService = $domainMatchingService;
+        $this->azureMfaService = $azureMfaService;
     }
 
     /**
@@ -77,7 +86,8 @@ class DefaultController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->registrationService->register($emailAddress->getEmailAddress());
-            return $this->registrationService->replyToServiceProvider();
+
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($emailAddress->getEmailAddress()));
         }
 
         return $this->render('default/registration.html.twig', [
@@ -105,7 +115,8 @@ class DefaultController extends AbstractController
         if ($request->get('action') === 'authenticate') {
             // The application should very if the user matches the nameId.
             $this->authenticationService->authenticate();
-            return $this->authenticationService->replyToServiceProvider();
+
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($nameId));
         }
 
         $requiresAuthentication = $this->authenticationService->authenticationRequired();
@@ -115,5 +126,21 @@ class DefaultController extends AbstractController
             'requiresAuthentication' => $requiresAuthentication,
             'NameID' => $nameId ?: 'unknown',
         ], $response);
+    }
+
+    /**
+     * @Route("/acs", name="app_identity_acs")
+     */
+    public function acsAction(Request $request)
+    {
+        try {
+            $this->azureMfaService->handleResponse($request);
+        } catch (AuthnFailedSamlResponseException $e) {
+            $this->registrationService->reject($request->get('message'));
+        }
+
+        // Todo: find out if we do need to handle different exceptions / responses ?
+
+        return $this->registrationService->replyToServiceProvider();
     }
 }
