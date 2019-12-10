@@ -7,7 +7,8 @@
     "jquery": "~3",
     "node-sass": "~4",
     "sass-loader": "~7",
-    "select2": "~4"
+    "select2": "~4",
+    "serialize-javascript": "^2.1"
   },
   "resolutions": {
     "js-yaml": "^3.13.1"
