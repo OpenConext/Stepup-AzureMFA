@@ -20,12 +20,18 @@ namespace Surfnet\AzureMfa\Application\Service;
 
 use Exception;
 use SAML2\Assertion;
+use Surfnet\AzureMfa\Application\Repository\UserRepositoryInterface;
+use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\User;
+use Surfnet\AzureMfa\Domain\UserId;
+use Surfnet\AzureMfa\Domain\UserStatus;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AzureMfaService
 {
@@ -33,16 +39,48 @@ class AzureMfaService
      * @var PostBinding
      */
     private $postBinding;
-
     /**
      * @var ServiceProvider
      */
     private $serviceProvider;
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+    /**
+     * @var SessionInterface
+     */
+    private $session;
 
-    public function __construct(ServiceProvider $serviceProvider, PostBinding $postBinding)
+    public function __construct(ServiceProvider $serviceProvider, PostBinding $postBinding, UserRepositoryInterface $userRepository, SessionInterface $session)
     {
         $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
+        $this->userRepository = $userRepository;
+        $this->session = $session;
+    }
+
+    public function startRegistration(EmailAddress $emailAddress)
+    {
+        // TODO: test attempts / blocked
+
+        $userId = UserId::generate();
+
+        $this->session->set('userId', $userId);
+
+        $user = new User($userId, $emailAddress, UserStatus::pending());
+        $this->userRepository->save($user);
+    }
+
+    public function finishRegistration(): UserId
+    {
+        $userId = $this->session->get('userId');
+
+        $user = $this->userRepository->load($userId);
+        $user->setStatus(UserStatus::registered());
+        $this->userRepository->save($user);
+
+        return $userId;
     }
 
     /**

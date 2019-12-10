@@ -20,6 +20,7 @@ namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
+use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
@@ -85,7 +86,8 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->registrationService->register($emailAddress->getEmailAddress());
+
+            $this->azureMfaService->startRegistration(new EmailAddress($emailAddress->getEmailAddress()));
 
             return new RedirectResponse($this->azureMfaService->createAuthnRequest($emailAddress->getEmailAddress()));
         }
@@ -113,9 +115,6 @@ class DefaultController extends AbstractController
         }
 
         if ($request->get('action') === 'authenticate') {
-            // The application should very if the user matches the nameId.
-            $this->authenticationService->authenticate();
-
             return new RedirectResponse($this->azureMfaService->createAuthnRequest($nameId));
         }
 
@@ -135,6 +134,11 @@ class DefaultController extends AbstractController
     {
         try {
             $this->azureMfaService->handleResponse($request);
+
+            //check authentication of registration
+            $userId = $this->azureMfaService->finishRegistration();
+            $this->registrationService->register($userId->getUserId());
+
         } catch (AuthnFailedSamlResponseException $e) {
             $this->registrationService->reject($request->get('message'));
         }

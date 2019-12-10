@@ -1,4 +1,4 @@
-@remote
+@sp
 Feature: When an user needs to register for a new token
   To register an user for a new token
   As a service provider
@@ -11,17 +11,23 @@ Feature: When an user needs to register for a new token
     When I press "Register user"
 
     # The user register himself at the IdP
-    Then I should see "Registration"
-    And I should be on "https://azure-mfa.stepup.example.com/registration"
+    Then I should be on "https://azure-mfa.stepup.example.com/registration"
+    And I should see "Registration"
 
     # GSSP assigns a subject name id to the user
-    Given I fill in "Subject NameID" with "test-name-id-1234"
-    When I press "Register user"
+    Given I fill in "Email address" with "test@stepup.example.com"
+    When I press "Submit"
 
-    # The SSO return page
-    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
-    Given I press "Submit"
+    # The MFA SSO page
+    Then I should be on "https://azure-mfa.stepup.example.com/mock/sso"
+    Given I press "Submit-success"
+
+    # The GSSP acs page.
+    Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
+    And I press "Submit"
 
     # Back at the SP.
+    Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
+    And print last response
     And I should see "Demo Service provider ConsumerAssertionService endpoint"
-    And I should see "test-name-id-1234"
+    And I should see "test@stepup.example.com"
