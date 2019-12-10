@@ -27,6 +27,11 @@ use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
+use Surfnet\AzureMfa\Application\Repository\UserRepositoryInterface;
+use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\User;
+use Surfnet\AzureMfa\Domain\UserId;
+use Surfnet\AzureMfa\Domain\UserStatus;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -48,6 +53,15 @@ class WebContext implements Context, KernelAwareContext
      * @var string
      */
     protected $previousMinkSession;
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $repository;
+
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * Sets HttpKernel instance.
@@ -192,5 +206,14 @@ class WebContext implements Context, KernelAwareContext
         $request = Saml2AuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath($destination.'?' . $query);
+    }
+
+
+    /**
+     * @Given /^I have a registered MFA token with NameID "(?P<nameId>(?:[^"]|\\")*)"$/
+     */
+    public function iHaveARegisteredMFATokenWIthNameID($nameId)
+    {
+        $this->repository->save(new User(new UserId($nameId), new EmailAddress('user@stepup.example.com'), UserStatus::registered()));
     }
 }

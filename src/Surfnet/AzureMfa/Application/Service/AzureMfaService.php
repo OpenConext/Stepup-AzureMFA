@@ -18,10 +18,11 @@
 
 namespace Surfnet\AzureMfa\Application\Service;
 
-use Exception;
-use SAML2\Assertion;
+use SAML2\Configuration\PrivateKey;
 use Surfnet\AzureMfa\Application\Repository\UserRepositoryInterface;
 use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\Exception\InvalidMFANameIdException;
+use Surfnet\AzureMfa\Domain\Exception\UserNotFoundException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
@@ -33,16 +34,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AzureMfaService
 {
     /**
      * @var PostBinding
      */
     private $postBinding;
-    /**
-     * @var ServiceProvider
-     */
-    private $serviceProvider;
     /**
      * @var UserRepositoryInterface
      */
@@ -52,15 +52,18 @@ class AzureMfaService
      */
     private $session;
 
-    public function __construct(ServiceProvider $serviceProvider, PostBinding $postBinding, UserRepositoryInterface $userRepository, SessionInterface $session)
+    public function __construct(PostBinding $postBinding, UserRepositoryInterface $userRepository, SessionInterface $session)
     {
-        $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
         $this->userRepository = $userRepository;
         $this->session = $session;
+
+        // Todo: make keys configurable
+        $this->publicKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
+        $this->privateKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem';
     }
 
-    public function startRegistration(EmailAddress $emailAddress)
+    public function startRegistration(EmailAddress $emailAddress): User
     {
         // TODO: test attempts / blocked
 
@@ -70,6 +73,8 @@ class AzureMfaService
 
         $user = new User($userId, $emailAddress, UserStatus::pending());
         $this->userRepository->save($user);
+
+        return $user;
     }
 
     public function finishRegistration(): UserId
@@ -80,20 +85,47 @@ class AzureMfaService
         $user->setStatus(UserStatus::registered());
         $this->userRepository->save($user);
 
+        $this->session->remove('userId');
+
+        return $userId;
+    }
+
+
+    public function startAuthentication(UserId $userId): User
+    {
+        // TODO: test attempts / blocked
+
+        $user = $this->userRepository->load($userId);
+        if (!$user->getStatus()->isRegistered()) {
+            throw new UserNotFoundException('Unaable to find registered user');
+        }
+
+        $this->session->set('userId', $userId);
+
+        return $user;
+    }
+
+    public function finishAuthentication(): userId
+    {
+        $userId = $this->session->get('userId');
+
+        $this->session->remove('userId');
+
         return $userId;
     }
 
     /**
-     * @param string $nameId
+     *
+     * /**
+     * @param User $user
      * @return RedirectResponse
-     * @throws Exception
      */
-    public function createAuthnRequest(string $nameId): string
+    public function createAuthnRequest(User $user): string
     {
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->getIdentityProvider());
+        $authnRequest = AuthnRequestFactory::createNewRequest($this->getServiceProvider(), $this->getIdentityProvider());
 
         // Use emailaddress as subject
-        $authnRequest->setSubject($nameId);
+        $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
 
         // Set authnContextClassRef to force MFA
         $authnRequest->setAuthenticationContextClassRef('http://schemas.microsoft.com/claims/multipleauthn');
@@ -106,11 +138,38 @@ class AzureMfaService
     /**
      * @param Request $request
      */
-    public function handleResponse(Request $request)
+    public function handleResponse(Request $request): User
     {
-        /** @var Assertion $response */
-        $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->serviceProvider);
+        $assertion = $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->getServiceProvider());
+
+        // validate NameID
+        $userId = $this->session->get('userId');
+        $user = $this->userRepository->load($userId);
+        if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
+            throw new InvalidMFANameIdException('MFA returned invalid NameId');
+        }
+
         //TODO: do we need additional validation?
+
+        return  $user;
+    }
+
+    private function getServiceProvider(): ServiceProvider
+    {
+        // TODO: make configurable
+        return new ServiceProvider(
+            [
+                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
+                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/saml/acs',
+                'certificateFile' => $this->publicKey,
+                'privateKeys' => [
+                    new PrivateKey(
+                        $this->privateKey,
+                        'default'
+                    ),
+                ],
+            ]
+        );
     }
 
     private function getIdentityProvider(): IdentityProvider
@@ -120,8 +179,13 @@ class AzureMfaService
             [
                 'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
                 'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
-                'certificateFile' => $this->serviceProvider->getCertificateFile(),
-                'privateKeys' => [$this->serviceProvider->getPrivateKey('default')],
+                'certificateFile' => $this->publicKey,
+                'privateKeys' => [
+                    new PrivateKey(
+                        $this->privateKey,
+                        'default'
+                    ),
+                ],
             ]
         );
     }

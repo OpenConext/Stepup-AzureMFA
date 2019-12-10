@@ -17,7 +17,6 @@
 
 namespace Surfnet\AzureMfa\Application\Repository;
 
-
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\User;
 

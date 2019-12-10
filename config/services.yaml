@@ -31,4 +31,4 @@ services:
 
     Surfnet\AzureMfa\Infrastructure\Repository\UserFileRepository:
         arguments:
-            $userRepositoryPath: '%kernel.root_dir%/../../../../var/userRepository.json'
+            $userRepositoryPath: '%kernel.root_dir%/../../../../var/userRepository-%kernel.environment%.json'

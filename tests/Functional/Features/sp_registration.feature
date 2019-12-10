@@ -23,11 +23,10 @@ Feature: When an user needs to register for a new token
     Given I press "Submit-success"
 
     # The GSSP acs page.
-    Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And I press "Submit"
 
     # Back at the SP.
     Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
-    And print last response
     And I should see "Demo Service provider ConsumerAssertionService endpoint"
-    And I should see "test@stepup.example.com"
+    And I should see "urn:oasis:names:tc:SAML:2.0:status:Succes"

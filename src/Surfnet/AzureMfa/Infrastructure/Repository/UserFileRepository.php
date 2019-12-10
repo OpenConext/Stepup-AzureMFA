@@ -17,7 +17,6 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Repository;
 
-
 use Surfnet\AzureMfa\Application\Repository\UserRepositoryInterface;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\UserNotFoundException;
@@ -46,15 +45,12 @@ class UserFileRepository implements UserRepositoryInterface
         $this->users = json_decode(file_get_contents($this->path), true);
     }
 
-    public function __destruct()
-    {
-        $content = json_encode($this->users, JSON_PRETTY_PRINT);
-        file_put_contents($this->path, $content);
-    }
-
     public function save(User $user)
     {
         $this->users[$user->getUserId()->getUserId()] = $this->serialize($user);
+
+        $content = json_encode($this->users, JSON_PRETTY_PRINT);
+        file_put_contents($this->path, $content);
     }
 
     public function exists(UserId $userId): bool
@@ -83,7 +79,7 @@ class UserFileRepository implements UserRepositoryInterface
     private function deserialize(string $data): User
     {
         $object = json_decode($data, true);
-        return new User (
+        return new User(
             new UserId($object['id']),
             new EmailAddress($object['email']),
             new UserStatus($object['status'])
