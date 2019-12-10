@@ -4,7 +4,7 @@ parameters:
     data: # The root node
       institutions:
         institution-a.example.com: # The institution identifier (schacHomeOrganization)
-          destination: 'https://adfs.stepup.example.com/adfs/ls/' # Location of the Azure MFA endpoint
+          destination: 'https://azure-mfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'stepup.example.com'
             - '*.example.com' # Wildcards are allowed
