@@ -18,13 +18,16 @@
 
 namespace Surfnet\AzureMfa\Domain\Institution\Factory;
 
+use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\ConfigurationValidatorInterface;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\InstitutionConfigurationInterface;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomain;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainWildcard;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
@@ -44,13 +47,17 @@ class ConfigurationFactory
     {
         $institutions = [];
         foreach ($this->configurationData as $institutionName => $institutionData) {
-            $destinationEndpoint = new Destination($institutionData['destination']);
+            $ssoLocation = new Destination($institutionData['sso_location']);
+            $entityId = new EntityId($institutionData['entity_id']);
 
             $emailDomains = $this->buildEmailDomains($institutionData['email_domains']);
+            $certificates = $this->buildCertificates($institutionData['certificates']);
 
             $institutions[$institutionName] = new Institution(
                 $institutionName,
-                $destinationEndpoint,
+                $ssoLocation,
+                $entityId,
+                $certificates,
                 $emailDomains
             );
         }
@@ -73,5 +80,14 @@ class ConfigurationFactory
             return new EmailDomainWildcard($domain);
         }
         return new EmailDomain($domain);
+    }
+
+    private function buildCertificates(array $certificates) : CertificateCollection
+    {
+        $certCollection = new CertificateCollection();
+        foreach ($certificates as $certData) {
+            $certCollection->add(new Certificate($certData));
+        }
+        return $certCollection;
     }
 }

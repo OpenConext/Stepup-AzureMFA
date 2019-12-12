@@ -5,8 +5,3 @@ data:
       entity_id: 'https://adfs.stepup.example.com/'
       email_domains:
         - 'stepup.example.com'
-        - 'stepup2.example.com'
-    institution-b.example.com:
-      hostname: 'https://foobar.example.com'
-      username: 'foobar'
-      password: 'supersecret'

@@ -19,6 +19,7 @@
 namespace Surfnet\AzureMfa\Domain\Institution\ValueObject;
 
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
+use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 
 class Institution
@@ -34,18 +35,35 @@ class Institution
     private $destination;
 
     /**
+     * @var EntityId
+     */
+    private $entityId;
+
+    /**
+     * @var CertificateCollection
+     */
+    private $certificates;
+
+    /**
      * @var EmailDomainCollection
      */
     private $emailDomainCollection;
 
-    public function __construct(string $name, Destination $destination, EmailDomainCollection $domainCollection)
-    {
+    public function __construct(
+        string $name,
+        Destination $destination,
+        EntityId $entityId,
+        CertificateCollection $certificates,
+        EmailDomainCollection $domainCollection
+    ) {
         if (empty($name)) {
             throw new InvalidInstitutionException('The name for the institution can not be an empty string.');
         }
 
         $this->name = $name;
         $this->destination = $destination;
+        $this->entityId = $entityId;
+        $this->certificates = $certificates;
         $this->emailDomainCollection = $domainCollection;
     }
 
@@ -62,5 +80,15 @@ class Institution
     public function getEmailDomainCollection() : EmailDomainCollection
     {
         return $this->emailDomainCollection;
+    }
+
+    public function getCertificates(): CertificateCollection
+    {
+        return $this->certificates;
+    }
+
+    public function getEntityId(): EntityId
+    {
+        return $this->entityId;
     }
 }

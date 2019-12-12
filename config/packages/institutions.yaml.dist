@@ -4,10 +4,52 @@ parameters:
     data: # The root node
       institutions:
         institution-a.example.com: # The institution identifier (schacHomeOrganization)
-          destination: 'https://azure-mfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
+          entity_id: 'https://azure-mfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
+          sso_location: 'https://azure-mfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
+          certificates:
+            - |
+                -----BEGIN CERTIFICATE-----
+                MIICzjCCAjegAwIBAgIUInXYmn/hxq0qmy5NJlxukNZ4qQowDQYJKoZIhvcNAQEL
+                BQAweTELMAkGA1UEBhMCRkIxDzANBgNVBAgMBkZvb2JhcjEMMAoGA1UEBwwDQmFy
+                MQwwCgYDVQQKDANGb28xDzANBgNVBAsMBkZvb2JhcjEMMAoGA1UEAwwDRm9vMR4w
+                HAYJKoZIhvcNAQkBFg9mb29AZXhhbXBsZS5jb20wHhcNMTkxMjEyMTIzMzMyWhcN
+                MjQxMjEwMTIzMzMyWjB5MQswCQYDVQQGEwJGQjEPMA0GA1UECAwGRm9vYmFyMQww
+                CgYDVQQHDANCYXIxDDAKBgNVBAoMA0ZvbzEPMA0GA1UECwwGRm9vYmFyMQwwCgYD
+                VQQDDANGb28xHjAcBgkqhkiG9w0BCQEWD2Zvb0BleGFtcGxlLmNvbTCBnzANBgkq
+                hkiG9w0BAQEFAAOBjQAwgYkCgYEA9Of3o788Pp1VfOOoZrTXs2gg+b3GEBw6VgTz
+                XA1xtr1oKAygJliS74UaK01k/e1bNwZvNZPAV26hKU5UD3g78tRlOGV2W11aWh8X
+                anfnhno2GH18wHeaOTHehgpVpkB4a9R2CztoRC0mjp6Z7ya4aZYbFLijxLsc1Z5P
+                kAD+Bi8CAwEAAaNTMFEwHQYDVR0OBBYEFLXFn8qQTnp2qbE0Bq5nvkspgFnbMB8G
+                A1UdIwQYMBaAFLXFn8qQTnp2qbE0Bq5nvkspgFnbMA8GA1UdEwEB/wQFMAMBAf8w
+                DQYJKoZIhvcNAQELBQADgYEAKXRNgkz0DUuS+EDhzX3VtUGi6YR75hFESYk+BdGU
+                4TlAI+UjVi8XOQeeCV6XwDKdeQla3t0JMBZqdor9vbo3BLNq7Xd7R36PnGNspNgZ
+                mXmePwbNrp+8JXae3AULMa7uR9Ai/eLESFcmIM79duCOrgmm5Nj11kIfHvA2qrfd
+                BYY=
+                -----END CERTIFICATE-----
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'stepup.example.com'
             - '*.example.com' # Wildcards are allowed
         harting-college.nl:
-          destination: 'https://adfs.harting-college.nl/adfs/ls/'
+          sso_location: 'https://adfs.harting-college.nl/adfs/ls/'
+          entity_id: 'https://azure-mfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
+          certificates:
+            - |
+              -----BEGIN CERTIFICATE-----
+              MIICzjCCAjegAwIBAgIUInXYmn/hxq0qmy5NJlxukNZ4qQowDQYJKoZIhvcNAQEL
+              BQAweTELMAkGA1UEBhMCRkIxDzANBgNVBAgMBkZvb2JhcjEMMAoGA1UEBwwDQmFy
+              MQwwCgYDVQQKDANGb28xDzANBgNVBAsMBkZvb2JhcjEMMAoGA1UEAwwDRm9vMR4w
+              HAYJKoZIhvcNAQkBFg9mb29AZXhhbXBsZS5jb20wHhcNMTkxMjEyMTIzMzMyWhcN
+              MjQxMjEwMTIzMzMyWjB5MQswCQYDVQQGEwJGQjEPMA0GA1UECAwGRm9vYmFyMQww
+              CgYDVQQHDANCYXIxDDAKBgNVBAoMA0ZvbzEPMA0GA1UECwwGRm9vYmFyMQwwCgYD
+              VQQDDANGb28xHjAcBgkqhkiG9w0BCQEWD2Zvb0BleGFtcGxlLmNvbTCBnzANBgkq
+              hkiG9w0BAQEFAAOBjQAwgYkCgYEA9Of3o788Pp1VfOOoZrTXs2gg+b3GEBw6VgTz
+              XA1xtr1oKAygJliS74UaK01k/e1bNwZvNZPAV26hKU5UD3g78tRlOGV2W11aWh8X
+              anfnhno2GH18wHeaOTHehgpVpkB4a9R2CztoRC0mjp6Z7ya4aZYbFLijxLsc1Z5P
+              kAD+Bi8CAwEAAaNTMFEwHQYDVR0OBBYEFLXFn8qQTnp2qbE0Bq5nvkspgFnbMB8G
+              A1UdIwQYMBaAFLXFn8qQTnp2qbE0Bq5nvkspgFnbMA8GA1UdEwEB/wQFMAMBAf8w
+              DQYJKoZIhvcNAQELBQADgYEAKXRNgkz0DUuS+EDhzX3VtUGi6YR75hFESYk+BdGU
+              4TlAI+UjVi8XOQeeCV6XwDKdeQla3t0JMBZqdor9vbo3BLNq7Xd7R36PnGNspNgZ
+              mXmePwbNrp+8JXae3AULMa7uR9Ai/eLESFcmIM79duCOrgmm5Nj11kIfHvA2qrfd
+              BYY=
+              -----END CERTIFICATE-----
           email_domains: ['harting-college.nl'] # Shorthand notation
