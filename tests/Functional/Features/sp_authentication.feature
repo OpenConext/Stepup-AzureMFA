@@ -6,10 +6,9 @@ Feature: When an user needs to authenticate
   Scenario: When an user needs to register for a new token
 
     # The user clicks on authenticate button from the SP
-    Given I have a registered MFA token with NameID "q2b27d-0000"
     And I am on "https://azure-mfa.stepup.example.com/demo/sp"
     Then I should see "Demo service provider"
-    And I fill in "Subject NameID" with "q2b27d-0000"
+    And I fill in "Subject NameID" with "q2b27d-0000|user@stepup.example.com"
     Given I press "Authenticate user"
 
     # The user clicks on authenticate button from the GSSP IdP
@@ -27,4 +26,4 @@ Feature: When an user needs to authenticate
     # Back at the SP.
     Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
     And I should see "Demo Service provider ConsumerAssertionService endpoint"
-    And I should see "q2b27d-0000"
+    And I should see "q2b27d-0000|user@stepup.example.com"

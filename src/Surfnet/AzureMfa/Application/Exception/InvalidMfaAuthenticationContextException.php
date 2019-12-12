@@ -1,4 +1,5 @@
 <?php declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -15,14 +16,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Application\Repository;
+namespace Surfnet\AzureMfa\Application\Exception;
 
-use Surfnet\AzureMfa\Domain\UserId;
-use Surfnet\AzureMfa\Domain\User;
+use Exception;
 
-interface UserRepositoryInterface
+class InvalidMfaAuthenticationContextException extends Exception
 {
-    public function save(User $user);
-    public function exists(UserId $userId): bool;
-    public function load(UserId $userId): User;
 }

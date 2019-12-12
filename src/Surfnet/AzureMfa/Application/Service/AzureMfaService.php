@@ -19,10 +19,9 @@
 namespace Surfnet\AzureMfa\Application\Service;
 
 use SAML2\Configuration\PrivateKey;
-use Surfnet\AzureMfa\Application\Repository\UserRepositoryInterface;
+use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InvalidMFANameIdException;
-use Surfnet\AzureMfa\Domain\Exception\UserNotFoundException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
@@ -44,18 +43,13 @@ class AzureMfaService
      */
     private $postBinding;
     /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-    /**
      * @var SessionInterface
      */
     private $session;
 
-    public function __construct(PostBinding $postBinding, UserRepositoryInterface $userRepository, SessionInterface $session)
+    public function __construct(PostBinding $postBinding, SessionInterface $session)
     {
         $this->postBinding = $postBinding;
-        $this->userRepository = $userRepository;
         $this->session = $session;
 
         // Todo: make keys configurable
@@ -67,25 +61,23 @@ class AzureMfaService
     {
         // TODO: test attempts / blocked
 
-        $userId = UserId::generate();
-
-        $this->session->set('userId', $userId);
-
+        $userId = UserId::generate($emailAddress);
         $user = new User($userId, $emailAddress, UserStatus::pending());
-        $this->userRepository->save($user);
+
+        $this->session->set('user', $user);
 
         return $user;
     }
 
-    public function finishRegistration(): UserId
+    public function finishRegistration(UserId $userId): UserId
     {
-        $userId = $this->session->get('userId');
+        $user = $this->session->get('user');
 
-        $user = $this->userRepository->load($userId);
-        $user->setStatus(UserStatus::registered());
-        $this->userRepository->save($user);
+        if (!$userId->isEqual($user->getUserId())) {
+            throw new InvalidMfaAuthenticationContextException('Unknown registration context another process is started in the meantime');
+        }
 
-        $this->session->remove('userId');
+        $this->session->remove('user');
 
         return $userId;
     }
@@ -93,23 +85,21 @@ class AzureMfaService
 
     public function startAuthentication(UserId $userId): User
     {
-        // TODO: test attempts / blocked
-
-        $user = $this->userRepository->load($userId);
-        if (!$user->getStatus()->isRegistered()) {
-            throw new UserNotFoundException('Unaable to find registered user');
-        }
-
-        $this->session->set('userId', $userId);
+        $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
+        $this->session->set('user', $user);
 
         return $user;
     }
 
-    public function finishAuthentication(): userId
+    public function finishAuthentication(UserId $userId): userId
     {
-        $userId = $this->session->get('userId');
+        $user = $this->session->get('user');
 
-        $this->session->remove('userId');
+        if (!$userId->isEqual($user->getUserId())) {
+            throw new InvalidMfaAuthenticationContextException('Unknown authentication context another process is started in the meantime');
+        }
+
+        $this->session->remove('user');
 
         return $userId;
     }
@@ -143,15 +133,14 @@ class AzureMfaService
         $assertion = $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->getServiceProvider());
 
         // validate NameID
-        $userId = $this->session->get('userId');
-        $user = $this->userRepository->load($userId);
+        $user = $this->session->get('user');
         if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
-            throw new InvalidMFANameIdException('MFA returned invalid NameId');
+            throw new InvalidMFANameIdException('The NameId from the Azure MFA assertion did not match the NameId provided during registration');
         }
 
         //TODO: do we need additional validation?
 
-        return  $user;
+        return $user;
     }
 
     private function getServiceProvider(): ServiceProvider

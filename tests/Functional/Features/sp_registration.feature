@@ -15,7 +15,7 @@ Feature: When an user needs to register for a new token
     And I should see "Registration"
 
     # GSSP assigns a subject name id to the user
-    Given I fill in "Email address" with "test@stepup.example.com"
+    Given I fill in "Email address" with "user@stepup.example.com"
     When I press "Submit"
 
     # The MFA SSO page
@@ -30,3 +30,4 @@ Feature: When an user needs to register for a new token
     Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
     And I should see "Demo Service provider ConsumerAssertionService endpoint"
     And I should see "urn:oasis:names:tc:SAML:2.0:status:Succes"
+    And I should see a NameID with email address "user@stepup.example.com"

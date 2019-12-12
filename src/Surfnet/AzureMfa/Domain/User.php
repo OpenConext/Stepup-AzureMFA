@@ -66,12 +66,4 @@ class User
     {
         return $this->status;
     }
-
-    /**
-     * @param UserStatus $status
-     */
-    public function setStatus(UserStatus $status): void
-    {
-        $this->status = $status;
-    }
 }

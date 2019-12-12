@@ -28,7 +28,3 @@ services:
             $serviceProviderEntityId: 'https://azure-mfa.stepup.example.com/saml/metadata'
             $privateKeyPath: '%saml_idp_privatekey%'
             $publicCertPath: '%saml_idp_publickey%'
-
-    Surfnet\AzureMfa\Infrastructure\Repository\UserFileRepository:
-        arguments:
-            $userRepositoryPath: '%kernel.root_dir%/../../../../var/userRepository-%kernel.environment%.json'

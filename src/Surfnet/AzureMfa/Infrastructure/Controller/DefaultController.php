@@ -139,11 +139,11 @@ class DefaultController extends AbstractController
 
             if ($user->getStatus()->isPending()) {
                 //check authentication of registration
-                $userId = $this->azureMfaService->finishRegistration();
+                $userId = $this->azureMfaService->finishRegistration($user->getUserId());
                 $this->registrationService->register($userId->getUserId());
             } else if ($user->getStatus()->isRegistered()) {
                 // handle authentication
-                $this->azureMfaService->finishAuthentication();
+                $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
         } catch (AuthnFailedSamlResponseException $e) {
