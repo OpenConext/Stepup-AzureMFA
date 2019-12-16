@@ -20,6 +20,8 @@ namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
+use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
@@ -85,9 +87,9 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->registrationService->register($emailAddress->getEmailAddress());
+            $user = $this->azureMfaService->startRegistration(new EmailAddress($emailAddress->getEmailAddress()));
 
-            return new RedirectResponse($this->azureMfaService->createAuthnRequest($emailAddress->getEmailAddress()));
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
         }
 
         return $this->render('default/registration.html.twig', [
@@ -113,10 +115,9 @@ class DefaultController extends AbstractController
         }
 
         if ($request->get('action') === 'authenticate') {
-            // The application should very if the user matches the nameId.
-            $this->authenticationService->authenticate();
+            $user = $this->azureMfaService->startAuthentication(new UserId($nameId));
 
-            return new RedirectResponse($this->azureMfaService->createAuthnRequest($nameId));
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
         }
 
         $requiresAuthentication = $this->authenticationService->authenticationRequired();
@@ -134,7 +135,17 @@ class DefaultController extends AbstractController
     public function acsAction(Request $request)
     {
         try {
-            $this->azureMfaService->handleResponse($request);
+            $user = $this->azureMfaService->handleResponse($request);
+
+            if ($user->getStatus()->isPending()) {
+                //check authentication of registration
+                $userId = $this->azureMfaService->finishRegistration($user->getUserId());
+                $this->registrationService->register($userId->getUserId());
+            } else if ($user->getStatus()->isRegistered()) {
+                // handle authentication
+                $this->azureMfaService->finishAuthentication($user->getUserId());
+                $this->authenticationService->authenticate();
+            }
         } catch (AuthnFailedSamlResponseException $e) {
             $this->registrationService->reject($request->get('message'));
         }

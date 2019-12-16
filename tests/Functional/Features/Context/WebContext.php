@@ -19,6 +19,7 @@
 namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Behat\Context\Context;
@@ -192,5 +193,22 @@ class WebContext implements Context, KernelAwareContext
         $request = Saml2AuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath($destination.'?' . $query);
+    }
+
+    /**
+     * @Given /^I should see a NameID with email address "(?P<emailAddress>(?:[^"]|\\")*)"$/
+     */
+    public function iShouldSeeANameIDWithEmailAddress($emailAddress){
+
+        $quotedEmailAddress = preg_quote($emailAddress);
+        $regex = '/[a-z0-9]{6}-[a-z0-9]{4}\|' . $quotedEmailAddress . '/';
+
+        $actual = $this->minkContext->getSession()->getPage()->getContent();
+        $message = sprintf('The MFA NameId "%s" was not found anywhere in the HTML response of the current page.', $emailAddress);
+
+        $match = preg_match($regex, $actual);
+        if ($match !== 1) {
+            throw new ExpectationException($message, $this->minkContext->getSession()->getDriver());
+        }
     }
 }

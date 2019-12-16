@@ -9,7 +9,7 @@ Feature: When an user needs to register for a new token
     And I fill in "Email address" with "test-user@institution-a.example.com"
     When I press "Submit"
     And I press "Submit"
-    Then I should be on "https://azure-mfa.stepup.example.com/demo/sp/acs"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
 
   Scenario: Registration fails when an invalid email address is provided by the user
     Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"

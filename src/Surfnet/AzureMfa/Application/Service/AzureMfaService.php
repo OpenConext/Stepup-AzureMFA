@@ -18,44 +18,104 @@
 
 namespace Surfnet\AzureMfa\Application\Service;
 
-use Exception;
-use SAML2\Assertion;
+use SAML2\Configuration\PrivateKey;
+use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
+use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\Exception\InvalidMFANameIdException;
+use Surfnet\AzureMfa\Domain\User;
+use Surfnet\AzureMfa\Domain\UserId;
+use Surfnet\AzureMfa\Domain\UserStatus;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AzureMfaService
 {
     /**
      * @var PostBinding
      */
     private $postBinding;
-
     /**
-     * @var ServiceProvider
+     * @var SessionInterface
      */
-    private $serviceProvider;
+    private $session;
 
-    public function __construct(ServiceProvider $serviceProvider, PostBinding $postBinding)
+    public function __construct(PostBinding $postBinding, SessionInterface $session)
     {
-        $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
+        $this->session = $session;
+
+        // Todo: make keys configurable
+        $this->publicKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
+        $this->privateKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem';
+    }
+
+    public function startRegistration(EmailAddress $emailAddress): User
+    {
+        // TODO: test attempts / blocked
+
+        $userId = UserId::generate($emailAddress);
+        $user = new User($userId, $emailAddress, UserStatus::pending());
+
+        $this->session->set('user', $user);
+
+        return $user;
+    }
+
+    public function finishRegistration(UserId $userId): UserId
+    {
+        $user = $this->session->get('user');
+
+        if (!$userId->isEqual($user->getUserId())) {
+            throw new InvalidMfaAuthenticationContextException('Unknown registration context another process is started in the meantime');
+        }
+
+        $this->session->remove('user');
+
+        return $userId;
+    }
+
+
+    public function startAuthentication(UserId $userId): User
+    {
+        $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
+        $this->session->set('user', $user);
+
+        return $user;
+    }
+
+    public function finishAuthentication(UserId $userId): userId
+    {
+        $user = $this->session->get('user');
+
+        if (!$userId->isEqual($user->getUserId())) {
+            throw new InvalidMfaAuthenticationContextException('Unknown authentication context another process is started in the meantime');
+        }
+
+        $this->session->remove('user');
+
+        return $userId;
     }
 
     /**
-     * @param string $nameId
+     *
+     * /**
+     * @param User $user
      * @return RedirectResponse
-     * @throws Exception
      */
-    public function createAuthnRequest(string $nameId): string
+    public function createAuthnRequest(User $user): string
     {
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->getIdentityProvider());
+        $authnRequest = AuthnRequestFactory::createNewRequest($this->getServiceProvider(), $this->getIdentityProvider());
 
         // Use emailaddress as subject
-        $authnRequest->setSubject($nameId);
+        $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
 
         // Set authnContextClassRef to force MFA
         $authnRequest->setAuthenticationContextClassRef('http://schemas.microsoft.com/claims/multipleauthn');
@@ -68,11 +128,37 @@ class AzureMfaService
     /**
      * @param Request $request
      */
-    public function handleResponse(Request $request)
+    public function handleResponse(Request $request): User
     {
-        /** @var Assertion $response */
-        $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->serviceProvider);
+        $assertion = $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->getServiceProvider());
+
+        // validate NameID
+        $user = $this->session->get('user');
+        if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
+            throw new InvalidMFANameIdException('The NameId from the Azure MFA assertion did not match the NameId provided during registration');
+        }
+
         //TODO: do we need additional validation?
+
+        return $user;
+    }
+
+    private function getServiceProvider(): ServiceProvider
+    {
+        // TODO: make configurable
+        return new ServiceProvider(
+            [
+                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
+                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/saml/acs',
+                'certificateFile' => $this->publicKey,
+                'privateKeys' => [
+                    new PrivateKey(
+                        $this->privateKey,
+                        'default'
+                    ),
+                ],
+            ]
+        );
     }
 
     private function getIdentityProvider(): IdentityProvider
@@ -82,8 +168,13 @@ class AzureMfaService
             [
                 'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
                 'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
-                'certificateFile' => $this->serviceProvider->getCertificateFile(),
-                'privateKeys' => [$this->serviceProvider->getPrivateKey('default')],
+                'certificateFile' => $this->publicKey,
+                'privateKeys' => [
+                    new PrivateKey(
+                        $this->privateKey,
+                        'default'
+                    ),
+                ],
             ]
         );
     }
