@@ -43,8 +43,16 @@ class Certificate
         return openssl_x509_fingerprint($this->certData, 'sha256');
     }
 
+    /**
+     * Returns the certificate as a string (without certificate header/footer)
+     */
     public function getCertData(): string
     {
-        return $this->certData;
+        $stripFormat = '-----%s CERTIFICATE-----';
+        $certData = $this->certData;
+        $certData = str_replace(sprintf($stripFormat, 'BEGIN'), '', $certData);
+        $certData = str_replace(sprintf($stripFormat, 'END'), '', $certData);
+        $certData = str_replace(PHP_EOL, '', $certData);
+        return $certData;
     }
 }
