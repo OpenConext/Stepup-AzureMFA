@@ -20,6 +20,7 @@ namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\Collection;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
 
@@ -33,6 +34,33 @@ class CertificateCollectionTest extends TestCase
         $collection->add($this->buildCertificateMock('mock3'));
 
         $this->assertInstanceOf(CertificateCollection::class, $collection);
+    }
+
+    public function test_not_allowed_to_add_certificate_twice()
+    {
+        $collection = new CertificateCollection();
+        $collection->add($this->buildCertificateMock('mock1'));
+        $this->expectException(InvalidCertificateException::class);
+        $this->expectExceptionMessage('This certificate was already added to the collection');
+        $collection->add($this->buildCertificateMock('mock1'));
+    }
+
+    public function test_first()
+    {
+        $first = $this->buildCertificateMock('mock1');
+        $second = $this->buildCertificateMock('mock2');
+        $last = $this->buildCertificateMock('mock3');
+
+        $collection = new CertificateCollection();
+        $collection->add($first);
+        $collection->add($second);
+        $collection->add($last);
+
+        $this->assertEquals($first, $collection->first());
+        // Verify it leaves the collection intact.
+        $this->assertNotEquals($second, $collection->first());
+        $this->assertNotEquals($last, $collection->first());
+        $this->assertEquals($first, $collection->first());
     }
 
     private function buildCertificateMock(string $certificate) : Certificate

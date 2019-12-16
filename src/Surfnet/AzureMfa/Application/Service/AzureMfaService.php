@@ -25,10 +25,10 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidMFANameIdException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
-use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -96,7 +96,6 @@ class AzureMfaService
         return $userId;
     }
 
-
     public function startAuthentication(UserId $userId): User
     {
         $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
@@ -126,9 +125,13 @@ class AzureMfaService
      */
     public function createAuthnRequest(User $user): string
     {
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->getIdentityProvider());
+        $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
+        $azureMfaIdentityProvider = $institution->getIdentityProvider();
+        $destination = $azureMfaIdentityProvider->getSsoLocation();
 
-        // Use emailaddress as subject
+        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $azureMfaIdentityProvider);
+
+        // Use email address as subject
         $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
 
         // Set authnContextClassRef to force MFA
@@ -139,7 +142,7 @@ class AzureMfaService
 
         return sprintf(
             '%s?%s',
-            $this->getIdentityProvider()->getSsoUrl(),
+            $destination->getUrl(),
             $query
         );
     }
@@ -149,14 +152,20 @@ class AzureMfaService
      */
     public function handleResponse(Request $request): User
     {
+        // Load the registering/authenticating user
+        $user = $this->session->get('user');
+
+        // Retrieve its institution and identity provider
+        $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
+        $azureMfaIdentityProvider = $institution->getIdentityProvider();
+
         $assertion = $this->postBinding->processResponse(
             $request,
-            $this->getIdentityProvider(),
-            $this->getServiceProvider()
+            $azureMfaIdentityProvider,
+            $this->serviceProvider
         );
 
         // validate NameID
-        $user = $this->session->get('user');
         if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
             throw new InvalidMFANameIdException(
                 'The NameId from the Azure MFA assertion did not match the NameId provided during registration'
@@ -170,21 +179,7 @@ class AzureMfaService
         //    gateway will handle this as a failed authentication/registration.
 
         // Validation possibilities:
-        // 1. Verify the email address provided to determine the destination matches the one in the subject name id
-        // 2. Did the response come form an IdP that is configured in the institution configuration (requires additional configuration of the idp entity id)
+        // 1. Did the response come form an IdP that is configured in the institution configuration (requires additional configuration of the idp entity id)
         return $user;
-    }
-
-    private function getIdentityProvider(): IdentityProvider
-    {
-        // TODO: make configurable
-        return new IdentityProvider(
-            [
-                'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
-                'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
-                'certificateFile' => $this->serviceProvider->getCertificateFile(),
-                'privateKeys' => [$this->serviceProvider->getPrivateKey('default')],
-            ]
-        );
     }
 }

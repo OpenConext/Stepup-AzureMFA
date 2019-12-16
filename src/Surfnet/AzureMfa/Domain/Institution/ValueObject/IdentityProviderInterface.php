@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Application\Factory;
+namespace Surfnet\AzureMfa\Domain\Institution\ValueObject;
 
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
-use Surfnet\SamlBundle\Entity\IdentityProvider;
+use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 
-interface IdentityProviderFactoryInterface
+interface IdentityProviderInterface
 {
-    /**
-     * Create an IdP instance from the SAML bundle, that is set with the
-     *  destination that is passed in the $destination parameter.
-     */
-    public function build(Destination $destination): IdentityProvider;
+    public function getSsoLocation() : Destination;
+
+    public function getCertificates() : CertificateCollection;
+
+    public function getEntityId() : EntityId;
 }

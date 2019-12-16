@@ -18,9 +18,12 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Factory;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Surfnet\AzureMfa\Application\Factory\IdentityProviderFactoryInterface;
+use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
+use Surfnet\AzureMfa\Domain\Institution\Factory\IdentityProviderFactoryInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 
 class IdentityProviderFactoryTest extends TestCase
 {
@@ -29,8 +32,25 @@ class IdentityProviderFactoryTest extends TestCase
         $factory = new IdentityProviderFactory();
         $this->assertInstanceOf(IdentityProviderFactoryInterface::class, $factory);
 
-        $identityProvider = $factory->build(new Destination('https://foobar.example.com/sso'));
-        $this->assertEquals('https://foobar.example.com/sso', $identityProvider->getSsoUrl());
-        $this->assertEquals('https://unknown-at-this-moment.example.com/saml/metadata', $identityProvider->getEntityId());
+        $entityId = m::mock(EntityId::class);
+        $entityId
+            ->shouldReceive('getEntityId')
+            ->andReturn('entityId');
+
+        $ssoLocation = m::mock(Destination::class);
+        $ssoLocation
+            ->shouldReceive('getUrl')
+            ->andReturn('https://sso-location.example.com');
+
+        $certCollection = m::mock(CertificateCollection::class);
+        $certCollection
+            ->shouldReceive('first->getCertData')
+            ->andReturn('certData');
+
+        $identityProvider = $factory->build($entityId, $ssoLocation, $certCollection);
+        $this->assertEquals('entityId', $identityProvider->getEntityId()->getEntityId());
+        $this->assertEquals('https://sso-location.example.com', $identityProvider->getSsoLocation()->getUrl());
+        $this->assertEquals('certData', $identityProvider->getCertificates()->first()->getCertData());
+
     }
 }

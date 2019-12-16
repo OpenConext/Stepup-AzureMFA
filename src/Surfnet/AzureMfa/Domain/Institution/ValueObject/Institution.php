@@ -19,7 +19,6 @@
 namespace Surfnet\AzureMfa\Domain\Institution\ValueObject;
 
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
-use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 
 class Institution
@@ -30,19 +29,9 @@ class Institution
     private $name;
 
     /**
-     * @var Destination
+     * @var IdentityProviderInterface
      */
-    private $destination;
-
-    /**
-     * @var EntityId
-     */
-    private $entityId;
-
-    /**
-     * @var CertificateCollection
-     */
-    private $certificates;
+    private $identityProvider;
 
     /**
      * @var EmailDomainCollection
@@ -51,9 +40,7 @@ class Institution
 
     public function __construct(
         string $name,
-        Destination $destination,
-        EntityId $entityId,
-        CertificateCollection $certificates,
+        IdentityProviderInterface $identityProvider,
         EmailDomainCollection $domainCollection
     ) {
         if (empty($name)) {
@@ -61,9 +48,7 @@ class Institution
         }
 
         $this->name = $name;
-        $this->destination = $destination;
-        $this->entityId = $entityId;
-        $this->certificates = $certificates;
+        $this->identityProvider = $identityProvider;
         $this->emailDomainCollection = $domainCollection;
     }
 
@@ -72,23 +57,13 @@ class Institution
         return $this->name;
     }
 
-    public function getDestination() : Destination
+    public function getIdentityProvider(): IdentityProviderInterface
     {
-        return $this->destination;
+        return $this->identityProvider;
     }
 
     public function getEmailDomainCollection() : EmailDomainCollection
     {
         return $this->emailDomainCollection;
-    }
-
-    public function getCertificates(): CertificateCollection
-    {
-        return $this->certificates;
-    }
-
-    public function getEntityId(): EntityId
-    {
-        return $this->entityId;
     }
 }

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -16,22 +16,18 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Infrastructure\Factory;
+namespace Surfnet\AzureMfa\Domain\Institution\Factory;
 
 use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
-use Surfnet\AzureMfa\Domain\Institution\Factory\IdentityProviderFactoryInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
-use Surfnet\AzureMfa\Infrastructure\Entity\AzureMfaIdentityProvider;
 
-class IdentityProviderFactory implements IdentityProviderFactoryInterface
+interface IdentityProviderFactoryInterface
 {
     public function build(
         EntityId $entityId,
         Destination $ssoLocation,
         CertificateCollection $certificates
-    ): IdentityProviderInterface {
-        return new AzureMfaIdentityProvider($entityId, $ssoLocation, $certificates);
-    }
+    ): IdentityProviderInterface;
 }

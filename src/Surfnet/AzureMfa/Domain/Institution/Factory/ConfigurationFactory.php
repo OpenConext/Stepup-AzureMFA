@@ -31,6 +31,11 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - This factory, by design has high coupling. Coupling could be
+ * reduced by introducing additional factories, but this would only complicate the simple creation logic that is now
+ * used
+ */
 class ConfigurationFactory
 {
     /**
@@ -38,9 +43,17 @@ class ConfigurationFactory
      */
     private $configurationData;
 
-    public function __construct(ConfigurationValidatorInterface $validator)
-    {
+    /**
+     * @var IdentityProviderFactoryInterface
+     */
+    private $identityProviderFactory;
+
+    public function __construct(
+        ConfigurationValidatorInterface $validator,
+        IdentityProviderFactoryInterface $identityProviderFactory
+    ) {
         $this->configurationData = $validator->process()['institutions'];
+        $this->identityProviderFactory = $identityProviderFactory;
     }
 
     public function build() : InstitutionConfigurationInterface
@@ -53,11 +66,11 @@ class ConfigurationFactory
             $emailDomains = $this->buildEmailDomains($institutionData['email_domains']);
             $certificates = $this->buildCertificates($institutionData['certificates']);
 
+            $identityProvider = $this->identityProviderFactory->build($entityId, $ssoLocation, $certificates);
+
             $institutions[$institutionName] = new Institution(
                 $institutionName,
-                $ssoLocation,
-                $entityId,
-                $certificates,
+                $identityProvider,
                 $emailDomains
             );
         }

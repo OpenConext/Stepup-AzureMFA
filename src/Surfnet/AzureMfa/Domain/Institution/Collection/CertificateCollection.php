@@ -35,4 +35,9 @@ class CertificateCollection
         }
         $this->certificates[$certificate->getFingerprint()] = $certificate;
     }
+
+    public function first() : Certificate
+    {
+        return reset($this->certificates);
+    }
 }
