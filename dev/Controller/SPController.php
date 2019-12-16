@@ -48,13 +48,24 @@ final class SPController extends AbstractController
     private $postBinding;
 
     public function __construct(
-        ServiceProvider $serviceProvider,
         IdentityProvider $identityProvider,
         PostBinding $postBinding
     ) {
         $this->identityProvider = $identityProvider;
-        $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
+        $this->serviceProvider = new ServiceProvider(
+            [
+                'entityId' => 'https://azure-mfa.stepup.example.com/demo/sp/metadata',
+                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
+                'certificateFile' => '/home/vagrant/code/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
+                'privateKeys' => [
+                    new PrivateKey(
+                        '/home/vagrant/code/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
+                        'default'
+                    ),
+                ],
+            ]
+        );
     }
 
     /**

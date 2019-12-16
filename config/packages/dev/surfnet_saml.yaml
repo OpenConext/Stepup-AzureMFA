@@ -8,7 +8,7 @@ surfnet_saml:
       private_key: "%saml_idp_privatekey%"
     service_provider:
       enabled: true
-      assertion_consumer_route: sp_demo_acs
+      assertion_consumer_route: azure_mfa_acs
       public_key: "%saml_idp_publickey%"
       private_key: "%saml_idp_privatekey%"
     metadata:
@@ -20,6 +20,6 @@ surfnet_saml:
       - entity_id: "%saml_remote_sp_entity_id%"
         certificate_file: "%saml_remote_sp_certificate%"
         assertion_consumer_service_url: "%saml_remote_sp_acs%"
-      - entity_id: https://azure-mfa.stepup.example.com/saml/metadata
+      - entity_id: https://azure-mfa.stepup.example.com/demo/sp/metadata
         certificate_file: "%saml_idp_publickey%"
         assertion_consumer_service_url: https://azure-mfa.stepup.example.com/demo/sp/acs

@@ -8,7 +8,7 @@ Feature: When an user needs to register for a new token
     Then I should see "Registration"
     And I fill in "Email address" with "test-user@institution-a.example.com"
     When I press "Submit"
-    And I press "Submit"
+    And I press "Submit-success"
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
 
   Scenario: Registration fails when an invalid email address is provided by the user
