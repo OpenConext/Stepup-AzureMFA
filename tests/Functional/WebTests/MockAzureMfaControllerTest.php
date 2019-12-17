@@ -25,9 +25,9 @@ use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\SAML2\AuthnRequest;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
-use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MockAzureMfaControllerTest extends PantherTestCase
+class MockAzureMfaControllerTest extends WebTestCase
 {
     /**
      * @var \Symfony\Bundle\FrameworkBundle\KernelBrowser
@@ -165,7 +165,7 @@ class MockAzureMfaControllerTest extends PantherTestCase
         $samlBundle = '';
         return new ServiceProvider(
             [
-                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
+                'entityId' => 'https://azure-mfa.stepup.example.com/demo/sp/metadata',
                 'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
                 'certificateFile' => $this->publicKey,
                 'privateKeys' => [

@@ -53,14 +53,15 @@ final class SPController extends AbstractController
     ) {
         $this->identityProvider = $identityProvider;
         $this->postBinding = $postBinding;
+        $baseDir = dirname(__DIR__, 2);
         $this->serviceProvider = new ServiceProvider(
             [
                 'entityId' => 'https://azure-mfa.stepup.example.com/demo/sp/metadata',
                 'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
-                'certificateFile' => '/home/vagrant/code/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
+                'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
                 'privateKeys' => [
                     new PrivateKey(
-                        '/home/vagrant/code/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
+                        $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
                         'default'
                     ),
                 ],
@@ -112,7 +113,7 @@ final class SPController extends AbstractController
         $xml = base64_decode($xmlResponse);
         try {
             /** @var Assertion $response */
-            $response = $this->postBinding->processResponse($request, $this->identityProvider, $this->serviceProvider);
+            $response = $this->postBinding->processResponse($request, $this->identityProvider, $this->getServiceProvider($request));
 
             $nameID = $response->getNameId();
 
@@ -139,6 +140,31 @@ final class SPController extends AbstractController
                 'xml' => $this->toFormattedXml($xml),
             ]);
         }
+    }
+
+    private function getServiceProvider(Request $request)
+    {
+        // The MockAzureMfaController test sends the mock sso response directly to the demo sp. Normally the Azure MFA
+        // GSSP SP would be targeted first. In order to prevent SAML errors, the correct SP entity is loaded for this
+        // test.
+        $mockMfaReferer = 'https://azure-mfa.stepup.example.com/mock/sso';
+        if (strstr($request->server->get('HTTP_REFERER'), $mockMfaReferer) !== false) {
+            $baseDir = dirname(__DIR__, 2);
+            return new ServiceProvider(
+                [
+                    'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
+                    'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
+                    'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
+                    'privateKeys' => [
+                        new PrivateKey(
+                            $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
+                            'default'
+                        ),
+                    ],
+                ]
+            );
+        }
+        return $this->serviceProvider;
     }
 
     /**
