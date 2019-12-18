@@ -10,6 +10,26 @@ Feature: When an user needs to register for a new token
     When I press "Submit"
     And I press "Submit-success"
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"
+    And the SAML Response should contain element "NameID" with value containing "test-user@institution-a.example.com"
+
+  Scenario: When a user is registering a new token, authentication at Azure MFA fails
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
+    Then I should see "Registration"
+    And I fill in "Email address" with "test-user@institution-a.example.com"
+    When I press "Submit"
+    And I press "Submit-user-cancelled"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
+
+  Scenario: When a user is registering a new token, authentication at Azure MFA fails
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
+    Then I should see "Registration"
+    And I fill in "Email address" with "test-user@institution-a.example.com"
+    When I press "Submit"
+    And I press "Submit-unknown"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
 
   Scenario: Registration fails when an invalid email address is provided by the user
     Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"

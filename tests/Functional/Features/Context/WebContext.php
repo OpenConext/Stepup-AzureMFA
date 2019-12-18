@@ -18,16 +18,20 @@
 
 namespace Surfnet\AzureMfa\Test\Features\Context;
 
+use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Exception\ExpectationException;
+use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Behat\Behat\Context\Context;
+use DOMNode;
+use DOMNodeList;
+use Exception;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
+use SAML2\DOMDocumentFactory;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -196,6 +200,99 @@ class WebContext implements Context, KernelAwareContext
     }
 
     /**
+     * @Given I send an authentication request request to :destination with NameID :nameId
+     */
+    public function iSendAnAuthenticationRequestRequestToWithNameid($destination, $nameId)
+    {
+        $authnRequest = new AuthnRequest();
+        $authnRequest->setAssertionConsumerServiceURL('https://service_provider/saml/acs');
+        $authnRequest->setDestination($destination);
+        $authnRequest->setIssuer('https://service_provider/saml/metadata');
+        $authnRequest->setNameId(['Value' => $nameId]);
+        $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
+
+        // Sign with random key, does not mather for now.
+        $authnRequest->setSignatureKey(
+            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
+        );
+
+        $request = Saml2AuthnRequest::createNew($authnRequest);
+        $query = $request->buildRequestQuery();
+        $this->minkContext->visitPath($destination.'?' . $query);
+    }
+
+    /**
+     * @Then the SAML Response should contain element :elementName with value :value
+     */
+    public function theSamlResponseShouldContainElementWithValue($elementName, $value)
+    {
+        $responseXml = $this->receiveResponse();
+        $elementSearchResult = $this->getElementByName($responseXml, $elementName);
+
+        if ($value == $elementSearchResult->nodeValue) {
+            return;
+        }
+        throw new Exception(
+            sprintf(
+                'The value of element %s did not match expected value "%s", actual value: "%s"',
+                $elementName,
+                $value,
+                $elementSearchResult->nodeValue
+            )
+        );
+    }
+
+    /**
+     * @Given the SAML Response should contain element :elementName with attribute :attributeName with attribute value :expectedAttributeValue
+     */
+    public function theSAMLResponseShouldContainElementWithAttributeWithAttributeValue(
+        $elementName,
+        $attributeName,
+        $expectedAttributeValue
+    ) {
+        $responseXml = $this->receiveResponse();
+        $elementSearchResults = $this->getElementsByName($responseXml, $elementName);
+
+        foreach ($elementSearchResults as $elementSearchResult) {
+            $attribute = $elementSearchResult->attributes->getNamedItem($attributeName);
+            $actualAttributeValue = $attribute->nodeValue;
+
+            if ($expectedAttributeValue == $actualAttributeValue) {
+                return;
+            }
+        }
+
+        throw new Exception(
+            sprintf(
+                'The value of element %s did not match expected value "%s", actual value: "%s"',
+                $elementName,
+                $actualAttributeValue,
+                $expectedAttributeValue
+            )
+        );
+    }
+
+    /**
+     * @Given the SAML Response should contain element :elementName with value containing :value
+     */
+    public function theSamlResponseShouldContainElementWithValueContaining($elementName, $value) {
+        $responseXml = $this->receiveResponse();
+        $elementSearchResult = $this->getElementByName($responseXml, $elementName);
+
+        if (strstr($elementSearchResult->nodeValue, $value) !== false) {
+            return;
+        }
+        throw new Exception(
+            sprintf(
+                'The value of element %s did not contain expected value "%s", actual value: "%s"',
+                $elementName,
+                $value,
+                $elementSearchResult->nodeValue
+            )
+        );
+    }
+
+    /**
      * @Given /^I should see a NameID with email address "(?P<emailAddress>(?:[^"]|\\")*)"$/
      */
     public function iShouldSeeANameIDWithEmailAddress($emailAddress){
@@ -210,5 +307,48 @@ class WebContext implements Context, KernelAwareContext
         if ($match !== 1) {
             throw new ExpectationException($message, $this->minkContext->getSession()->getDriver());
         }
+    }
+
+    private function receiveResponse()
+    {
+        $samlResponse = $this->minkContext->getSession()->getPage()->find('css', 'input[name="SAMLResponse"]');
+        if (!$samlResponse instanceof NodeElement) {
+            throw new Exception('The SAMLResponse does not appear on the current page');
+        }
+        $responseValue = $samlResponse->getValue();
+        $response = base64_decode($responseValue);
+        $previous = libxml_disable_entity_loader(true);
+        $responseXml = DOMDocumentFactory::fromString($response);
+        libxml_disable_entity_loader($previous);
+
+        return $responseXml;
+    }
+
+    private function getElementsByName(\DOMDocument $responseXml, $elementName): DOMNodeList
+    {
+        $elementSearchResults = $responseXml->getElementsByTagName($elementName);
+        if ($elementSearchResults->count() === 0) {
+            throw new Exception(
+                sprintf('Element named: %s was not found in the SAML Response', $elementName)
+            );
+        }
+        return $elementSearchResults;
+    }
+
+    private function getElementByName(\DOMDocument $responseXml, $elementName): DOMNode
+    {
+        $elementSearchResults = $responseXml->getElementsByTagName($elementName);
+        if ($elementSearchResults->count() === 0) {
+            throw new Exception(
+                sprintf('Element named: %s was not found in the SAML Response', $elementName)
+            );
+        }
+        if ($elementSearchResults->count() > 1) {
+            throw new Exception(
+                sprintf('Element named: %s was found more than once in the SAML Response', $elementName)
+            );
+        }
+
+        return $elementSearchResults->item(0);
     }
 }
