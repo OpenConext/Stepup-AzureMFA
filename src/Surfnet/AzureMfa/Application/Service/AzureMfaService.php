@@ -189,21 +189,12 @@ class AzureMfaService
             $this->serviceProvider
         );
 
-        // validate NameID
         if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
             throw new InvalidMFANameIdException(
                 'The NameId from the Azure MFA assertion did not match the NameId provided during registration'
             );
         }
         $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
-        //TODO: do we need additional validation?
-
-        // On handling the response:
-        // 1. Do we need custom error response handling? Simply returning the error response will probably be best as
-        //    gateway will handle this as a failed authentication/registration.
-
-        // Validation possibilities:
-        // 1. Did the response come form an IdP that is configured in the institution configuration (requires additional configuration of the idp entity id)
         return $user;
     }
 }

@@ -159,7 +159,6 @@ class DefaultController extends AbstractController
             $this->registrationService->reject($request->get('message'));
         }
 
-        // Todo: find out if we do need to handle different exceptions / responses ?
         $this->logger->info('Sending a SAML response to the SP');
         return $this->registrationService->replyToServiceProvider();
     }
