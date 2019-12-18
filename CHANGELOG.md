@@ -1,3 +1,7 @@
+# 0.2.0
+The authentication logic was updated and covered by additional test coverage. 
+Several example logic still present in the project was removed.
+
 # 0.1.0
 This release supports registrations, authentications should work to, but this has not been verified and tested in detail.
 
