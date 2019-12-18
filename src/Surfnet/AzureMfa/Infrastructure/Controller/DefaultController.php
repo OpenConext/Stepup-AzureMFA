@@ -19,7 +19,6 @@
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\UserId;
@@ -38,7 +37,6 @@ class DefaultController extends AbstractController
 {
     private $authenticationService;
     private $registrationService;
-    private $domainMatchingService;
 
     /**
      * @var LoggerInterface
@@ -53,13 +51,11 @@ class DefaultController extends AbstractController
     public function __construct(
         AuthenticationService $authenticationService,
         RegistrationService $registrationService,
-        EmailDomainMatchingService $domainMatchingService,
         AzureMfaService $azureMfaService,
         LoggerInterface $logger
     ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
-        $this->domainMatchingService = $domainMatchingService;
         $this->azureMfaService = $azureMfaService;
         $this->logger = $logger;
     }
