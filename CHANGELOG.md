@@ -1,3 +1,6 @@
+# 0.2.3
+Make sure we can install composer dependencies in prod mode
+
 # 0.2.2
 Add the surfnet_saml.yaml configuration to the prod package configuration
 
