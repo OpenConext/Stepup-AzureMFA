@@ -1,3 +1,6 @@
+# 0.2.4
+Add composer archive excludes to the composer.json
+
 # 0.2.3
 Make sure we can install composer dependencies in prod mode
 

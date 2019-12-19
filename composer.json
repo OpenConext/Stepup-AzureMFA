@@ -119,6 +119,46 @@
       "@auto-scripts"
     ]
   },
+  "archive": {
+    "exclude": [
+      "!/.env",
+      "!/.env.local.php",
+      "!/var/cache/prod",
+      "!/public/build",
+      "/node_modules",
+      "/dev",
+      "/bin/phpunit",
+      "/translations/sp",
+      "/coverage",
+      "/docs",
+      "/homestead",
+      "tests",
+      "/build",
+      "/travis-ci-apache.conf",
+      "/.travis.php.ini",
+      "/.travis.yml",
+      "/tsconfig.json",
+      "/tslint.json",
+      "/Vagrantfile",
+      "/webpack.config.js",
+      "/jest.config.js",
+      "/.docheader",
+      "/.env.ci",
+      "/.env.test",
+      "/.env.vm",
+      "/*.xml",
+      "/*.xml.dist",
+      "/config/routes/dev",
+      "/config/packages/dev",
+      "/config/packages/test",
+      "/node_modules",
+      "/coverage",
+      "/homestead",
+      "/build",
+      "/var/log",
+      "/var/sessions"
+    ]
+  },
   "config": {
     "sort-packages": true
   },
