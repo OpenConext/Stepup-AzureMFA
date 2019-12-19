@@ -1,3 +1,6 @@
+# 0.2.2
+Add the surfnet_saml.yaml configuration to the prod package configuration
+
 # 0.2.1
 Improved the test coverage of the locale related features
 
