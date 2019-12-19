@@ -1,3 +1,6 @@
+# 0.2.5
+Various changes to support Stepup-Build
+
 # 0.2.4
 Add composer archive excludes to the composer.json
 
