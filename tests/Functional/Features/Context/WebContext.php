@@ -309,6 +309,14 @@ class WebContext implements Context, KernelAwareContext
         }
     }
 
+    /**
+     * @Given I have :language set as my stepup-locale cookie value
+     */
+    public function iHaveSetAsMyPreference($language)
+    {
+        $this->minkContext->getSession()->setCookie('stepup_locale', $language);
+    }
+
     private function receiveResponse()
     {
         $samlResponse = $this->minkContext->getSession()->getPage()->find('css', 'input[name="SAMLResponse"]');
