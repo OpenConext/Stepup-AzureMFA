@@ -18,6 +18,7 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
@@ -74,6 +75,9 @@ class DefaultController extends AbstractController
      */
     public function indexAction()
     {
+        if (!in_array($this->getParameter('kernel.environment'), ['test', 'dev'])) {
+            throw new Exception('Invalid environment encountered.');
+        }
         return $this->render('default/index.html.twig');
     }
 
