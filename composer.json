@@ -108,6 +108,9 @@
     "frontend-install": [
       "yarn install"
     ],
+    "encore": [
+      "./node_modules/.bin/encore"
+    ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
