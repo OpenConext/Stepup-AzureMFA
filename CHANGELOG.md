@@ -1,3 +1,6 @@
+# 0.2.1
+Improved the test coverage of the locale related features
+
 # 0.2.0
 The authentication logic was updated and covered by additional test coverage. 
 Several example logic still present in the project was removed.
