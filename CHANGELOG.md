@@ -1,3 +1,6 @@
+# 0.2.6
+Improved error reporting (by utilising Stepup-bundles error reporting feature)
+
 # 0.2.5
 Various changes to support Stepup-Build
 

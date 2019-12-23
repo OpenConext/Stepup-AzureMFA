@@ -68,9 +68,9 @@ Feature: When an user needs to register for a new token
   Scenario: When the user is redirected from an unknown service provider he should see an error page
     Given a normal SAML 2.0 AuthnRequest form a unknown service provider
     Then the response status code should be 500
-    And I should see "AuthnRequest received from ServiceProvider with an unknown EntityId"
+    And I should see "Something went wrong. Please try again"
 
   Scenario: When an user request the sso endpoint without AuthnRequest the request should be denied
     When I am on "/saml/sso"
     Then the response status code should be 500
-    And I should see "Could not receive AuthnRequest from HTTP Request: expected query parameters, none found"
+    And I should see "Something went wrong. Please try again"
