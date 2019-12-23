@@ -11,7 +11,7 @@ echo "########\n# Update APT repositories and install development requirements f
 # Start by updating the apt dependencies making the base box up to date
 sudo apt update
 # Install the plantuml dependency (used to generate UML diagrams in the markdown files
-sudo apt install plantuml chromium-browser -y
+sudo apt install plantuml chromium-browser php7.2-gmp -y
 
 echo "\n########\n# Update PHP settings\n######\n"
 # Use our onw PHP.ini
