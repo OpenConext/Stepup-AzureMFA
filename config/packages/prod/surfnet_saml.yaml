@@ -15,11 +15,3 @@ surfnet_saml:
       entity_id_route: gssp_saml_metadata
       public_key: "%saml_metadata_publickey%"
       private_key: "%saml_metadata_privatekey%"
-  remote:
-    service_providers:
-      - entity_id: "%saml_remote_sp_entity_id%"
-        certificate_file: "%saml_remote_sp_certificate%"
-        assertion_consumer_service_url: "%saml_remote_sp_acs%"
-      - entity_id: https://azure-mfa.stepup.example.com/saml/metadata
-        certificate_file: "%saml_idp_publickey%"
-        assertion_consumer_service_url: https://azure-mfa.stepup.example.com/demo/sp/acs

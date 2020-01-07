@@ -165,7 +165,7 @@ class MockAzureMfaControllerTest extends WebTestCase
         $samlBundle = '';
         return new ServiceProvider(
             [
-                'entityId' => 'https://azure-mfa.stepup.example.com/demo/sp/metadata',
+                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
                 'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
                 'certificateFile' => $this->publicKey,
                 'privateKeys' => [
