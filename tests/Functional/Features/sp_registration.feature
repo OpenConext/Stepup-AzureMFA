@@ -1,4 +1,4 @@
-@remote
+@sp
 Feature: When an user needs to register for a new token
   To register an user for a new token
   As a service provider

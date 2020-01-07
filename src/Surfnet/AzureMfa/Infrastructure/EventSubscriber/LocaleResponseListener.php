@@ -52,7 +52,7 @@ final class LocaleResponseListener implements EventSubscriberInterface
     }
 
     /**
-     * Sets the application local based on stepup cookie.
+     * Sets the application locale based on stepup cookie.
      *
      * @param RequestEvent $event
      */
@@ -65,7 +65,7 @@ final class LocaleResponseListener implements EventSubscriberInterface
     }
 
     /**
-     * Preserves the current selected local as user cookie.
+     * Preserves the current selected locale as user cookie.
      *
      * @param ResponseEvent $event
      */

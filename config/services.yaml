@@ -1,6 +1,13 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: nl
+    locales:
+        - nl
+        - en
+    support_url:
+        en: "https://support.example.org/faq-strong-authentication"
+        nl: "https://support.example.org/faq-sterke-authenticatie"
+    support_email: support@support.nl
 
 services:
     _defaults:
@@ -22,9 +29,8 @@ services:
         arguments:
             $configuration: '%institution_configuration%'
 
-    Dev\Mock\MockConfiguration:
+    Surfnet\AzureMfa\Infrastructure\Twig\GlobalViewParameters:
         arguments:
-            $identityProviderEntityId: 'https://azure-mfa.stepup.example.com/mock/idp/metadata'
-            $serviceProviderEntityId: 'https://azure-mfa.stepup.example.com/saml/metadata'
-            $privateKeyPath: '%saml_idp_privatekey%'
-            $publicCertPath: '%saml_idp_publickey%'
+            $locales: '%locales%'
+            $supportUrl: '%support_url%'
+            $supportEmail: '%support_email%'

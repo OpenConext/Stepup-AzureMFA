@@ -1,18 +1,22 @@
 Feature: When an user needs to authenticate
   As a service provider
-  I need to send an AuthnRequest with a nameID to the identity provider
+  I need to send an AuthnRequest with a nameID to the Azure MFA GSSP IdP
 
-  @remote
-  Scenario: When an user needs to register for a new token
-    Given I am on "https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp"
-    And I select "https://azure-mfa.stepup.example.com/saml/metadata" from "idp"
-    And I fill in "subject" with "test-name-id-1234"
-    When I press "Login"
-    Then I should see "Authenticate"
-    And I should be on "https://gssp.stepup.example.com/authentication"
+  Scenario: The user authenticates successfully
+    Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
+    And I press "Submit-success"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"
+    And the SAML Response should contain element "NameID" with value "q2b27d-0000|user@stepup.example.com"
 
-    When I press "Authenticate user"
-    Then I press "Submit"
-    And I should see "You are logged in to SP:default-sp"
-    And I should see "IdP EnitytID:https://azure-mfa.stepup.example.com/saml/metadata"
-    And I should see "test-name-id-1234"
+  Scenario: Authentication fails on the Azure MFA side
+    Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
+    And I press "Submit-user-cancelled"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
+
+  Scenario: Authentication fails because of unknown user on the Azure MFA side
+    Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
+    And I press "Submit-unknown"
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"

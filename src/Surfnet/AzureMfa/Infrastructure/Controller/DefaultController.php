@@ -35,7 +35,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
+    /**
+     * @var AuthenticationService
+     */
     private $authenticationService;
+
+    /**
+     * @var RegistrationService
+     */
     private $registrationService;
 
     /**
@@ -120,26 +127,15 @@ class DefaultController extends AbstractController
      */
     public function authenticationAction(Request $request)
     {
+        $requiresAuthentication = $this->authenticationService->authenticationRequired();
+        if (!$requiresAuthentication) {
+            return new Response(null, $requiresAuthentication ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
+        }
         $nameId = $this->authenticationService->getNameId();
 
-        if ($request->get('action') === 'error') {
-            $this->authenticationService->reject($request->get('message'));
-            return $this->authenticationService->replyToServiceProvider();
-        }
+        $user = $this->azureMfaService->startAuthentication(new UserId($nameId));
 
-        if ($request->get('action') === 'authenticate') {
-            $user = $this->azureMfaService->startAuthentication(new UserId($nameId));
-
-            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
-        }
-
-        $requiresAuthentication = $this->authenticationService->authenticationRequired();
-        $response = new Response(null, $requiresAuthentication ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
-
-        return $this->render('default/authentication.html.twig', [
-            'requiresAuthentication' => $requiresAuthentication,
-            'NameID' => $nameId ?: 'unknown',
-        ], $response);
+        return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
     }
 
     /**
@@ -170,7 +166,6 @@ class DefaultController extends AbstractController
             $this->registrationService->reject($request->get('message'));
         }
 
-        // Todo: find out if we do need to handle different exceptions / responses ?
         $this->logger->info('Sending a SAML response to the SP');
         return $this->registrationService->replyToServiceProvider();
     }

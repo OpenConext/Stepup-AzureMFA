@@ -20,6 +20,6 @@ namespace Surfnet\AzureMfa\Domain\Exception;
 
 use Exception;
 
-class InvalidMFANameIdException extends Exception
+class InvalidMfaNameIdException extends Exception
 {
 }
