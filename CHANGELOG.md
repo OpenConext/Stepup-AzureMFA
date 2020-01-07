@@ -1,3 +1,6 @@
+# 1.0.0
+First release to master
+
 # 0.2.8
 # 0.2.7
 More small improvements to make the codebase more easy maintainable.
