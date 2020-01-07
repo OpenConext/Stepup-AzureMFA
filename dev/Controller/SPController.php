@@ -56,7 +56,7 @@ final class SPController extends AbstractController
         $baseDir = dirname(__DIR__, 2);
         $this->serviceProvider = new ServiceProvider(
             [
-                'entityId' => 'https://azure-mfa.stepup.example.com/demo/sp/metadata',
+                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
                 'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
                 'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
                 'privateKeys' => [
@@ -147,23 +147,23 @@ final class SPController extends AbstractController
         // The MockAzureMfaController test sends the mock sso response directly to the demo sp. Normally the Azure MFA
         // GSSP SP would be targeted first. In order to prevent SAML errors, the correct SP entity is loaded for this
         // test.
-        $mockMfaReferer = 'https://azure-mfa.stepup.example.com/mock/sso';
-        if (strstr($request->server->get('HTTP_REFERER'), $mockMfaReferer) !== false) {
-            $baseDir = dirname(__DIR__, 2);
-            return new ServiceProvider(
-                [
-                    'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
-                    'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
-                    'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
-                    'privateKeys' => [
-                        new PrivateKey(
-                            $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
-                            'default'
-                        ),
-                    ],
-                ]
-            );
-        }
+//        $mockMfaReferer = 'https://azure-mfa.stepup.example.com/mock/sso';
+//        if (strstr($request->server->get('HTTP_REFERER'), $mockMfaReferer) !== false) {
+//            $baseDir = dirname(__DIR__, 2);
+//            return new ServiceProvider(
+//                [
+//                    'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
+//                    'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
+//                    'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
+//                    'privateKeys' => [
+//                        new PrivateKey(
+//                            $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
+//                            'default'
+//                        ),
+//                    ],
+//                ]
+//            );
+//        }
         return $this->serviceProvider;
     }
 
