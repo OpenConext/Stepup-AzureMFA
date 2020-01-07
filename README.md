@@ -57,6 +57,12 @@ Requirements
 - Virtualbox
 - Composer
 
+Other requirements, installed by `homestead/after.sh`
+
+- plantuml *(dev only) For generating plantuml diagrams in readme/markdown files*
+- chromium-browser *(dev only) For running Panther web tests*
+- php7.2-gmp *Dependency of the Stepup-bundle*
+
 Install
 -------------------
 **Create a .env file**
