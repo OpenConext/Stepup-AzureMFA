@@ -20,7 +20,6 @@
   },
   "require": {
     "ext-dom": "*",
-    "ext-gmp": "*",
     "ext-libxml": "*",
     "ext-zlib": "*",
     "sensio/framework-extra-bundle": "^5.4",
