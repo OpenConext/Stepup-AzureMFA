@@ -1,3 +1,6 @@
+# 0.2.7
+More small improvements to make the codebase more easy maintainable.
+
 # 0.2.6
 Improved error reporting (by utilising Stepup-bundles error reporting feature)
 
