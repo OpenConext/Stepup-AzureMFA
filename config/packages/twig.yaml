@@ -1,4 +1,7 @@
 twig:
+    exception_controller: Surfnet\AzureMfa\Infrastructure\Controller\ExceptionController::showAction
     default_path: '%kernel.project_dir%/templates'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        global_view_parameters: "@Surfnet\\AzureMfa\\Infrastructure\\Twig\\GlobalViewParameters"

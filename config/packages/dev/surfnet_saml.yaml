@@ -8,7 +8,7 @@ surfnet_saml:
       private_key: "%saml_idp_privatekey%"
     service_provider:
       enabled: true
-      assertion_consumer_route: sp_demo_acs
+      assertion_consumer_route: azure_mfa_acs
       public_key: "%saml_idp_publickey%"
       private_key: "%saml_idp_privatekey%"
     metadata:

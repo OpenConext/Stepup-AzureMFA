@@ -18,14 +18,14 @@
 
 namespace Surfnet\AzureMfa\Application\Service;
 
-use SAML2\Configuration\PrivateKey;
+use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
+use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
-use Surfnet\AzureMfa\Domain\Exception\InvalidMFANameIdException;
+use Surfnet\AzureMfa\Domain\Exception\InvalidMfaNameIdException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
-use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
@@ -39,31 +39,52 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class AzureMfaService
 {
     /**
+     * @var EmailDomainMatchingService
+     */
+    private $matchingService;
+
+    /**
      * @var PostBinding
      */
     private $postBinding;
+
+    /**
+     * @var ServiceProvider
+     */
+    private $serviceProvider;
+
     /**
      * @var SessionInterface
      */
     private $session;
 
-    public function __construct(PostBinding $postBinding, SessionInterface $session)
-    {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        EmailDomainMatchingService $matchingService,
+        ServiceProvider $serviceProvider,
+        PostBinding $postBinding,
+        SessionInterface $session,
+        LoggerInterface $logger
+    ) {
+        $this->matchingService = $matchingService;
+        $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
         $this->session = $session;
-
-        // Todo: make keys configurable
-        $this->publicKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
-        $this->privateKey = __DIR__ . '/../../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem';
+        $this->logger = $logger;
     }
 
     public function startRegistration(EmailAddress $emailAddress): User
     {
         // TODO: test attempts / blocked
-
+        $this->logger->info('Generating a new UserId based on the user email address');
         $userId = UserId::generate($emailAddress);
         $user = new User($userId, $emailAddress, UserStatus::pending());
 
+        $this->logger->info('Updating user session: status pending');
         $this->session->set('user', $user);
 
         return $user;
@@ -71,58 +92,81 @@ class AzureMfaService
 
     public function finishRegistration(UserId $userId): UserId
     {
+        $this->logger->info('Finishing the registration');
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
-            throw new InvalidMfaAuthenticationContextException('Unknown registration context another process is started in the meantime');
+            throw new InvalidMfaAuthenticationContextException(
+                'Unknown registration context another process is started in the meantime'
+            );
         }
-
+        $this->logger->info('Updating user session: removing');
         $this->session->remove('user');
 
         return $userId;
     }
 
-
     public function startAuthentication(UserId $userId): User
     {
+        $this->logger->info('Starting an authentication based on the provided UserId');
         $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
+
+        $this->logger->info('Updating user session: status registered');
         $this->session->set('user', $user);
 
         return $user;
     }
 
-    public function finishAuthentication(UserId $userId): userId
+    public function finishAuthentication(UserId $userId): UserId
     {
+        $this->logger->info('Finishing the authentication');
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
-            throw new InvalidMfaAuthenticationContextException('Unknown authentication context another process is started in the meantime');
+            throw new InvalidMfaAuthenticationContextException(
+                'Unknown authentication context another process is started in the meantime'
+            );
         }
 
+        $this->logger->info('Updating user session: removing');
         $this->session->remove('user');
 
         return $userId;
     }
 
     /**
-     *
-     * /**
      * @param User $user
      * @return RedirectResponse
      */
     public function createAuthnRequest(User $user): string
     {
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->getServiceProvider(), $this->getIdentityProvider());
+        $this->logger->info('Creating a SAML2 AuthnRequest to send to the Azure MFA IdP');
 
-        // Use emailaddress as subject
+        $this->logger->info('Retrieve the institution for the authenticating/registering user');
+        $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
+        $azureMfaIdentityProvider = $institution->getIdentityProvider();
+        $destination = $azureMfaIdentityProvider->getSsoLocation();
+
+        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $azureMfaIdentityProvider);
+
+        // Use email address as subject
+        $this->logger->info('Setting the users email address as the Subject');
         $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
 
         // Set authnContextClassRef to force MFA
+        $this->logger->info(
+            'Setting "http://schemas.microsoft.com/claims/multipleauthn" as the authentication context class reference'
+        );
         $authnRequest->setAuthenticationContextClassRef('http://schemas.microsoft.com/claims/multipleauthn');
 
         // Create redirect response.
         $query = $authnRequest->buildRequestQuery();
-        return sprintf('%s?%s', $this->getIdentityProvider()->getSsoUrl(), $query);
+
+        return sprintf(
+            '%s?%s',
+            $destination->getUrl(),
+            $query
+        );
     }
 
     /**
@@ -130,52 +174,27 @@ class AzureMfaService
      */
     public function handleResponse(Request $request): User
     {
-        $assertion = $this->postBinding->processResponse($request, $this->getIdentityProvider(), $this->getServiceProvider());
-
-        // validate NameID
+        // Load the registering/authenticating user
         $user = $this->session->get('user');
+
+        // Retrieve its institution and identity provider
+        $this->logger->info('Match the user email address to one of the registered institutions');
+        $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
+        $azureMfaIdentityProvider = $institution->getIdentityProvider();
+
+        $this->logger->info('Process the SAML Response');
+        $assertion = $this->postBinding->processResponse(
+            $request,
+            $azureMfaIdentityProvider,
+            $this->serviceProvider
+        );
+
         if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
-            throw new InvalidMFANameIdException('The NameId from the Azure MFA assertion did not match the NameId provided during registration');
+            throw new InvalidMfaNameIdException(
+                'The NameId from the Azure MFA assertion did not match the NameId provided during registration'
+            );
         }
-
-        //TODO: do we need additional validation?
-
+        $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
         return $user;
-    }
-
-    private function getServiceProvider(): ServiceProvider
-    {
-        // TODO: make configurable
-        return new ServiceProvider(
-            [
-                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/saml/acs',
-                'certificateFile' => $this->publicKey,
-                'privateKeys' => [
-                    new PrivateKey(
-                        $this->privateKey,
-                        'default'
-                    ),
-                ],
-            ]
-        );
-    }
-
-    private function getIdentityProvider(): IdentityProvider
-    {
-        // TODO: make configurable
-        return new IdentityProvider(
-            [
-                'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
-                'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
-                'certificateFile' => $this->publicKey,
-                'privateKeys' => [
-                    new PrivateKey(
-                        $this->privateKey,
-                        'default'
-                    ),
-                ],
-            ]
-        );
     }
 }

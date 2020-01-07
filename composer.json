@@ -23,11 +23,14 @@
     "ext-libxml": "*",
     "ext-zlib": "*",
     "sensio/framework-extra-bundle": "^5.4",
+    "surfnet/stepup-bundle": "^4.1",
     "surfnet/stepup-gssp-bundle": "^3.0",
     "surfnet/stepup-saml-bundle": "^4.1.7",
     "symfony/asset": "^4.3",
     "symfony/config": "4.4.*",
+    "symfony/console": "4.4.*",
     "symfony/dependency-injection": "4.4.*",
+    "symfony/dotenv": "4.4.*",
     "symfony/flex": "^1.4",
     "symfony/form": "^4.3",
     "symfony/monolog-bundle": "^3.4",
@@ -55,7 +58,6 @@
     "squizlabs/php_codesniffer": "~3",
     "symfony/browser-kit": "^4.3",
     "symfony/css-selector": "^3",
-    "symfony/dotenv": "~4",
     "symfony/maker-bundle": "~1",
     "symfony/panther": "^0.6.0",
     "symfony/profiler-pack": "~1",
@@ -107,6 +109,9 @@
     "frontend-install": [
       "yarn install"
     ],
+    "encore": [
+      "./node_modules/.bin/encore"
+    ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
@@ -116,6 +121,46 @@
     ],
     "post-update-cmd": [
       "@auto-scripts"
+    ]
+  },
+  "archive": {
+    "exclude": [
+      "!/.env",
+      "!/.env.local.php",
+      "!/var/cache/prod",
+      "!/public/build",
+      "/node_modules",
+      "/dev",
+      "/bin/phpunit",
+      "/translations/sp",
+      "/coverage",
+      "/docs",
+      "/homestead",
+      "tests",
+      "/build",
+      "/travis-ci-apache.conf",
+      "/.travis.php.ini",
+      "/.travis.yml",
+      "/tsconfig.json",
+      "/tslint.json",
+      "/Vagrantfile",
+      "/webpack.config.js",
+      "/jest.config.js",
+      "/.docheader",
+      "/.env.ci",
+      "/.env.test",
+      "/.env.vm",
+      "/*.xml",
+      "/*.xml.dist",
+      "/config/routes/dev",
+      "/config/packages/dev",
+      "/config/packages/test",
+      "/node_modules",
+      "/coverage",
+      "/homestead",
+      "/build",
+      "/var/log",
+      "/var/sessions"
     ]
   },
   "config": {

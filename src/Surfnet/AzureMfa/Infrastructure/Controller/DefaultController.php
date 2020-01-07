@@ -18,7 +18,7 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
-use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
+use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\UserId;
@@ -35,9 +35,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
+    /**
+     * @var AuthenticationService
+     */
     private $authenticationService;
+
+    /**
+     * @var RegistrationService
+     */
     private $registrationService;
-    private $domainMatchingService;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * @var AzureMfaService
      */
@@ -46,13 +58,13 @@ class DefaultController extends AbstractController
     public function __construct(
         AuthenticationService $authenticationService,
         RegistrationService $registrationService,
-        EmailDomainMatchingService $domainMatchingService,
-        AzureMfaService $azureMfaService
+        AzureMfaService $azureMfaService,
+        LoggerInterface $logger
     ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
-        $this->domainMatchingService = $domainMatchingService;
         $this->azureMfaService = $azureMfaService;
+        $this->logger = $logger;
     }
 
     /**
@@ -74,7 +86,10 @@ class DefaultController extends AbstractController
      */
     public function registrationAction(Request $request)
     {
+        $this->logger->info('Verifying if there is a pending registration from SP');
+
         if ($request->get('action') === 'error') {
+            $this->logger->error('The registration failed, rejecting the registration request');
             $this->registrationService->reject($request->get('message'));
             return $this->registrationService->replyToServiceProvider();
         }
@@ -87,11 +102,16 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->info(
+                'Matched the user to an institution, continue registration by sending an ' .
+                'authentication request to the Azure MFA remote IdP'
+            );
             $user = $this->azureMfaService->startRegistration(new EmailAddress($emailAddress->getEmailAddress()));
 
             return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
         }
 
+        $this->logger->info('Asking the user for its email address in order to match it to his/her institution');
         return $this->render('default/registration.html.twig', [
             'requiresRegistration' => $requiresRegistration,
             'form' => $form->createView()
@@ -107,26 +127,15 @@ class DefaultController extends AbstractController
      */
     public function authenticationAction(Request $request)
     {
+        $requiresAuthentication = $this->authenticationService->authenticationRequired();
+        if (!$requiresAuthentication) {
+            return new Response(null, $requiresAuthentication ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
+        }
         $nameId = $this->authenticationService->getNameId();
 
-        if ($request->get('action') === 'error') {
-            $this->authenticationService->reject($request->get('message'));
-            return $this->authenticationService->replyToServiceProvider();
-        }
+        $user = $this->azureMfaService->startAuthentication(new UserId($nameId));
 
-        if ($request->get('action') === 'authenticate') {
-            $user = $this->azureMfaService->startAuthentication(new UserId($nameId));
-
-            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
-        }
-
-        $requiresAuthentication = $this->authenticationService->authenticationRequired();
-        $response = new Response(null, $requiresAuthentication ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
-
-        return $this->render('default/authentication.html.twig', [
-            'requiresAuthentication' => $requiresAuthentication,
-            'NameID' => $nameId ?: 'unknown',
-        ], $response);
+        return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
     }
 
     /**
@@ -134,24 +143,30 @@ class DefaultController extends AbstractController
      */
     public function acsAction(Request $request)
     {
+        $this->logger->info('Receiving response from the Azure MFA remote IdP');
+
         try {
+            $this->logger->info('Load the associated Stepup user from this response');
             $user = $this->azureMfaService->handleResponse($request);
 
+            // Check registration status
             if ($user->getStatus()->isPending()) {
-                //check authentication of registration
+                // Handle registration, this user is already registered
+                $this->logger->info('Finishing the registration');
                 $userId = $this->azureMfaService->finishRegistration($user->getUserId());
                 $this->registrationService->register($userId->getUserId());
             } else if ($user->getStatus()->isRegistered()) {
-                // handle authentication
+                // Handle authentication, this user is already registered
+                $this->logger->info('Process the authentication');
                 $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
         } catch (AuthnFailedSamlResponseException $e) {
+            $this->logger->error('The authentication or registration failed. Rejecting the Azure MFA response.');
             $this->registrationService->reject($request->get('message'));
         }
 
-        // Todo: find out if we do need to handle different exceptions / responses ?
-
+        $this->logger->info('Sending a SAML response to the SP');
         return $this->registrationService->replyToServiceProvider();
     }
 }

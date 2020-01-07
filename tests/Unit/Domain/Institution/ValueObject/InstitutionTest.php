@@ -22,30 +22,39 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 
 class InstitutionTest extends TestCase
 {
     public function test_happy_flow()
     {
-        $destination = m::mock(Destination::class);
+        $idp = m::mock(IdentityProviderInterface::class);
         $emailDomainCollection = m::mock(EmailDomainCollection::class);
-        $institution = new Institution('stepup.example.com', $destination, $emailDomainCollection);
+        $institution = new Institution('stepup.example.com', $idp, $emailDomainCollection);
 
         $this->assertInstanceOf(Institution::class, $institution);
         $this->assertEquals('stepup.example.com', $institution->getName());
-        $this->assertEquals($destination, $institution->getDestination());
         $this->assertEquals($emailDomainCollection, $institution->getEmailDomainCollection());
     }
 
     public function test_empty_name_not_allowed()
     {
-        $destination = m::mock(Destination::class);
+        $idp = m::mock(IdentityProviderInterface::class);
         $emailDomainCollection = m::mock(EmailDomainCollection::class);
 
         $this->expectException(InvalidInstitutionException::class);
         $this->expectExceptionMessage('The name for the institution can not be an empty string.');
-        new Institution('', $destination, $emailDomainCollection);
+        new Institution('', $idp, $emailDomainCollection);
+    }
+
+    public function test_retrieve_idenitty_provider()
+    {
+        $idp = m::mock(IdentityProviderInterface::class);
+        $emailDomainCollection = m::mock(EmailDomainCollection::class);
+        $institution = new Institution('stepup.example.com', $idp, $emailDomainCollection);
+
+        $this->assertInstanceOf(IdentityProviderInterface::class, $institution->getIdentityProvider());
+        $this->assertEquals($idp, $institution->getIdentityProvider());
     }
 }

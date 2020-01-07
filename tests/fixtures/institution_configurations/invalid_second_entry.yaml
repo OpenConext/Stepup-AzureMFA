@@ -1,7 +1,8 @@
 data:
   institutions:
     institution-a.example.com:
-      destination: 'https://adfs.stepup.example.com/adfs/ls/'
+      sso_location: 'https://adfs.stepup.example.com/adfs/ls/'
+      entity_id: 'https://adfs.stepup.example.com/'
       email_domains:
         - 'stepup.example.com'
         - 'stepup2.example.com'

@@ -21,9 +21,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use DOMDocument;
-use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Assertion;
-use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;
@@ -48,13 +46,25 @@ final class SPController extends AbstractController
     private $postBinding;
 
     public function __construct(
-        ServiceProvider $serviceProvider,
         IdentityProvider $identityProvider,
         PostBinding $postBinding
     ) {
         $this->identityProvider = $identityProvider;
-        $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
+        $baseDir = dirname(__DIR__, 2);
+        $this->serviceProvider = new ServiceProvider(
+            [
+                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
+                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
+                'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
+                'privateKeys' => [
+                    new PrivateKey(
+                        $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
+                        'default'
+                    ),
+                ],
+            ]
+        );
     }
 
     /**

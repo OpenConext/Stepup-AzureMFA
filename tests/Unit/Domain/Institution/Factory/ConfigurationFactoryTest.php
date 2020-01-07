@@ -19,12 +19,15 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\Factory;
 
 use PHPUnit\Framework\TestCase;
+use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
 use Surfnet\AzureMfa\Domain\Institution\Factory\ConfigurationFactory;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
+use Surfnet\AzureMfa\Infrastructure\Factory\IdentityProviderFactory;
 use Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationDefinition;
 use Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationValidator;
 use Symfony\Component\Yaml\Yaml;
@@ -49,7 +52,7 @@ class ConfigurationFactoryTest extends TestCase
     public function test_happy_flow() : void
     {
         $this->setUpValidator('factory.yaml');
-        $factory = new ConfigurationFactory($this->validator);
+        $factory = new ConfigurationFactory($this->validator, new IdentityProviderFactory());
 
         $configuration = $factory->build();
 
@@ -64,16 +67,22 @@ class ConfigurationFactoryTest extends TestCase
         $harting = $institutions->getByName('harting-college.nl');
 
         $this->assertEquals('institution-a.example.com', $institutionA->getName());
-        $this->assertInstanceOf(Destination::class, $institutionA->getDestination());
-        $this->assertEquals('https://adfs.stepup.example.com/adfs/ls/', $institutionA->getDestination()->getUrl());
+        $this->assertInstanceOf(Destination::class, $institutionA->getIdentityProvider()->getSsoLocation());
+        $this->assertInstanceOf(EntityId::class, $institutionA->getIdentityProvider()->getEntityId());
+        $this->assertEquals('https://adfs.stepup.example.com/adfs/ls/', $institutionA->getIdentityProvider()->getSsoLocation()->getUrl());
+        $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->getEntityId()->getEntityId());
 
         // Todo: at this point we do not know how we want to work with this collection. Update test coverage once this becomes clear!
         $this->assertInstanceOf(EmailDomainCollection::class, $institutionA->getEmailDomainCollection());
+        $this->assertInstanceOf(CertificateCollection::class, $institutionA->getIdentityProvider()->getCertificates());
 
         $this->assertEquals('harting-college.nl', $harting->getName());
-        $this->assertInstanceOf(Destination::class, $harting->getDestination());
-        $this->assertEquals('https://adfs.harting-college.nl/adfs/ls/', $harting->getDestination()->getUrl());
+        $this->assertInstanceOf(Destination::class, $harting->getIdentityProvider()->getSsoLocation());
+        $this->assertInstanceOf(EntityId::class, $harting->getIdentityProvider()->getEntityId());
+        $this->assertEquals('https://adfs.harting-college.nl/adfs/ls/', $harting->getIdentityProvider()->getSsoLocation()->getUrl());
+        $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->getEntityId()->getEntityId());
         $this->assertInstanceOf(EmailDomainCollection::class, $harting->getEmailDomainCollection());
+        $this->assertInstanceOf(CertificateCollection::class, $harting->getIdentityProvider()->getCertificates());
     }
 
     private function setUpValidator(string $input)

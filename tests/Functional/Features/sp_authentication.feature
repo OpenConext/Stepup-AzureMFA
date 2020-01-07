@@ -11,10 +11,6 @@ Feature: When an user needs to authenticate
     And I fill in "Subject NameID" with "q2b27d-0000|user@stepup.example.com"
     Given I press "Authenticate user"
 
-    # The user clicks on authenticate button from the GSSP IdP
-    Then I should be on "https://azure-mfa.stepup.example.com/authentication"
-    Given I press "Authenticate user"
-
     # The mock MFA client
     Then I should be on "https://azure-mfa.stepup.example.com/mock/sso"
     Given I press "Submit-success"

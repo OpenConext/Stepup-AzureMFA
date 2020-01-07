@@ -18,8 +18,8 @@
 
 namespace Surfnet\AzureMfa\Domain\Exception;
 
-use Exception;
+use InvalidArgumentException;
 
-class InvalidMFANameIdException extends Exception
+class InvalidCertificateException extends InvalidArgumentException
 {
 }

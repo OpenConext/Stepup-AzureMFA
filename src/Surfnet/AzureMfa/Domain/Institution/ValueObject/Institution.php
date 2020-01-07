@@ -29,23 +29,26 @@ class Institution
     private $name;
 
     /**
-     * @var Destination
+     * @var IdentityProviderInterface
      */
-    private $destination;
+    private $identityProvider;
 
     /**
      * @var EmailDomainCollection
      */
     private $emailDomainCollection;
 
-    public function __construct(string $name, Destination $destination, EmailDomainCollection $domainCollection)
-    {
+    public function __construct(
+        string $name,
+        IdentityProviderInterface $identityProvider,
+        EmailDomainCollection $domainCollection
+    ) {
         if (empty($name)) {
             throw new InvalidInstitutionException('The name for the institution can not be an empty string.');
         }
 
         $this->name = $name;
-        $this->destination = $destination;
+        $this->identityProvider = $identityProvider;
         $this->emailDomainCollection = $domainCollection;
     }
 
@@ -54,9 +57,9 @@ class Institution
         return $this->name;
     }
 
-    public function getDestination() : Destination
+    public function getIdentityProvider(): IdentityProviderInterface
     {
-        return $this->destination;
+        return $this->identityProvider;
     }
 
     public function getEmailDomainCollection() : EmailDomainCollection
