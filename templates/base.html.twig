@@ -51,7 +51,7 @@
 </div>
 <div class="navigation-container">
     <div class="navigation">
-        {% for route in ['homepage', 'azure_mfa_registration', 'azure_mfa_authentication', 'gssp_saml_metadata'] %}
+        {% for route in ['homepage', 'gssp_saml_metadata'] %}
             {% set translatekey = "page.navigation.route." ~ route %}
             <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
         {% endfor %}

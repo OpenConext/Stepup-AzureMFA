@@ -8,17 +8,16 @@
 # to apply, you may also create user-customizations.sh,
 # which will be run after this script.
 echo "########\n# Update APT repositories and install development requirements from the apt repos\n######\n"
-# Start by updating the apt dependencies making the base box up to date
-sudo apt update
+
 # Install the plantuml dependency (used to generate UML diagrams in the markdown files
-sudo apt install plantuml chromium-browser -y
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install plantuml chromium-browser php7.2-gmp
 
 echo "\n########\n# Update PHP settings\n######\n"
-# Use our onw PHP.ini
-sudo cp /home/vagrant/code/homestead/php.ini /etc/php/7.2/mods-available/custom.ini
+# Set timezone
+sudo ln -sf /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
 
 # Use PHP 7.2 by default in our environment
-sudo phpenmod -v 7.2 custom
 php72
 xon
 

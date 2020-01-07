@@ -16,5 +16,12 @@ services:
         resource: '../../../dev/Controller'
         tags: ['controller.service_arguments']
 
+    Dev\Mock\MockConfiguration:
+        arguments:
+            $identityProviderEntityId: 'https://azure-mfa.stepup.example.com/mock/idp/metadata'
+            $serviceProviderEntityId: 'https://azure-mfa.stepup.example.com/saml/metadata'
+            $privateKeyPath: '%saml_idp_privatekey%'
+            $publicCertPath: '%saml_idp_publickey%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

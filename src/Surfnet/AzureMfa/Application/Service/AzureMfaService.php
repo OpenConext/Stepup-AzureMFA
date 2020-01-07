@@ -18,10 +18,11 @@
 
 namespace Surfnet\AzureMfa\Application\Service;
 
+use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
-use Surfnet\AzureMfa\Domain\Exception\InvalidMFANameIdException;
+use Surfnet\AzureMfa\Domain\Exception\InvalidMfaNameIdException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
@@ -57,25 +58,33 @@ class AzureMfaService
      */
     private $session;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         EmailDomainMatchingService $matchingService,
         ServiceProvider $serviceProvider,
         PostBinding $postBinding,
-        SessionInterface $session
+        SessionInterface $session,
+        LoggerInterface $logger
     ) {
         $this->matchingService = $matchingService;
         $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
         $this->session = $session;
+        $this->logger = $logger;
     }
 
     public function startRegistration(EmailAddress $emailAddress): User
     {
         // TODO: test attempts / blocked
-
+        $this->logger->info('Generating a new UserId based on the user email address');
         $userId = UserId::generate($emailAddress);
         $user = new User($userId, $emailAddress, UserStatus::pending());
 
+        $this->logger->info('Updating user session: status pending');
         $this->session->set('user', $user);
 
         return $user;
@@ -83,6 +92,7 @@ class AzureMfaService
 
     public function finishRegistration(UserId $userId): UserId
     {
+        $this->logger->info('Finishing the registration');
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
@@ -90,7 +100,7 @@ class AzureMfaService
                 'Unknown registration context another process is started in the meantime'
             );
         }
-
+        $this->logger->info('Updating user session: removing');
         $this->session->remove('user');
 
         return $userId;
@@ -98,7 +108,10 @@ class AzureMfaService
 
     public function startAuthentication(UserId $userId): User
     {
+        $this->logger->info('Starting an authentication based on the provided UserId');
         $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
+
+        $this->logger->info('Updating user session: status registered');
         $this->session->set('user', $user);
 
         return $user;
@@ -106,6 +119,7 @@ class AzureMfaService
 
     public function finishAuthentication(UserId $userId): UserId
     {
+        $this->logger->info('Finishing the authentication');
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
@@ -114,6 +128,7 @@ class AzureMfaService
             );
         }
 
+        $this->logger->info('Updating user session: removing');
         $this->session->remove('user');
 
         return $userId;
@@ -125,6 +140,9 @@ class AzureMfaService
      */
     public function createAuthnRequest(User $user): string
     {
+        $this->logger->info('Creating a SAML2 AuthnRequest to send to the Azure MFA IdP');
+
+        $this->logger->info('Retrieve the institution for the authenticating/registering user');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
         $destination = $azureMfaIdentityProvider->getSsoLocation();
@@ -132,9 +150,13 @@ class AzureMfaService
         $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $azureMfaIdentityProvider);
 
         // Use email address as subject
+        $this->logger->info('Setting the users email address as the Subject');
         $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
 
         // Set authnContextClassRef to force MFA
+        $this->logger->info(
+            'Setting "http://schemas.microsoft.com/claims/multipleauthn" as the authentication context class reference'
+        );
         $authnRequest->setAuthenticationContextClassRef('http://schemas.microsoft.com/claims/multipleauthn');
 
         // Create redirect response.
@@ -156,30 +178,23 @@ class AzureMfaService
         $user = $this->session->get('user');
 
         // Retrieve its institution and identity provider
+        $this->logger->info('Match the user email address to one of the registered institutions');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
 
+        $this->logger->info('Process the SAML Response');
         $assertion = $this->postBinding->processResponse(
             $request,
             $azureMfaIdentityProvider,
             $this->serviceProvider
         );
 
-        // validate NameID
         if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
-            throw new InvalidMFANameIdException(
+            throw new InvalidMfaNameIdException(
                 'The NameId from the Azure MFA assertion did not match the NameId provided during registration'
             );
         }
-
-        //TODO: do we need additional validation?
-
-        // On handling the response:
-        // 1. Do we need custom error response handling? Simply returning the error response will probably be best as
-        //    gateway will handle this as a failed authentication/registration.
-
-        // Validation possibilities:
-        // 1. Did the response come form an IdP that is configured in the institution configuration (requires additional configuration of the idp entity id)
+        $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
         return $user;
     }
 }
