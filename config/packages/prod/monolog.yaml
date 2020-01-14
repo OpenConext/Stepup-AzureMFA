@@ -9,6 +9,7 @@ monolog:
             type: syslog
             ident: stepup-azure-mfa
             facility: user
+            formatter: monolog.formatter.gelf_message
         console:
             type: console
             process_psr_3_messages: false

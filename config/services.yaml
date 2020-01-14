@@ -34,3 +34,6 @@ services:
             $locales: '%locales%'
             $supportUrl: '%support_url%'
             $supportEmail: '%support_email%'
+
+    Surfnet\AzureMfa\Infrastructure\Monolog\Formatter\GelfMessageToStringFormatter:
+        alias: monolog.formatter.gelf_message
