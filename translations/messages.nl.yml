@@ -100,3 +100,8 @@ page.acs.title: Demo service provider ACS
 page.acs.sub_title: Demo serviceprovider ConsumerAssertionService endpoint
 
 page.sp.common_properties.title: Algemeene request parameters
+
+en: EN
+nl: NL
+nl_NL: NL
+en_EN: NL
