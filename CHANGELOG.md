@@ -1,3 +1,8 @@
+# 1.0.1
+ - Improved logging (JSON formatted logging to syslog for prod environment)
+ - Addressed a translation & default language issue
+ - Security update (node-sass)
+
 # 1.0.0
 First release to master
 
