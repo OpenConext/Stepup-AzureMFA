@@ -14,7 +14,3 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
-
-framework:
-    php_errors:
-        log: false # change error reporting level to: E_ALL & ~E_DEPRECATED (32767 - 8192 = 24575)

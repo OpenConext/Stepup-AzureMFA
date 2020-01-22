@@ -12,8 +12,6 @@ framework:
     assets: ~
     #esi: true
     fragments: true
-    php_errors:
-        log: false
     templating:
         engines:
             - twig
