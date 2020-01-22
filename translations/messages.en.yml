@@ -63,7 +63,9 @@ page.route.description.sp_demo: |
   This is not part of the second factor IdP and can only be used in development (app_dev.php) mode.
 
 en: EN
+nl: NL
 nl_NL: NL
+en_EN: NL
 
 saml.subject_name_id: Subject NameID
 
