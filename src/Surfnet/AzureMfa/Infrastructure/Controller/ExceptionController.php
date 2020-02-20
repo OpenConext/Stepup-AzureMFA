@@ -64,13 +64,6 @@ final class ExceptionController extends BaseExceptionController
      */
     protected function getPageTitleAndDescription(Exception $exception)
     {
-        if (isset($title) && isset($description)) {
-            return [
-                'title' => $title,
-                'description' => $description,
-            ];
-        }
-
         return parent::getPageTitleAndDescription($exception);
     }
 
