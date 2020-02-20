@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "870353b117c4cd769f5bcab1c1f659c5",
@@ -1045,16 +1045,16 @@
         },
         {
             "name": "surfnet/stepup-saml-bundle",
-            "version": "4.1.9",
+            "version": "4.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
-                "reference": "9c211006cd6d862678f366b3a9f710dc185e2443"
+                "reference": "756310e6628b6dc9cfe66c81e37494fb470bc3bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/9c211006cd6d862678f366b3a9f710dc185e2443",
-                "reference": "9c211006cd6d862678f366b3a9f710dc185e2443",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/756310e6628b6dc9cfe66c81e37494fb470bc3bf",
+                "reference": "756310e6628b6dc9cfe66c81e37494fb470bc3bf",
                 "shasum": ""
             },
             "require": {
@@ -1083,22 +1083,19 @@
                     "Surfnet\\SamlBundle\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "description": "A Symfony 3 (with SF 4 support) bundle that integrates the simplesamlphp\\saml2 library with Symfony.",
             "keywords": [
-                "SAML",
                 "SAML2",
-                "StepUp",
+                "saml",
                 "simplesamlphp",
+                "stepup",
                 "surfnet"
             ],
-            "support": {
-                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/4.1.9",
-                "issues": "https://github.com/OpenConext/Stepup-saml-bundle/issues"
-            },
-            "time": "2019-11-19T12:32:40+00:00"
+            "time": "2020-02-20T12:24:28+00:00"
         },
         {
             "name": "symfony/asset",
@@ -5143,6 +5140,7 @@
                 "selenium",
                 "webdriver"
             ],
+            "abandoned": "php-webdriver/webdriver",
             "time": "2019-06-13T08:02:18+00:00"
         },
         {
