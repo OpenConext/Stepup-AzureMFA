@@ -4,6 +4,7 @@ Feature: When an user needs to authenticate
 
   Scenario: The user authenticates successfully
     Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
+    And the received AuthNRequest should have the ForceAuthn attribute
     And I press "Submit-success"
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"

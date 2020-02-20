@@ -147,7 +147,7 @@ class AzureMfaService
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
         $destination = $azureMfaIdentityProvider->getSsoLocation();
 
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $azureMfaIdentityProvider);
+        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $azureMfaIdentityProvider, true);
 
         // Use email address as subject
         $this->logger->info('Setting the users email address as the Subject');

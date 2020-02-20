@@ -20,6 +20,7 @@ namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
@@ -32,10 +33,13 @@ use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
 use SAML2\DOMDocumentFactory;
+use SAML2\Message;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function GuzzleHttp\Psr7\parse_query;
 
 class WebContext implements Context, KernelAwareContext
 {
@@ -358,5 +362,54 @@ class WebContext implements Context, KernelAwareContext
         }
 
         return $elementSearchResults->item(0);
+    }
+
+    /**
+     * @Given /^the received AuthNRequest should have the ForceAuthn attribute$/
+     */
+    public function theReceivedAuthNRequestShouldHaveTheForceAuthnAttribute()
+    {
+        // Get the AuthNRequest from the current URL, so only redirect binding is supported here!
+        $currentUrl = $this->minkContext->getSession()->getCurrentUrl();
+        $parsed = parse_url($currentUrl);
+        if (!isset($parsed['query'])) {
+            throw new Exception('No query parameters found in request');
+        }
+
+        $parsedQueryString = parse_query($parsed['query']);
+        if (!isset($parsedQueryString['SAMLRequest'])) {
+            throw new Exception('No SAMLRequest parameter found in the query string');
+        }
+
+        $authNRequest = base64_decode($parsedQueryString['SAMLRequest'], true);
+
+        // Catch any errors gzinflate triggers
+        $errorNo = $errorMessage = null;
+        set_error_handler(function ($number, $message) use (&$errorNo, &$errorMessage) {
+            $errorNo      = $number;
+            $errorMessage = $message;
+        });
+        $authNRequest = gzinflate($authNRequest);
+        restore_error_handler();
+
+        if ($authNRequest === false) {
+            throw new Exception(sprintf(
+                'Failed inflating the request; error "%d": "%s"',
+                $errorNo,
+                $errorMessage
+            ));
+        }
+
+        // Parse an XML document from the inflated authnrequest
+        $previous = libxml_disable_entity_loader(true);
+        $document = DOMDocumentFactory::fromString($authNRequest);
+        libxml_disable_entity_loader($previous);
+
+        // Next create a SAML2 VO
+        $authnRequest = Message::fromXML($document->firstChild);
+
+        if ($authnRequest->getForceAuthn() === false) {
+            throw new Exception('ForceAuthn was not set on the request');
+        }
     }
 }
