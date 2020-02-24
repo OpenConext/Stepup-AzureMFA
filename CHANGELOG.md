@@ -1,3 +1,6 @@
+# 1.0.2
+ - Enforce authentication on RA authenications #21
+
 # 1.0.1
  - Improved logging (JSON formatted logging to syslog for prod environment)
  - Addressed a translation & default language issue
