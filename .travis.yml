@@ -19,10 +19,12 @@ cache:
   directories:
     - ~/.composer/cache/files
 
+before_install:
+  - gem install chromedriver-helper -v 1.2.0
+
 before_script:
   # configure ssl
   - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/azure-mfa.key -out /etc/ssl/certs/azure-mfa.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=azure-mfa.stepup.example.com"
-
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - export PHP_VERSION=$(phpenv version-name)
@@ -46,6 +48,7 @@ before_script:
   - sudo service apache2 restart
 
   # Install dependencies
+  - chromedriver-update 80.0.3987.106
   - cp .env.ci .env
   - cp config/packages/parameters.yaml.dist config/packages/parameters.yaml
   - cp config/packages/institutions.yaml.dist config/packages/institutions.yaml
