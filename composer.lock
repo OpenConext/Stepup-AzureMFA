@@ -929,16 +929,16 @@
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
-            "version": "3.0.4",
+            "version": "3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-gssp-bundle.git",
-                "reference": "615f792626a305daf2a4510efdf6354d1e28a3d7"
+                "reference": "941d9a7ed5fe680a7cc7d4bea9a8c3e411da7633"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/615f792626a305daf2a4510efdf6354d1e28a3d7",
-                "reference": "615f792626a305daf2a4510efdf6354d1e28a3d7",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/941d9a7ed5fe680a7cc7d4bea9a8c3e411da7633",
+                "reference": "941d9a7ed5fe680a7cc7d4bea9a8c3e411da7633",
                 "shasum": ""
             },
             "require": {
@@ -969,79 +969,12 @@
                     "Surfnet\\GsspBundle\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\Surfnet\\GsspBundle\\": "tests/"
-                },
-                "files": [
-                    "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
-                ]
-            },
-            "scripts": {
-                "test": [
-                    "@lint",
-                    "@static-analysis",
-                    "@phpunit",
-                    "@behat"
-                ],
-                "lint": [
-                    "@lint-php",
-                    "@lint-composer"
-                ],
-                "lint-php": [
-                    "vendor/bin/parallel-lint src tests"
-                ],
-                "lint-composer": [
-                    "composer validate"
-                ],
-                "static-analysis": [
-                    "@license-headers",
-                    "@phpmd",
-                    "@phpcs",
-                    "@phpcpd"
-                ],
-                "license-headers": [
-                    "vendor/bin/docheader check src/ tests/"
-                ],
-                "phpmd": [
-                    "vendor/bin/docheader check src/ tests/"
-                ],
-                "phpcs": [
-                    "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./src",
-                    "vendor/bin/phpcs --standard=phpcs_tests.xml --report=full --warning-severity=0 ./tests"
-                ],
-                "phpcbf": [
-                    "vendor/bin/phpcbf --standard=phpcs.xml ./src",
-                    "vendor/bin/phpcbf --standard=phpcs_tests.xml ./tests"
-                ],
-                "phpcpd": [
-                    "vendor/bin/phpcpd  ./src",
-                    "vendor/bin/phpcpd  ./tests"
-                ],
-                "phpunit": [
-                    "vendor/bin/phpunit tests"
-                ],
-                "behat": [
-                    "vendor/bin/behat  --config behat.yml"
-                ],
-                "coverage": [
-                    "@phpunit-coverage",
-                    "mkdir -p coverage/reports",
-                    "vendor/bin/phpcov merge coverage/reports --html coverage"
-                ],
-                "phpunit-coverage": [
-                    "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "description": "A Symfony 3 bundle (with SF 4 support) to aid the creation of GSSP (Generic SAML Step-up Provider) device support.",
-            "support": {
-                "source": "https://github.com/OpenConext/Stepup-gssp-bundle/tree/3.0.4",
-                "issues": "https://github.com/OpenConext/Stepup-gssp-bundle/issues"
-            },
-            "time": "2019-11-20T10:21:12+00:00"
+            "time": "2020-02-24T09:27:27+00:00"
         },
         {
             "name": "surfnet/stepup-saml-bundle",
