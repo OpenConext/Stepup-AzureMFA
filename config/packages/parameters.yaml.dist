@@ -18,4 +18,5 @@ parameters:
     saml_remote_sp_sso_url: '"https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/saml2-acs.php/default-sp"'
     saml_remote_sp_certificate: '%kernel.root_dir%/../../../../vendor/surfnet/stepup-gssp-bundle/src/Resources/keys/pieter.aai.surfnet.nl.pem'
     saml_remote_sp_acs: 'https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/saml2-acs.php/default-sp'
-
+    # Authentication issuers matching this regex will send ForceAuthn to the Azure MFA. The at sign is used as delimiter, be sure to escape the first sign as Symfony would see it as a reference to a service.
+    ra_issuer_entity_id_regex: '@@^https://(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/vetting-procedure/gssf/azuremfa/metadata$@'
