@@ -19,6 +19,7 @@
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
 use Psr\Log\LoggerInterface;
+use Surfnet\AzureMfa\Application\Service\AuthenticationHelperInterface;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\UserId;
@@ -33,6 +34,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - A higher level of coupling is favoured over having business
+ * logic in the controller
+ */
 class DefaultController extends AbstractController
 {
     /**
@@ -55,13 +60,20 @@ class DefaultController extends AbstractController
      */
     private $azureMfaService;
 
+    /**
+     * @var AuthenticationHelperInterface
+     */
+    private $authenticationHelper;
+
     public function __construct(
         AuthenticationService $authenticationService,
+        AuthenticationHelperInterface $authenticationHelper,
         RegistrationService $registrationService,
         AzureMfaService $azureMfaService,
         LoggerInterface $logger
     ) {
         $this->authenticationService = $authenticationService;
+        $this->authenticationHelper = $authenticationHelper;
         $this->registrationService = $registrationService;
         $this->azureMfaService = $azureMfaService;
         $this->logger = $logger;
@@ -135,7 +147,9 @@ class DefaultController extends AbstractController
 
         $user = $this->azureMfaService->startAuthentication(new UserId($nameId));
 
-        return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
+        return new RedirectResponse(
+            $this->azureMfaService->createAuthnRequest($user, $this->authenticationHelper->useForceAuthn())
+        );
     }
 
     /**

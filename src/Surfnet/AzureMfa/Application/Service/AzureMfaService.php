@@ -136,9 +136,10 @@ class AzureMfaService
 
     /**
      * @param User $user
+     * @param bool $forceAuthn
      * @return RedirectResponse
      */
-    public function createAuthnRequest(User $user): string
+    public function createAuthnRequest(User $user, bool $forceAuthn = false): string
     {
         $this->logger->info('Creating a SAML2 AuthnRequest to send to the Azure MFA IdP');
 
@@ -147,7 +148,11 @@ class AzureMfaService
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
         $destination = $azureMfaIdentityProvider->getSsoLocation();
 
-        $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $azureMfaIdentityProvider);
+        $authnRequest = AuthnRequestFactory::createNewRequest(
+            $this->serviceProvider,
+            $azureMfaIdentityProvider,
+            $forceAuthn
+        );
 
         // Use email address as subject
         $this->logger->info('Setting the users email address as the Subject');
