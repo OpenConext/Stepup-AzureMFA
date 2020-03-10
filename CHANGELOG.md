@@ -1,3 +1,7 @@
+# 1.1.0
+ - Session cookies are setup with SameSite=None #22
+ - JS dependencies have been updated #23
+
 # 1.0.2
  - Enforce authentication on RA authenications #21
 
