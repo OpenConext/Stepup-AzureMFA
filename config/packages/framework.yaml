@@ -8,7 +8,9 @@ framework:
     session:
         handler_id: null
         cookie_secure: auto
-        cookie_samesite: lax
+        # SameSite is set to none. As we must allow receiving a session cookie from the (trusted)
+        # remote Azure MFA IdP's
+        cookie_samesite: 'none'
     assets: ~
     #esi: true
     fragments: true
