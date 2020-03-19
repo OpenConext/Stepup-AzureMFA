@@ -929,16 +929,16 @@
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
-            "version": "3.0.5",
+            "version": "3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-gssp-bundle.git",
-                "reference": "941d9a7ed5fe680a7cc7d4bea9a8c3e411da7633"
+                "reference": "5db1042fbda8cc164e364164f72ca6260fbcb39b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/941d9a7ed5fe680a7cc7d4bea9a8c3e411da7633",
-                "reference": "941d9a7ed5fe680a7cc7d4bea9a8c3e411da7633",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/5db1042fbda8cc164e364164f72ca6260fbcb39b",
+                "reference": "5db1042fbda8cc164e364164f72ca6260fbcb39b",
                 "shasum": ""
             },
             "require": {
@@ -974,20 +974,20 @@
                 "Apache-2.0"
             ],
             "description": "A Symfony 3 bundle (with SF 4 support) to aid the creation of GSSP (Generic SAML Step-up Provider) device support.",
-            "time": "2020-02-24T09:27:27+00:00"
+            "time": "2020-03-19T09:54:38+00:00"
         },
         {
             "name": "surfnet/stepup-saml-bundle",
-            "version": "4.1.10",
+            "version": "4.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
-                "reference": "756310e6628b6dc9cfe66c81e37494fb470bc3bf"
+                "reference": "2fa2d44e5a005c2044b7898d9624648a4850b129"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/756310e6628b6dc9cfe66c81e37494fb470bc3bf",
-                "reference": "756310e6628b6dc9cfe66c81e37494fb470bc3bf",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/2fa2d44e5a005c2044b7898d9624648a4850b129",
+                "reference": "2fa2d44e5a005c2044b7898d9624648a4850b129",
                 "shasum": ""
             },
             "require": {
@@ -1028,7 +1028,7 @@
                 "stepup",
                 "surfnet"
             ],
-            "time": "2020-02-20T12:24:28+00:00"
+            "time": "2020-03-17T13:59:34+00:00"
         },
         {
             "name": "symfony/asset",
@@ -5155,6 +5155,7 @@
             ],
             "description": "This tool check syntax of PHP files about 20x faster than serial check.",
             "homepage": "https://github.com/JakubOnderka/PHP-Parallel-Lint",
+            "abandoned": "php-parallel-lint/php-parallel-lint",
             "time": "2018-02-24T15:31:20+00:00"
         },
         {

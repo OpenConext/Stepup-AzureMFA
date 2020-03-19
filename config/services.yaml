@@ -31,4 +31,3 @@ services:
     Surfnet\AzureMfa\Application\Service\AuthenticationHelper:
         arguments:
             $regex: '%ra_issuer_entity_id_regex%'
-            $authenticationService: '@Surfnet\GsspBundle\Service\AuthenticationService'
