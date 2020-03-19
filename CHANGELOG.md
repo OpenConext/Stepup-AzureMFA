@@ -1,3 +1,7 @@
+# 1.1.1
+ - ForceAuthn feature introduced in #21 was changed to peek into the scoping requester ids for retrieving the issuing SP. #24
+ - Installed JS security upgrades #25 
+
 # 1.1.0
  - Session cookies are setup with SameSite=None #22
  - JS dependencies have been updated #23
