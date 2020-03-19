@@ -214,7 +214,7 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest->setIssuer('https://azure-mfa.stepup.example.com/saml/metadata');
         $authnRequest->setNameId(['Value' => $nameId]);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
-
+        $authnRequest->setRequesterID(['https://azure-mfa.stepup.example.com/saml/metadata']);
         // Sign with random key, does not mather for now.
         $authnRequest->setSignatureKey(
             $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))

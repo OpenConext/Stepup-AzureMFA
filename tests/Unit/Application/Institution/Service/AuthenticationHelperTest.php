@@ -33,10 +33,10 @@ class AuthenticationHelperTest extends TestCase
      */
     public function test_domain_matching_works_as_intended(string $domainName) : void
     {
-        $authenticationService = m::mock(AuthenticationService::class);
-        $authenticationService->shouldReceive('getIssuer')
-            ->andReturn($domainName);
-        $helper = new AuthenticationHelper($this->regex, $authenticationService);
+        $authService = m::mock(AuthenticationService::class);
+        $authService->shouldReceive('getScopingRequesterIds')
+            ->andReturn([$domainName]);
+        $helper = new AuthenticationHelper($this->regex, $authService);
 
         $this->assertTrue($helper->useForceAuthn());
     }
@@ -47,10 +47,10 @@ class AuthenticationHelperTest extends TestCase
      */
     public function test_domain_matching_works_as_intended_on_invalid_uris(string $domainName) : void
     {
-        $authenticationService = m::mock(AuthenticationService::class);
-        $authenticationService->shouldReceive('getIssuer')
-            ->andReturn($domainName);
-        $helper = new AuthenticationHelper($this->regex, $authenticationService);
+        $authService = m::mock(AuthenticationService::class);
+        $authService->shouldReceive('getScopingRequesterIds')
+            ->andReturn([$domainName]);
+        $helper = new AuthenticationHelper($this->regex, $authService);
 
         $this->assertFalse($helper->useForceAuthn());
     }
@@ -71,5 +71,6 @@ class AuthenticationHelperTest extends TestCase
         yield ['https://example.a/vetting-procedure/gssf/azuremfa/metadata'];
         yield ['https://example.com/vetting-procedure/gssf/azuremfa/metadataa'];
         yield ['https://example.it\'s-invalid.com/vetting-procedure/gssf/azuremfa/metadata'];
+        yield [''];
     }
 }

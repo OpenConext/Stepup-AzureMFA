@@ -39,15 +39,21 @@ class AuthenticationHelper implements AuthenticationHelperInterface
      */
     private $authenticationService;
 
-    public function __construct(string $regex, AuthenticationService $authenticationService)
+    public function __construct(string $regex, AuthenticationService $authService)
     {
         $this->regex = $regex;
-        $this->authenticationService = $authenticationService;
+        $this->authenticationService = $authService;
     }
 
     public function useForceAuthn() : bool
     {
-        $issuer = $this->authenticationService->getIssuer();
+        $issuer = '';
+        $requesterIds = $this->authenticationService->getScopingRequesterIds();
+        // If Scoping=>RequesterIDs are set, get the first entry, which is the original issuer of the authn request.
+        if (!empty($requesterIds)) {
+            $issuer = array_shift($requesterIds);
+        }
+
         if (preg_match($this->regex, $issuer) == false) {
             return false;
         }
