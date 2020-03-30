@@ -48,6 +48,6 @@ class EmailAddress
     public function getDomain() : string
     {
         $explosion = explode('@', $this->emailAddress);
-        return strtolower($explosion[1]);
+        return strtolower(end($explosion));
     }
 }
