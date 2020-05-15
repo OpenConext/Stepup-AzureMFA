@@ -69,6 +69,7 @@ class MockGateway
      * @param Request $request
      * @param string $fullRequestUri
      * @return Response
+     * @throws \Exception
      */
     public function handleSsoSuccess(Request $request, $fullRequestUri)
     {
@@ -84,6 +85,7 @@ class MockGateway
         // handle success
         return $this->createSecondFactorOnlyResponse(
             $nameId,
+            $authnRequest->getNameId()->value,
             $destination,
             $authnContextClassRef,
             $requestId
@@ -113,16 +115,18 @@ class MockGateway
 
     /**
      * @param string $nameId
+     * @param string $emailAddress
      * @param string $destination The ACS location
      * @param string|null $authnContextClassRef The loa level
      * @param string $requestId The requestId
      * @return Response
      */
-    private function createSecondFactorOnlyResponse($nameId, $destination, $authnContextClassRef, $requestId)
+    private function createSecondFactorOnlyResponse($nameId, $emailAddress, $destination, $authnContextClassRef, $requestId)
     {
         return $this->createNewAuthnResponse(
             $this->createNewAssertion(
                 $nameId,
+                $emailAddress,
                 $authnContextClassRef,
                 $destination,
                 $requestId
@@ -290,12 +294,13 @@ class MockGateway
 
     /**
      * @param string $nameId
+     * @param $emailAddress
      * @param string $authnContextClassRef
      * @param string $destination The ACS location
      * @param string $requestId The requestId
      * @return Assertion
      */
-    private function createNewAssertion($nameId, $authnContextClassRef, $destination, $requestId)
+    private function createNewAssertion($nameId,$emailAddress, $authnContextClassRef, $destination, $requestId)
     {
         $newAssertion = new Assertion();
         $newAssertion->setNotBefore($this->currentTime->getTimestamp());
@@ -307,6 +312,9 @@ class MockGateway
         $newAssertion->setNameId([
             'Format' => Constants::NAMEID_UNSPECIFIED,
             'Value' => $nameId,
+        ]);
+        $newAssertion->setAttributes([
+            'urn:mace:dir:attribute-def:emailAddress' => [$emailAddress]
         ]);
         $newAssertion->setValidAudiences([$this->gatewayConfiguration->getServiceProviderEntityId()]);
         $this->addAuthenticationStatementTo($newAssertion, $authnContextClassRef);

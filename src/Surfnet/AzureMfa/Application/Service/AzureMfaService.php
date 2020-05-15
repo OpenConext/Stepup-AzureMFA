@@ -38,6 +38,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class AzureMfaService
 {
+    const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:email';
+
     /**
      * @var EmailDomainMatchingService
      */
@@ -194,9 +196,18 @@ class AzureMfaService
             $this->serviceProvider
         );
 
-        if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
+        $attributes = $assertion->getAttributes();
+
+        if (!isset($attributes[self::SAML_EMAIL_ATTRIBUTE]) || !isset($attributes[self::SAML_EMAIL_ATTRIBUTE][0])) {
             throw new InvalidMfaNameIdException(
-                'The NameId from the Azure MFA assertion did not match the NameId provided during registration'
+                'The email attribute from the Azure MFA assertion was missing'
+            );
+        }
+        $emailAddressAttribute = $attributes[self::SAML_EMAIL_ATTRIBUTE][0];
+
+        if ($emailAddressAttribute !== $user->getEmailAddress()->getEmailAddress()) {
+            throw new InvalidMfaNameIdException(
+                'The email attribute from the Azure MFA assertion did not match the NameId provided during registration'
             );
         }
         $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
