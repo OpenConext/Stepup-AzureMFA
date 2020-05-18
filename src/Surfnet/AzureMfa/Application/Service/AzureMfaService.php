@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class AzureMfaService
 {
-    const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:email';
+    const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
 
     /**
      * @var EmailDomainMatchingService
