@@ -27,5 +27,6 @@ default:
             contexts:
                 - Surfnet\AzureMfa\Test\Features\Context\WebContext
                 - Surfnet\AzureMfa\Test\Features\Context\ErrorReportContext
+                - Surfnet\AzureMfa\Test\Features\Context\MockIDPContext
                 - Behat\MinkExtension\Context\MinkContext
                 - behatch:context:xml
