@@ -11,6 +11,8 @@
     "serialize-javascript": "^2.1"
   },
   "resolutions": {
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "yargs-parser": "^13.1.2",
+    "http-proxy": "1.18.1"
   }
 }

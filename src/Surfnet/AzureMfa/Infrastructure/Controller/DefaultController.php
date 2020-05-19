@@ -18,6 +18,7 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Service\AuthenticationHelperInterface;
 use Surfnet\AzureMfa\Application\Service\AzureMfaService;
@@ -27,7 +28,6 @@ use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
-use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -175,7 +175,7 @@ class DefaultController extends AbstractController
                 $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
-        } catch (AuthnFailedSamlResponseException $e) {
+        } catch (Exception $e) {
             $this->logger->error('The authentication or registration failed. Rejecting the Azure MFA response.');
             $this->registrationService->reject($request->get('message'));
         }

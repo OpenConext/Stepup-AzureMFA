@@ -19,6 +19,7 @@ namespace Dev\Mock;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use LogicException;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use RuntimeException;
@@ -56,7 +57,7 @@ class MockGateway
 
     /**
      * @param MockConfiguration $gatewayConfiguration
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(
         MockConfiguration $gatewayConfiguration
@@ -68,9 +69,11 @@ class MockGateway
     /**
      * @param Request $request
      * @param string $fullRequestUri
+     * @param array $attributes
      * @return Response
+     * @throws Exception
      */
-    public function handleSsoSuccess(Request $request, $fullRequestUri)
+    public function handleSsoSuccess(Request $request, $fullRequestUri, array $attributes)
     {
         // parse the authnRequest
         $authnRequest = $this->parseRequest($request, $fullRequestUri);
@@ -86,7 +89,8 @@ class MockGateway
             $nameId,
             $destination,
             $authnContextClassRef,
-            $requestId
+            $requestId,
+            $attributes
         );
     }
 
@@ -116,17 +120,22 @@ class MockGateway
      * @param string $destination The ACS location
      * @param string|null $authnContextClassRef The loa level
      * @param string $requestId The requestId
+     * @param array $attributes All new attributes, as an associative array.
      * @return Response
      */
-    private function createSecondFactorOnlyResponse($nameId, $destination, $authnContextClassRef, $requestId)
+    private function createSecondFactorOnlyResponse($nameId, $destination, $authnContextClassRef, $requestId, array $attributes)
     {
+        $assertion = $this->createNewAssertion(
+            $nameId,
+            $authnContextClassRef,
+            $destination,
+            $requestId
+        );
+
+        $assertion->setAttributes($attributes);
+
         return $this->createNewAuthnResponse(
-            $this->createNewAssertion(
-                $nameId,
-                $authnContextClassRef,
-                $destination,
-                $requestId
-            ),
+            $assertion,
             $destination,
             $requestId
         );
@@ -136,14 +145,14 @@ class MockGateway
      * @param string $samlRequest
      * @param string $fullRequestUri
      * @return SAML2AuthnRequest
-     * @throws \Exception
+     * @throws Exception
      */
     private function parseRequest(Request $request, $fullRequestUri)
     {
         // the GET parameter is already urldecoded by Symfony, so we should not do it again.
         $requestData = $request->get(self::PARAMETER_REQUEST);
 
-        if (empty($requestData)){
+        if (empty($requestData)) {
             throw new BadRequestHttpException('Missing a request, did not receive a request or request was empty');
         }
 
@@ -290,6 +299,7 @@ class MockGateway
 
     /**
      * @param string $nameId
+     * @param $emailAddress
      * @param string $authnContextClassRef
      * @param string $destination The ACS location
      * @param string $requestId The requestId

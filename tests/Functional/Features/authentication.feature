@@ -5,19 +5,19 @@ Feature: When an user needs to authenticate
   Scenario: The user authenticates successfully
     Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
     And the received AuthNRequest should have the ForceAuthn attribute
-    And I press "Submit-success"
+    Given the login with Azure MFA succeeds and the email addresses "user@stepup.example.com" are released
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"
     And the SAML Response should contain element "NameID" with value "q2b27d-0000|user@stepup.example.com"
 
   Scenario: Authentication fails on the Azure MFA side
     Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
-    And I press "Submit-user-cancelled"
+    And the login with Azure MFA gets cancelled
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
 
   Scenario: Authentication fails because of unknown user on the Azure MFA side
     Given I send an authentication request request to "https://azure-mfa.stepup.example.com/saml/sso" with NameID "q2b27d-0000|user@stepup.example.com"
-    And I press "Submit-unknown"
+    And the login with Azure MFA fails
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"

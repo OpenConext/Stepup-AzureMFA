@@ -1,4 +1,7 @@
-# 1.1.1
+# 1.1.3
+ - Do validation on emailaddress and not NameId when saml response is received from Azure MFA. #31
+ 
+ # 1.1.1
  - ForceAuthn feature introduced in #21 was changed to peek into the scoping requester ids for retrieving the issuing SP. #24
  - Installed JS security upgrades #25 
 
