@@ -1,4 +1,4 @@
-# 1.1.2
+# 1.1.3
  - Do validation on emailaddress and not NameId when saml response is received from Azure MFA. #31
  
  # 1.1.1
