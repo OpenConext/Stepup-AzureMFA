@@ -22,7 +22,8 @@ use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
-use Surfnet\AzureMfa\Domain\Exception\InvalidMfaNameIdException;
+use Surfnet\AzureMfa\Domain\Exception\MailAttributeMismatchException;
+use Surfnet\AzureMfa\Domain\Exception\MissingMailAttributeException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
@@ -38,6 +39,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class AzureMfaService
 {
+    const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
+
     /**
      * @var EmailDomainMatchingService
      */
@@ -194,11 +197,20 @@ class AzureMfaService
             $this->serviceProvider
         );
 
-        if ($assertion->getNameId()->value !== $user->getEmailAddress()->getEmailAddress()) {
-            throw new InvalidMfaNameIdException(
-                'The NameId from the Azure MFA assertion did not match the NameId provided during registration'
+        $attributes = $assertion->getAttributes();
+
+        if (!isset($attributes[self::SAML_EMAIL_ATTRIBUTE])) {
+            throw new MissingMailAttributeException(
+                'The mail attribute in the Azure MFA assertion was missing'
             );
         }
+
+        if (!in_array($user->getEmailAddress()->getEmailAddress(), $attributes[self::SAML_EMAIL_ATTRIBUTE])) {
+            throw new MailAttributeMismatchException(
+                'The mail attribute from the Azure MFA assertion did not contain the email address provided during registration'
+            );
+        }
+
         $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
         return $user;
     }

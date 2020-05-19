@@ -22,7 +22,7 @@ Feature: When an user needs switch it's preferred locale
     Then I should see "Registration"
     And I fill in "Email address" with "test-user@institution-a.example.com"
     When I press "Submit"
-    And I press "Submit-success"
+    Given the login with Azure MFA succeeds and the email addresses "test-user@institution-a.example.com" are released
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"
     And the SAML Response should contain element "NameID" with value containing "test-user@institution-a.example.com"

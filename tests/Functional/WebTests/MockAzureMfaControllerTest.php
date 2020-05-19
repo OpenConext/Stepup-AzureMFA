@@ -26,7 +26,11 @@ use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\SAML2\AuthnRequest;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
+/**
+ * @SuppressWarnings(PHPCPD)
+ */
 class MockAzureMfaControllerTest extends WebTestCase
 {
     /**
@@ -44,7 +48,10 @@ class MockAzureMfaControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->client = static::createClient();;
+        $this->client = static::createClient();
+        $this->client->followRedirects(true);
+        $this->client->disableReboot();
+
         $projectDir = self::$kernel->getProjectDir();
 
         $this->publicKey = $projectDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
@@ -61,13 +68,13 @@ class MockAzureMfaControllerTest extends WebTestCase
 
         // Test if on decision page
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('success', $crawler->filter('h2')->text());
-        $this->assertStringContainsString('One moment please...', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
     }
 
     public function testSuccessfulResponse()
     {
         $emailAddress = 'user@organization.tld';
+        $releasedEmailAddresses = ['user@organization.tld'];
 
         $authnRequestUrl = $this->createAuthnRequestUrl($this->createServiceProvider(), $this->createIdentityProvider(), $emailAddress);
 
@@ -75,17 +82,63 @@ class MockAzureMfaControllerTest extends WebTestCase
 
         // Test if on decision page
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('success', $crawler->filter('h2')->text());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
 
-        // Return success response
-        $form = $crawler->selectButton('Submit-success')->form();
-        $crawler = $this->client->submit($form);
+        // Post response
+        $this->postMockIdpForm($crawler, 'success', $releasedEmailAddresses);
 
         // Test if on sp acs
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Demo Service provider ConsumerAssertionService endpoint', $crawler->filter('h2')->text());
-        $this->assertStringContainsString($emailAddress, $this->client->getResponse());
+        $this->assertStringContainsString('urn:oasis:names:tc:SAML:2.0:status:Success', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('urn:mace:dir:attribute-def:mail', $crawler->html());
+        $this->assertStringContainsString($emailAddress, $this->client->getResponse()->getContent());
     }
+
+    public function testSuccessfulResponseWithoutMailAttribute()
+    {
+        $emailAddress = 'user@organization.tld';
+        $releasedEmailAddresses = null;
+
+        $authnRequestUrl = $this->createAuthnRequestUrl($this->createServiceProvider(), $this->createIdentityProvider(), $emailAddress);
+
+        $crawler = $this->client->request('GET', $authnRequestUrl);
+
+        // Test if on decision page
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
+
+        // Post response
+        $crawler = $this->postMockIdpForm($crawler, 'success', $releasedEmailAddresses);
+
+        // Test if on sp acs
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('urn:oasis:names:tc:SAML:2.0:status:Success', $crawler->html());
+        $this->assertStringNotContainsString('urn:mace:dir:attribute-def:mail', $crawler->html());
+    }
+
+    public function testSuccessfulResponseWithMultipleEmailAddress()
+    {
+        $emailAddress = 'user@organization.tld';
+        $releasedEmailAddresses = ['email1@organization.tld', 'email2@organization.tld'];
+
+        $authnRequestUrl = $this->createAuthnRequestUrl($this->createServiceProvider(), $this->createIdentityProvider(), $emailAddress);
+
+        $crawler = $this->client->request('GET', $authnRequestUrl);
+
+        // Test if on decision page
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
+
+        // Post response
+        $crawler = $this->postMockIdpForm($crawler, 'success', $releasedEmailAddresses);
+
+        // Test if on sp acs
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('urn:oasis:names:tc:SAML:2.0:status:Success', $crawler->html());
+        $this->assertStringContainsString('email1@organization.tld', $crawler->html());
+        $this->assertStringContainsString('email2@organization.tld', $crawler->html());
+    }
+
 
     public function testUserCancelledResponse()
     {
@@ -97,17 +150,16 @@ class MockAzureMfaControllerTest extends WebTestCase
 
         // Test if on decision page
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('success', $crawler->filter('h2')->text());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
 
-        // Return success response
-        $form = $crawler->selectButton('Submit-user-cancelled')->form();
-        $crawler = $this->client->submit($form);
+        // Post response
+        $crawler = $this->postMockIdpForm($crawler, 'user-cancelled');
 
         // Test if on sp acs
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('Demo Service provider ConsumerAssertionService endpoint', $crawler->filter('h2')->text());
-        $this->assertStringContainsString('Error SAMLResponse', $this->client->getResponse());
-        $this->assertStringContainsString('Responder/AuthnFailed Authentication cancelled by user', $this->client->getResponse());
+        $this->assertStringContainsString('Error SAMLResponse', $crawler->html());
+        $this->assertStringContainsString('Responder/AuthnFailed Authentication cancelled by user', $crawler->html());
     }
 
     public function testUnsuccessfulResponse()
@@ -120,17 +172,16 @@ class MockAzureMfaControllerTest extends WebTestCase
 
         // Test if on decision page
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('success', $crawler->filter('h2')->text());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
 
-        // Return success response
-        $form = $crawler->selectButton('Submit-unknown')->form();
-        $crawler = $this->client->submit($form);
+        // Post response
+        $crawler = $this->postMockIdpForm($crawler, 'unknown');
 
         // Test if on sp acs
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('Demo Service provider ConsumerAssertionService endpoint', $crawler->filter('h2')->text());
-        $this->assertStringContainsString('Error SAMLResponse', $this->client->getResponse());
-        $this->assertStringContainsString('Responder/AuthnFailed', $this->client->getResponse());
+        $this->assertStringContainsString('Error SAMLResponse', $crawler->html());
+        $this->assertStringContainsString('Responder/AuthnFailed', $crawler->html());
     }
 
     /**
@@ -236,5 +287,34 @@ class MockAzureMfaControllerTest extends WebTestCase
         $key->loadKey($privateKey->getKeyAsString());
 
         return $key;
+    }
+
+    /**
+     * @param Crawler $crawler
+     * @param string $state State button to press
+     * @param string[]|null $emailAddresses
+     * @return Crawler
+     */
+    private function postMockIdpForm(Crawler $crawler, $state, array $emailAddresses = null)
+    {
+        $data = '[]';
+        if (is_array($emailAddresses)) {
+            $jsonMail = json_encode($emailAddresses);
+            $data = sprintf('[{"name":"urn:mace:dir:attribute-def:mail","value":%s}]', $jsonMail);
+        }
+
+        // Test if on decision page
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Select response', $crawler->filter('h2')->text());
+
+        // Set response attributes and post form
+        $form = $crawler->selectButton($state)->form();
+        $form->get('attributes')->setValue($data);
+        $crawler = $this->client->submit($form);
+
+        // Post response
+        $form = $crawler->selectButton('Post')->form();
+
+        return $this->client->submit($form);
     }
 }

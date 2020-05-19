@@ -8,17 +8,26 @@ Feature: When an user needs to register for a new token
     Then I should see "Registration"
     And I fill in "Email address" with "test-user@institution-a.example.com"
     When I press "Submit"
-    And I press "Submit-success"
+    Given the login with Azure MFA succeeds and the email addresses "test-user@institution-a.example.com" are released
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"
     And the SAML Response should contain element "NameID" with value containing "test-user@institution-a.example.com"
 
-  Scenario: When a user is registering a new token, authentication at Azure MFA fails
+  Scenario: When a user is registering a new token, and if an unknown mail address gets released authentication at Azure MFA fails
     Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
     And I fill in "Email address" with "test-user@institution-a.example.com"
     When I press "Submit"
-    And I press "Submit-user-cancelled"
+    Given the login with Azure MFA succeeds and the email addresses "unknown@institution-a.example.com" are released
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
+
+  Scenario: When a user is registering a new token, and if no mail attribute gets released authentication at Azure MFA fails
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
+    Then I should see "Registration"
+    And I fill in "Email address" with "test-user@institution-a.example.com"
+    When I press "Submit"
+    Given the login with Azure MFA succeeds and the email addresses "" are released
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
 
@@ -27,7 +36,16 @@ Feature: When an user needs to register for a new token
     Then I should see "Registration"
     And I fill in "Email address" with "test-user@institution-a.example.com"
     When I press "Submit"
-    And I press "Submit-unknown"
+    And the login with Azure MFA gets cancelled
+    Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
+    And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
+
+  Scenario: When a user is registering a new token, authentication at Azure MFA fails
+    Given I send a registration request request to "https://azure-mfa.stepup.example.com/saml/sso"
+    Then I should see "Registration"
+    And I fill in "Email address" with "test-user@institution-a.example.com"
+    When I press "Submit"
+    Given the login with Azure MFA fails
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
 
