@@ -157,9 +157,11 @@ class AzureMfaService
             $forceAuthn
         );
 
-        // Use email address as subject
-        //$this->logger->info('Setting the users email address as the Subject');
-        //$authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
+        // Use email address as subject if not sending to an AzureAD IdP
+        if (!(strpos($destination->getUrl(),"https://login.microsoftonline.com/") === 0)) {
+          $this->logger->info('Setting the users email address as the Subject');
+          $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
+        }
 
         // Set authnContextClassRef to force MFA
         $this->logger->info(
