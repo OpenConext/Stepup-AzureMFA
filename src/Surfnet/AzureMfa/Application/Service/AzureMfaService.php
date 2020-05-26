@@ -158,8 +158,8 @@ class AzureMfaService
         );
 
         // Use email address as subject
-        $this->logger->info('Setting the users email address as the Subject');
-        $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
+        //$this->logger->info('Setting the users email address as the Subject');
+        //$authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
 
         // Set authnContextClassRef to force MFA
         $this->logger->info(
