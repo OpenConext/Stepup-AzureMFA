@@ -226,7 +226,7 @@ class AzureMfaService
             );
         }
 
-        $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
+        $this->logger->info('The mail attribute in the response matched the email address of the registering/authenticating user');
         return $user;
     }
 }
