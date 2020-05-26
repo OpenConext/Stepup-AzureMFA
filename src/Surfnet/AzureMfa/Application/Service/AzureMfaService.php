@@ -158,9 +158,10 @@ class AzureMfaService
         );
 
         // Use email address as subject if not sending to an AzureAD IdP
-        if (!(strpos($destination->getUrl(),"https://login.microsoftonline.com/") === 0)) {
-          $this->logger->info('Setting the users email address as the Subject');
-          $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
+        // TODO: This should be a config parameter in institutions.yaml instead of string matching
+        if (!(strpos($destination->getUrl(), "https://login.microsoftonline.com/") === 0)) {
+            $this->logger->info('Setting the users email address as the Subject');
+            $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
         }
 
         // Set authnContextClassRef to force MFA
@@ -201,17 +202,18 @@ class AzureMfaService
 
         $attributes = $assertion->getAttributes();
 
+        // TODO: This should be a config parameter in institutions.yaml instead of string matching
         // If the IDP was an AzureAD endpoint (the entityID or Issuer starts with https://login.microsoftonline.com/, or preferably an config parameter in institutions.yaml)
         // the SAML response attribute 'http://schemas.microsoft.com/claims/authnmethodsreferences'
         // should contain 'http://schemas.microsoft.com/claims/multipleauthn'
-        if (strpos($azureMfaIdentityProvider->getSsoUrl(),"https://login.microsoftonline.com/") === 0) {
-          $this->logger->info('This is an AzureAD IdP. Validating authnmethodsreferences in the response.');
-          if (!in_array('http://schemas.microsoft.com/claims/multipleauthn',$attributes['http://schemas.microsoft.com/claims/authnmethodsreferences'])) {
-            // TODO: Create a proper AuthnmethodsreferencesMissingException
-            throw new Exception(
-                'No http://schemas.microsoft.com/claims/multipleauthn in authnmethodsreferences.'
-            );
-          }
+        if (strpos($azureMfaIdentityProvider->getSsoUrl(), "https://login.microsoftonline.com/") === 0) {
+            $this->logger->info('This is an AzureAD IdP. Validating authnmethodsreferences in the response.');
+            if (!in_array('http://schemas.microsoft.com/claims/multipleauthn', $attributes['http://schemas.microsoft.com/claims/authnmethodsreferences'])) {
+                // TODO: Create a proper AuthnmethodsreferencesMissingException
+                throw new Exception(
+                    'No http://schemas.microsoft.com/claims/multipleauthn in authnmethodsreferences.'
+                );
+            }
         }
 
         if (!isset($attributes[self::SAML_EMAIL_ATTRIBUTE])) {
