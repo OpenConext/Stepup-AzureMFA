@@ -19,9 +19,6 @@ cache:
   directories:
     - ~/.composer/cache/files
 
-before_install:
-  - gem install chromedriver-helper -v 1.2.0
-
 before_script:
   # configure ssl
   - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/azure-mfa.key -out /etc/ssl/certs/azure-mfa.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=azure-mfa.stepup.example.com"
@@ -47,14 +44,20 @@ before_script:
   - touch $TRAVIS_BUILD_DIR/access.log
   - sudo service apache2 restart
 
-  # Install dependencies
-  - chromedriver-update 80.0.3987.106
+  # Update config
   - cp .env.ci .env
   - cp config/packages/parameters.yaml.dist config/packages/parameters.yaml
   - cp config/packages/institutions.yaml.dist config/packages/institutions.yaml
+
+  # Install dependencies
   - composer install
   - yarn install
   - yarn encore dev
+
+  # Install Chrome testing stack and update Symfony Panther Chrome drivers
+  - CHROME_VERSION="$(google-chrome --version | grep -Eo '[0-9.]{10,20}' | grep -Eo '^[0-9]*')"
+  - echo ${CHROME_VERSION}
+  - cd ./vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../../
 
   # Check if everything runs properly
   - ps aux | grep php-fpm
