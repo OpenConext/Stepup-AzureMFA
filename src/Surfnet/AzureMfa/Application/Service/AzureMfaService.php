@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class AzureMfaService
 {
     const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
+    const AZUREAD_LOGIN_URL = 'https://login.microsoftonline.com/';
 
     /**
      * @var EmailDomainMatchingService
@@ -159,7 +160,7 @@ class AzureMfaService
 
         // Use email address as subject if not sending to an AzureAD IdP
         // TODO: This should be a config parameter in institutions.yaml instead of string matching
-        if (!(strpos($destination->getUrl(), "https://login.microsoftonline.com/") === 0)) {
+        if (!(strpos($destination->getUrl(), AZUREAD_LOGIN_URL) === 0)) {
             $this->logger->info('Setting the users email address as the Subject');
             $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
         }
@@ -206,7 +207,7 @@ class AzureMfaService
         // If the IDP was an AzureAD endpoint (the entityID or Issuer starts with https://login.microsoftonline.com/, or preferably an config parameter in institutions.yaml)
         // the SAML response attribute 'http://schemas.microsoft.com/claims/authnmethodsreferences'
         // should contain 'http://schemas.microsoft.com/claims/multipleauthn'
-        if (strpos($azureMfaIdentityProvider->getSsoUrl(), "https://login.microsoftonline.com/") === 0) {
+        if (strpos($azureMfaIdentityProvider->getSsoUrl(), AZUREAD_LOGIN_URL) === 0) {
             $this->logger->info('This is an AzureAD IdP. Validating authnmethodsreferences in the response.');
             if (!in_array('http://schemas.microsoft.com/claims/multipleauthn', $attributes['http://schemas.microsoft.com/claims/authnmethodsreferences'])) {
                 // TODO: Create a proper AuthnmethodsreferencesMissingException
