@@ -9,6 +9,7 @@ parameters:
     locales:
         - nl_NL
         - en_GB
+    default_locale: en_GB
 
     saml_idp_publickey: '%kernel.root_dir%/../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'
     saml_idp_privatekey: '%kernel.root_dir%/../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem'
