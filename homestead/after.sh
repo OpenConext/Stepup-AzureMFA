@@ -11,7 +11,7 @@ echo "########\n# Update APT repositories and install development requirements f
 
 # Install the plantuml dependency (used to generate UML diagrams in the markdown files
 sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive apt-get -y install plantuml chromium-browser php7.2-gmp
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install plantuml php7.2-gm
 
 echo "\n########\n# Update PHP settings\n######\n"
 # Set timezone
@@ -47,3 +47,13 @@ yarn install
 echo "\n########\n# Compile front-end dependencies\n######\n"
 # Finally compile the front-end assets using Webpack Encore
 yarn encore dev
+
+# Install latest stable Chrome
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+sudo apt-get update && sudo apt-get install -y google-chrome-stable
+
+# Install Chrome testing stack and update Symfony Panther Chrome drivers
+CHROME_VERSION="$(chromium-browser --version | grep -Eo '[0-9.]{10,20}' | grep -Eo '^[0-9]*')"
+echo ${CHROME_VERSION}
+cd ./vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../../
