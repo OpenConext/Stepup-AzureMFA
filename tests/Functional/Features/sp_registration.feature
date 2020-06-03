@@ -20,7 +20,9 @@ Feature: When an user needs to register for a new token
 
     # The MFA SSO page
     Then I should be on "https://azure-mfa.stepup.example.com/mock/sso"
-    Given the login with Azure MFA succeeds and the email addresses "user@stepup.example.com" are released
+    Given the login with Azure MFA succeeds and the following attributes are released:
+      | name                                                       | value                  |
+      | urn:mace:dir:attribute-def:mail                            | user@stepup.example.com |
 
     # The GSSP acs page.
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"

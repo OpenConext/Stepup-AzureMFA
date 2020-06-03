@@ -42,6 +42,7 @@ data:
           VE1Qmb8MkAFU9cMaWd0AH/PV2QNBROlG/V0rDRIbEt/yEcbHy/m4xJHk/mrsq0p/
           EwBxDRBplyUvHHwH2ruG24B/ENh6cuwhOCzqoqzUdnmYFwhEuRJY+ksw
           -----END CERTIFICATE-----
+      is_azure_ad: false
     harting-college.nl:
       entity_id: 'https://adfs.harting-college.nl/'
       sso_location: 'https://adfs.harting-college.nl/adfs/ls/'
@@ -66,3 +67,4 @@ data:
           mXmePwbNrp+8JXae3AULMa7uR9Ai/eLESFcmIM79duCOrgmm5Nj11kIfHvA2qrfd
           BYY=
           -----END CERTIFICATE-----
+      is_azure_ad: false

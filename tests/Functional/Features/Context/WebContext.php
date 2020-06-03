@@ -20,8 +20,8 @@ namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use DOMNode;
@@ -37,7 +37,6 @@ use SAML2\Message;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use function GuzzleHttp\Psr7\parse_query;
 
@@ -183,7 +182,7 @@ class WebContext implements Context, KernelAwareContext
     }
 
     /**
-     * @Given /^I send a registration request request to "(?P<destination>(?:[^"]|\\")*)"$/
+     * @Given /^I send a registration request to "(?P<destination>(?:[^"]|\\")*)"$/
      */
     public function iSendARegistrationRequestRequestTo($destination)
     {
@@ -204,9 +203,9 @@ class WebContext implements Context, KernelAwareContext
     }
 
     /**
-     * @Given I send an authentication request request to :destination with NameID :nameId
+     * @Given I send an authentication request to :destination with NameID :nameId
      */
-    public function iSendAnAuthenticationRequestRequestToWithNameid($destination, $nameId)
+    public function iSendAnAuthenticationRequestRequestToWithNameID($destination, $nameId = "")
     {
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://azure-mfa.stepup.example.com/saml/acs');
@@ -223,6 +222,14 @@ class WebContext implements Context, KernelAwareContext
         $request = Saml2AuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath($destination.'?' . $query);
+    }
+
+    /**
+     * @Given I send an authentication request to :destination without NameID
+     */
+    public function iSendAnAuthenticationRequestRequestToWithoutNameID($destination, $nameId = "")
+    {
+        $this->iSendAnAuthenticationRequestRequestToWithNameID($destination);
     }
 
     /**
@@ -270,8 +277,8 @@ class WebContext implements Context, KernelAwareContext
             sprintf(
                 'The value of element %s did not match expected value "%s", actual value: "%s"',
                 $elementName,
-                $actualAttributeValue,
-                $expectedAttributeValue
+                $expectedAttributeValue,
+                $actualAttributeValue
             )
         );
     }
@@ -302,7 +309,7 @@ class WebContext implements Context, KernelAwareContext
     public function iShouldSeeANameIDWithEmailAddress($emailAddress){
 
         $quotedEmailAddress = preg_quote($emailAddress);
-        $regex = '/[a-z0-9]{6}-[a-z0-9]{4}\|' . $quotedEmailAddress . '/';
+        $regex = '/[a-z0-9]{1,6}-[a-z0-9]{1,4}\|' . $quotedEmailAddress . '/';
 
         $actual = $this->minkContext->getSession()->getPage()->getContent();
         $message = sprintf('The MFA NameId "%s" was not found anywhere in the HTML response of the current page.', $emailAddress);
