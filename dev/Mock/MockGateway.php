@@ -79,7 +79,7 @@ class MockGateway
         $authnRequest = $this->parseRequest($request, $fullRequestUri);
 
         // get parameters from authnRequest
-        $nameId = $authnRequest->getNameId()->value;
+        $nameId = $authnRequest->getNameId() ? $authnRequest->getNameId()->value : null;
         $destination = $authnRequest->getAssertionConsumerServiceURL();
         $authnContextClassRef = current($authnRequest->getRequestedAuthnContext()['AuthnContextClassRef']);
         $requestId = $authnRequest->getId();
@@ -298,8 +298,8 @@ class MockGateway
     }
 
     /**
-     * @param string $nameId
-     * @param $emailAddress
+     * @param string|null $nameId
+     * @param string $emailAddress
      * @param string $authnContextClassRef
      * @param string $destination The ACS location
      * @param string $requestId The requestId
@@ -314,10 +314,12 @@ class MockGateway
         $newAssertion->setIssueInstant($this->getTimestamp());
         $this->signAssertion($newAssertion);
         $this->addSubjectConfirmationFor($newAssertion, $destination, $requestId);
-        $newAssertion->setNameId([
-            'Format' => Constants::NAMEID_UNSPECIFIED,
-            'Value' => $nameId,
-        ]);
+        if (!is_null($nameId)) {
+            $newAssertion->setNameId([
+                'Format' => Constants::NAMEID_UNSPECIFIED,
+                'Value' => $nameId,
+            ]);
+        }
         $newAssertion->setValidAudiences([$this->gatewayConfiguration->getServiceProviderEntityId()]);
         $this->addAuthenticationStatementTo($newAssertion, $authnContextClassRef);
 

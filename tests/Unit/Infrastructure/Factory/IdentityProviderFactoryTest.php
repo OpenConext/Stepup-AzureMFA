@@ -47,10 +47,11 @@ class IdentityProviderFactoryTest extends TestCase
             ->shouldReceive('first->getCertData')
             ->andReturn('certData');
 
-        $identityProvider = $factory->build($entityId, $ssoLocation, $certCollection);
+        $identityProvider = $factory->build($entityId, $ssoLocation, $certCollection, false);
         $this->assertEquals('entityId', $identityProvider->getEntityId()->getEntityId());
         $this->assertEquals('https://sso-location.example.com', $identityProvider->getSsoLocation()->getUrl());
         $this->assertEquals('certData', $identityProvider->getCertificates()->first()->getCertData());
+        $this->assertEquals(false, $identityProvider->isAzureAD());
 
     }
 }

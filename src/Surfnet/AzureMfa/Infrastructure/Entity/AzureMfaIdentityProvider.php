@@ -31,13 +31,14 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
      */
     private $certificates;
 
-    public function __construct(EntityId $entityId, Destination $destination, CertificateCollection $certificates)
+    public function __construct(EntityId $entityId, Destination $destination, CertificateCollection $certificates, bool $isAzureId)
     {
         $configuration = [
             // The entityId is not configured in the
             'entityId' => $entityId->getEntityId(),
             'ssoUrl' => $destination->getUrl(),
-            'certificateData' => $certificates->first()->getCertData()
+            'certificateData' => $certificates->first()->getCertData(),
+            'isAzureAD' => $isAzureId,
         ];
 
         $this->certificates = $certificates;
@@ -57,5 +58,10 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
     public function getCertificates(): CertificateCollection
     {
         return $this->certificates;
+    }
+
+    public function isAzureAD(): bool
+    {
+        return $this->get('isAzureAD');
     }
 }

@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\Exception\AzureADException;
 use Surfnet\AzureMfa\Domain\Exception\MailAttributeMismatchException;
 use Surfnet\AzureMfa\Domain\Exception\MissingMailAttributeException;
 use Surfnet\AzureMfa\Domain\User;
@@ -157,9 +158,11 @@ class AzureMfaService
             $forceAuthn
         );
 
-        // Use email address as subject
-        $this->logger->info('Setting the users email address as the Subject');
-        $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
+        // Use email address as subject if not sending to an AzureAD IdP
+        if (!$azureMfaIdentityProvider->isAzureAD()) {
+            $this->logger->info('Setting the users email address as the Subject');
+            $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
+        }
 
         // Set authnContextClassRef to force MFA
         $this->logger->info(
@@ -199,6 +202,19 @@ class AzureMfaService
 
         $attributes = $assertion->getAttributes();
 
+        // If the IDP was an AzureAD endpoint (the entityID or Issuer starts with https://login.microsoftonline.com/, or preferably an config parameter in institutions.yaml)
+        // the SAML response attribute 'http://schemas.microsoft.com/claims/authnmethodsreferences'
+        // should contain 'http://schemas.microsoft.com/claims/multipleauthn'
+        if ($azureMfaIdentityProvider->isAzureAD()) {
+            $this->logger->info('This is an AzureAD IdP. Validating authnmethodsreferences in the response.');
+            if (!isset($attributes['http://schemas.microsoft.com/claims/authnmethodsreferences']) || !in_array('http://schemas.microsoft.com/claims/multipleauthn', $attributes['http://schemas.microsoft.com/claims/authnmethodsreferences'])) {
+                // TODO: Create a proper AuthnmethodsreferencesMissingException
+                throw new AzureADException(
+                    'No http://schemas.microsoft.com/claims/multipleauthn in authnmethodsreferences.'
+                );
+            }
+        }
+
         if (!isset($attributes[self::SAML_EMAIL_ATTRIBUTE])) {
             throw new MissingMailAttributeException(
                 'The mail attribute in the Azure MFA assertion was missing'
@@ -211,7 +227,7 @@ class AzureMfaService
             );
         }
 
-        $this->logger->info('The NameId value matched the email address of the registering/authenticating user');
+        $this->logger->info('The mail attribute in the response matched the email address of the registering/authenticating user');
         return $user;
     }
 }

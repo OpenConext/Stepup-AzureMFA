@@ -94,7 +94,7 @@ class ConfigurationValidatorTest extends TestCase
             ],
             'invalid second entry' => [
                 'invalid_second_entry.yaml',
-                'Unrecognized options "hostname, username, password" under "institution_configuration.institutions.institution-b.example.com". Available options are "certificates", "email_domains", "entity_id", "sso_location".'
+                'Unrecognized options "hostname, username, password" under "institution_configuration.institutions.institution-b.example.com". Available options are "certificates", "email_domains", "entity_id", "is_azure_ad", "sso_location".'
             ],
             'invalid entity id' => [
                 'invalid_entity_id.yaml',
