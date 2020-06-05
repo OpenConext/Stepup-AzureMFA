@@ -1,3 +1,6 @@
+# 1.2.0
+ - Support direct connection to AzureAD #33
+ 
 # 1.1.3
  - Do validation on emailaddress and not NameId when saml response is received from Azure MFA. #31
  
