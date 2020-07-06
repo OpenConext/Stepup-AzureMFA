@@ -107,10 +107,8 @@
     ],
     "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
     "frontend-install": [
-      "yarn install"
-    ],
-    "encore": [
-      "./node_modules/.bin/encore"
+      "yarn install",
+      "yarn encore production"
     ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
