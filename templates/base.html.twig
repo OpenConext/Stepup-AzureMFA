@@ -31,7 +31,7 @@
 <div class="header-container">
     <div class="header">
         <a class="logo" href="{{ url('homepage') }}">
-            <img src="{{ asset('images/surfconext-logo.png') }}" alt="SURFconext"/>
+            <img src="{{ asset('images/openconext-logo.png') }}" alt="SURFconext"/>
         </a>
         <ul class="links">
             <li class="title">
@@ -51,12 +51,12 @@
 </div>
 <div class="navigation-container">
     <div class="navigation">
-        {% for route in ['homepage', 'gssp_saml_metadata'] %}
-            {% set translatekey = "page.navigation.route." ~ route %}
-            <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
-        {% endfor %}
         {% if app.environment == 'dev' %}
-            <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
+          {% for route in ['homepage', 'gssp_saml_metadata'] %}
+              {% set translatekey = "page.navigation.route." ~ route %}
+              <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
+          {% endfor %}
+          <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
         {% endif %}
     </div>
 </div>
