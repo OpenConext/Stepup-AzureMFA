@@ -78,6 +78,8 @@ page.registration.register_user: Register user
 page.registration.error_response: Error response
 page.registration.random_default_error: random registration error
 page.registration.submit_error: Return authentication failed
+page.registration.form.email.label: Emailaddress
+page.registration.form.email.submit: Submit
 
 page.authentication.title: Athenticate the user
 page.authentication.sub_title: Authentication
