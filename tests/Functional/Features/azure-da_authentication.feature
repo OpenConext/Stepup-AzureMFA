@@ -3,7 +3,7 @@ Feature: When using AzureAD directly
   Scenario: When a user is authenticating a token
     Given I send an authentication request to "https://azure-mfa.stepup.example.com/saml/sso" without NameID
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-b.example.com"
+    And I fill in "email_address_emailAddress" with "test-user@institution-b.example.com"
     When I press "Submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                                             |
@@ -15,7 +15,7 @@ Feature: When using AzureAD directly
   Scenario: Should fail when a authnmethodsreferences attribute is not released
     Given I send an authentication request to "https://azure-mfa.stepup.example.com/saml/sso" without NameID
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-b.example.com"
+    And I fill in "email_address_emailAddress" with "test-user@institution-b.example.com"
     When I press "Submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                                             |

@@ -33,7 +33,7 @@ final class EmailAddressType extends AbstractType
               'label' => 'page.registration.form.email.label',
               'attr' => ['type' => 'email'], 'required' => true
             ])
-            ->add('submit', SubmitType::class,[
+            ->add('submit', SubmitType::class, [
               'label' => 'page.registration.form.email.submit',
             ])
         ;
