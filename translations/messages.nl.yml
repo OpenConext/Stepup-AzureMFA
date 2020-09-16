@@ -13,7 +13,7 @@ page.navigation.route.sp_demo: Demo SP
 page.footer.terms: Terms and Conditions
 
 page.index.title: Welkom bij de Azure MFA plugin
-age.index.body.intro: Dit is de langsingpagina voor de Azure MFA plugin in Openconext-stepup
+page.index.body.intro: Dit is de langsingpagina voor de Azure MFA plugin in Openconext-Stepup
 
 page.index.external_sp: External service provider
 page.index.internal_sp: Internal service provider
@@ -106,4 +106,4 @@ page.sp.common_properties.title: Algemeene request parameters
 en: EN
 nl: NL
 nl_NL: NL
-en_EN: NL
+en_EN: EN
