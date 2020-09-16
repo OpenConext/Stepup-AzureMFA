@@ -1,3 +1,7 @@
+# 1.2.1
+ - Add support for component_info in deploy
+ - Security updates in dependencies
+ 
 # 1.2.0
  - Support direct connection to AzureAD #33
  
