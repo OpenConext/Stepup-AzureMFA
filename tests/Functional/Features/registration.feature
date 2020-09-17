@@ -6,8 +6,8 @@ Feature: When an user needs to register for a new token
   Scenario: When a user is registering a new token
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-a.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-a.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                               |
       | urn:mace:dir:attribute-def:mail                            | test-user@institution-a.example.com |
@@ -18,8 +18,8 @@ Feature: When an user needs to register for a new token
   Scenario: When a user is registering a new token, and if an unknown mail address gets released authentication at Azure MFA fails
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-a.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-a.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                             |
       | urn:mace:dir:attribute-def:mail                            | unknown@institution-a.example.com |
@@ -29,8 +29,8 @@ Feature: When an user needs to register for a new token
   Scenario: When a user is registering a new token, and if no mail attribute gets released authentication at Azure MFA fails
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-a.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-a.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                             |
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
@@ -39,8 +39,8 @@ Feature: When an user needs to register for a new token
   Scenario: When a user is registering a new token, authentication at Azure MFA fails
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-a.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress with "test-user@institution-a.example.com"
+    When I press "email_address_submit"
     And the login with Azure MFA gets cancelled
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
@@ -48,8 +48,8 @@ Feature: When an user needs to register for a new token
   Scenario: When a user is registering a new token, authentication at Azure MFA fails
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-a.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-a.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA fails
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
@@ -58,9 +58,9 @@ Feature: When an user needs to register for a new token
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     # Fill an email address that does not match any of the configured email domains
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-xample.com"
-    When I press "Submit"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-xample.com"
+    When I press "email_address_submit"
+    When I press "email_address_submit"
     Then I should be on "https://azure-mfa.stepup.example.com/registration"
     And I should see "The provided email address did not match any of our configured email domains."
 

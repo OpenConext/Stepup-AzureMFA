@@ -3,8 +3,8 @@ Feature: When using AzureAD directly
   Scenario: When a user is registering a new token
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-b.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-b.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                                             |
       | urn:mace:dir:attribute-def:mail                            | test-user@institution-b.example.com               |
@@ -15,8 +15,8 @@ Feature: When using AzureAD directly
   Scenario: Should fail when a authnmethodsreferences attribute is not released
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-b.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-b.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                                             |
       | urn:mace:dir:attribute-def:mail                            | test-user@institution-b.example.com               |

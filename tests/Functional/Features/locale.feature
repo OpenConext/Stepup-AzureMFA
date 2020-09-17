@@ -20,8 +20,8 @@ Feature: When an user needs switch it's preferred locale
     Then I should see "Registratie"
     And I follow "EN"
     Then I should see "Registration"
-    And I fill in "Email address" with "test-user@institution-a.example.com"
-    When I press "Submit"
+    And I fill in "email_address_emailAddress" with "test-user@institution-a.example.com"
+    When I press "email_address_submit"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                               |
       | urn:mace:dir:attribute-def:mail                            | test-user@institution-a.example.com |
