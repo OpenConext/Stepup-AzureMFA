@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -16,19 +16,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\AzureMfa\Domain\Institution\Factory;
+namespace Surfnet\AzureMfa\Domain\Exception;
 
-use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
+use Exception;
 
-interface IdentityProviderFactoryInterface
+class AzureADException extends Exception
 {
-    public function build(
-        EntityId $entityId,
-        Destination $ssoLocation,
-        CertificateCollection $certificates,
-        bool $isAzureDA
-    ): IdentityProviderInterface;
 }

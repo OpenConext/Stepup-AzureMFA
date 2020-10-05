@@ -66,7 +66,7 @@ class ConfigurationFactory
             $emailDomains = $this->buildEmailDomains($institutionData['email_domains']);
             $certificates = $this->buildCertificates($institutionData['certificates']);
 
-            $identityProvider = $this->identityProviderFactory->build($entityId, $ssoLocation, $certificates);
+            $identityProvider = $this->identityProviderFactory->build($entityId, $ssoLocation, $certificates, $institutionData['is_azure_ad']);
 
             $institutions[$institutionName] = new Institution(
                 $institutionName,

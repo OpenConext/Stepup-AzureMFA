@@ -11,6 +11,7 @@ folders:
     -
         map: .
         to: /home/vagrant/code
+        type: "nfs"
 sites:
     -
         map: azure-mfa.stepup.example.com

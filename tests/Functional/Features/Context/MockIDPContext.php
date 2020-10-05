@@ -20,6 +20,7 @@ namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 
 class MockIDPCOntext implements Context
@@ -41,21 +42,31 @@ class MockIDPCOntext implements Context
     }
 
     /**
-     * @Then /^the login with Azure MFA succeeds and the email addresses "(?P<emailAddresses>(?:[^"]|\\")*)" are released$/
+     * @Then /^the login with Azure MFA succeeds and the following attributes are released:$/
      */
-    public function theLoginToAzureMFASucceeds($emailAddresses)
+    public function theLoginToAzureMFASucceeds(TableNode $table)
     {
-        $data = '[]';
-
-        if ($emailAddresses) {
-            $emailAddresses = explode(',', $emailAddresses);
-            $jsonMail = json_encode($emailAddresses);
-            $data = sprintf('[{"name":"urn:mace:dir:attribute-def:mail","value":%s}]', $jsonMail);
+        $attributes = [];
+        foreach ($table as $row) {
+            $attributes[$row['name']][] = $row['value'];
         }
+
+        $result = [];
+        foreach ($attributes as $key => $values) {
+            $result[] = [
+                'name' => $key,
+                'value' => $values,
+            ];
+        }
+
+        $data = json_encode($result);
+
+        $this->minkContext->assertElementOnPage('textarea[name="attributes"]');
 
         $this->minkContext->fillField('attributes', $data);
 
         $this->minkContext->pressButton('success');
+
         $this->minkContext->pressButton('Post');
     }
 

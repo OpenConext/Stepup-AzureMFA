@@ -24,7 +24,7 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidUserIdException;
 class UserId
 {
     const SEPARATOR = '|';
-    const VALID_UNIQUE_ID = '/^[a-z0-9]{6}-[a-z0-9]{4}$/';
+    const VALID_UNIQUE_ID = '/^[a-z0-9]{1,6}-[a-z0-9]{1,4}$/';
 
     /**
      * @var string

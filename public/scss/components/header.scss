@@ -13,7 +13,7 @@
     max-width: $medium;
     margin: 40px auto 0 auto;
     margin-top: 0px;
-    padding: 15px 15px 40px 15px;
+    padding: 15px 15px 15px 15px;
     position: relative;
     transition: margin 150ms ease-in-out;
 
@@ -42,6 +42,10 @@
       }
     }
 
+    img {
+      width: 15%;
+    }
+
     ul.links {
       display: flex;
       align-items: center;
@@ -64,7 +68,7 @@
         }
 
         &.title {
-          margin-left: 210px;
+          margin-left: 220px;
           font-weight: bold;
           text-transform: uppercase;
           font-size: 22px;

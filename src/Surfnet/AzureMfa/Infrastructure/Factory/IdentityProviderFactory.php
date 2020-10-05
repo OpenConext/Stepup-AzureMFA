@@ -30,8 +30,9 @@ class IdentityProviderFactory implements IdentityProviderFactoryInterface
     public function build(
         EntityId $entityId,
         Destination $ssoLocation,
-        CertificateCollection $certificates
+        CertificateCollection $certificates,
+        bool $isAzureDA
     ): IdentityProviderInterface {
-        return new AzureMfaIdentityProvider($entityId, $ssoLocation, $certificates);
+        return new AzureMfaIdentityProvider($entityId, $ssoLocation, $certificates, $isAzureDA);
     }
 }

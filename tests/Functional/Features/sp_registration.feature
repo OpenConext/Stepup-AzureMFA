@@ -15,12 +15,14 @@ Feature: When an user needs to register for a new token
     And I should see "Registration"
 
     # GSSP assigns a subject name id to the user
-    Given I fill in "Email address" with "user@stepup.example.com"
-    When I press "Submit"
+    Given I fill in "email_address_emailAddress" with "user@stepup.example.com"
+    When I press "email_address_submit"
 
     # The MFA SSO page
     Then I should be on "https://azure-mfa.stepup.example.com/mock/sso"
-    Given the login with Azure MFA succeeds and the email addresses "user@stepup.example.com" are released
+    Given the login with Azure MFA succeeds and the following attributes are released:
+      | name                                                       | value                  |
+      | urn:mace:dir:attribute-def:mail                            | user@stepup.example.com |
 
     # The GSSP acs page.
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"

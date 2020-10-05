@@ -1,3 +1,10 @@
+# 1.2.1
+ - Add support for component_info in deploy
+ - Security updates in dependencies
+ 
+# 1.2.0
+ - Support direct connection to AzureAD #33
+ 
 # 1.1.3
  - Do validation on emailaddress and not NameId when saml response is received from Azure MFA. #31
  

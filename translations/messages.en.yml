@@ -1,6 +1,6 @@
 service_provider: Service provider
 
-page.title: Azure MFA GSSP
+page.title: Azure MFA
 
 page.header.stepup-gateway-gssp: Wiki
 
@@ -12,8 +12,8 @@ page.navigation.route.sp_demo: Demo SP
 
 page.footer.terms: Terms and Conditions
 
-page.index.title: Welcome to the Azure MFA GSSP
-page.index.body.intro: TODO Introduction
+page.index.title: Welcome to the Azure MFA plugin
+page.index.body.intro: This is the landingpage for the Azure MFA plugin in OpenConext-Stepup.
 
 page.index.external_sp: External service provider
 page.index.internal_sp: Internal service provider
@@ -78,6 +78,8 @@ page.registration.register_user: Register user
 page.registration.error_response: Error response
 page.registration.random_default_error: random registration error
 page.registration.submit_error: Return authentication failed
+page.registration.form.email.label: Email address
+page.registration.form.email.submit: Next
 
 page.authentication.title: Athenticate the user
 page.authentication.sub_title: Authentication
