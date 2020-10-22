@@ -6,7 +6,7 @@
     "import-glob-loader": "~1",
     "jquery": "~3",
     "node-sass": "~4",
-    "sass-loader": "~7",
+    "sass-loader": "~9",
     "select2": "~4",
     "serialize-javascript": "^3.1"
   },

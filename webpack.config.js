@@ -7,10 +7,10 @@ Encore
     .addStyleEntry('global', './public/scss/application.scss')
     .addLoader({ test: /\.scss$/, loader: 'import-glob-loader' })
     .enableSassLoader(function (options) {
-        options.includePaths = [
-            'public'
-        ];
-        options.outputStyle = 'expanded';
+        options.sassOptions = {
+            outputStyle: 'expanded',
+            includePaths: ['public'],
+        };
     })
     .autoProvidejQuery()
     .cleanupOutputBeforeBuild()

@@ -39,7 +39,7 @@ Feature: When an user needs to register for a new token
   Scenario: When a user is registering a new token, authentication at Azure MFA fails
     Given I send a registration request to "https://azure-mfa.stepup.example.com/saml/sso"
     Then I should see "Registration"
-    And I fill in "email_address_emailAddress with "test-user@institution-a.example.com"
+    And I fill in "email_address_emailAddress" with "test-user@institution-a.example.com"
     When I press "email_address_submit"
     And the login with Azure MFA gets cancelled
     Then I should be on "https://azure-mfa.stepup.example.com/saml/sso_return"
