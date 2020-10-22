@@ -178,7 +178,7 @@ class DefaultController extends AbstractController
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf(
-                    'The authentication or registration failed. Rejecting the Azure MFA response. Errormessage: "%s"',
+                    'The authentication or registration failed. Rejecting the Azure MFA response. Error message: "%s"',
                     $e->getMessage()
                 )
             );
