@@ -6,7 +6,7 @@ addons:
   chrome: stable
 
   hosts:
-    - azure-mfa.stepup.example.com
+    - azuremfa.stepup.example.com
   apt:
     packages:
       - cmake
@@ -27,7 +27,7 @@ before_script:
   - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
   # configure ssl
-  - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/azure-mfa.key -out /etc/ssl/certs/azure-mfa.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=azure-mfa.stepup.example.com"
+  - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/azuremfa.key -out /etc/ssl/certs/azuremfa.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=azuremfa.stepup.example.com"
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - export PHP_VERSION=$(phpenv version-name)
@@ -69,8 +69,8 @@ before_script:
   - ps aux | grep php-fpm
   - netstat -an | grep :9000
   # Test if the website is actually running
-  - curl --insecure https://azure-mfa.stepup.example.com
-  - curl --insecure https://azure-mfa.stepup.example.com/fonts/FontAwesome.otf
+  - curl --insecure https://azuremfa.stepup.example.com
+  - curl --insecure https://azuremfa.stepup.example.com/fonts/FontAwesome.otf
 
 script:
   - composer test

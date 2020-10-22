@@ -4,8 +4,8 @@ parameters:
     data: # The root node
       institutions:
         institution-a.example.com: # The institution identifier (schacHomeOrganization)
-          entity_id: 'https://azure-mfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
-          sso_location: 'https://azure-mfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
+          entity_id: 'https://azuremfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
+          sso_location: 'https://azuremfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
           certificates:
             - |
                 -----BEGIN CERTIFICATE-----
@@ -38,8 +38,8 @@ parameters:
             - 'institution-a.example.com'
             - '*.stepup.example.com' # Wildcards are allowed
         institution-b.example.com: # The institution identifier (schacHomeOrganization)
-          entity_id: 'https://azure-mfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
-          sso_location: 'https://azure-mfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
+          entity_id: 'https://azuremfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
+          sso_location: 'https://azuremfa.stepup.example.com/mock/sso' # Location of the Azure MFA endpoint
           certificates:
             - |
               -----BEGIN CERTIFICATE-----
@@ -72,7 +72,7 @@ parameters:
           is_azure_ad: true
         harting-college.nl:
           sso_location: 'https://adfs.harting-college.nl/adfs/ls/'
-          entity_id: 'https://azure-mfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
+          entity_id: 'https://azuremfa.stepup.example.com/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
           certificates:
             - |
               -----BEGIN CERTIFICATE-----
