@@ -28,49 +28,49 @@
     </script>
 </head>
 <body>
-<div class="header-container">
-    <div class="header">
-        <img src="{{ asset('images/header-logo.png') }}" />
-        <ul class="links">
-            <li class="title">
-                <span>{{ 'page.title'|trans }}</span>
-            </li>
-            <li class="push-right">
-                <ul class="language-selector">
-                    {% for lang in ['en', 'nl_NL'] %}
-                        <li {{ app.request.getLocale() == lang ? 'class="active"' :'' }}>
-                            <a href="{{ path('local', {lang: lang}) }}">{{ lang|trans }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-<div class="navigation-container">
-    <div class="navigation">
-        {% if app.environment == 'dev' %}
-          {% for route in ['homepage', 'gssp_saml_metadata'] %}
-              {% set translatekey = "page.navigation.route." ~ route %}
-              <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
-          {% endfor %}
-          <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
-        {% endif %}
-    </div>
-</div>
-<div class="page-container">
-    {% block body_container %}
-        <h1>{% block page_heading %}{% endblock %}</h1>
-        <div class="card">
-            {% block body %}{% endblock %}
+<div class="container">
+
+    <div class="content">
+        <div class="page-header container-fluid">
+            <img class="pull-right logo" src="{{ asset('images/header-logo.png') }}"/>
+            <h1>{% block header_title %}{{ 'page.title'|trans }}{% endblock %}</h1>
         </div>
+    </div>
+
+
+    <div class="main-content">
+        {% if app.environment == 'dev' %}
+            <div class="navigation-container">
+                <div class="navigation">
+                    {% for route in ['homepage', 'gssp_saml_metadata'] %}
+                        {% set translatekey = "page.navigation.route." ~ route %}
+                        <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
+                    {% endfor %}
+                    <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
+                </div>
+            </div>
+        {% endif %}
+
+        {# stepup-gssp-bundle and stepup-tiqr use 'body' #}
+        {% block body %}{% endblock %}
+
+        {# stepup-bundle 'content', don't bother, just define them both #}
+        {% block content %}{% endblock %}
+    </div>
+
+    <hr>
+
+    {% block footer %}
+        <footer>
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="{{ global_view_parameters.supportUrl }}" target="_blank">Help</a>
+                </div>
+            </div>
+        </footer>
     {% endblock %}
+
+    {% block javascripts %}{% endblock %}
 </div>
-<div class="footer">
-    <div class="footer-inner">
-        <span><a href="mailto:help@surfconext.nl"
-                 target="_blank">help@surfconext.nl</a></span></div>
-</div>
-{% block javascripts %}{% endblock %}
 </body>
 </html>

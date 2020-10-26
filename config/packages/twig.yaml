@@ -5,3 +5,4 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         global_view_parameters: "@Surfnet\\AzureMfa\\Infrastructure\\Twig\\GlobalViewParameters"
+    form_themes: [ 'bootstrap_4_layout.html.twig' ]
