@@ -11,13 +11,13 @@ Locale user preference
 ----------------------
 
 The default locale is based on the user agent. When the user switches its locale the selected preference is stored inside a
-browser cookie (stepup_locale). The cookie is set on naked domain of the requested domain (for azure-mfa.stepup.example.com this is example.com).
+browser cookie (stepup_locale). The cookie is set on naked domain of the requested domain (for azuremfa.stepup.example.com this is example.com).
 
 Authentication and registration flows
 -------------------------------------
 
 The application provides internal (SpBundle) and a remote service provider. Instructions for this are given 
-on the homepage of this example project [Homepage](https://azure-mfa.stepup.example.com/app_dev.php/).
+on the homepage of this example project [Homepage](https://azuremfa.stepup.example.com/app_dev.php/).
 
 ![flow](docs/flow.png)
 <!---
@@ -106,7 +106,7 @@ for production
 
 If everything goes as planned you can go to:
 
-[https://azure-mfa.stepup.example.com](https://azure-mfa.stepup.example.com/app_dev.php)
+[https://azuremfa.stepup.example.com](https://azuremfa.stepup.example.com/app_dev.php)
 
 
 Configuring institutions using Azure MFA 

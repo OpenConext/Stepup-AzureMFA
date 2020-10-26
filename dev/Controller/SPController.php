@@ -54,8 +54,8 @@ final class SPController extends AbstractController
         $baseDir = dirname(__DIR__, 2);
         $this->serviceProvider = new ServiceProvider(
             [
-                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
+                'entityId' => 'https://azuremfa.stepup.example.com/saml/metadata',
+                'assertionConsumerUrl' => 'https://azuremfa.stepup.example.com/demo/sp/acs',
                 'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
                 'privateKeys' => [
                     new PrivateKey(

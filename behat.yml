@@ -8,7 +8,7 @@ default:
                 bootstrap: tests/Functional/Features/bootstrap/bootstrap.php
                 class: Surfnet\AzureMfa\Infrastructure\Kernel
         Behat\MinkExtension:
-            base_url: https://azure-mfa.stepup.example.com
+            base_url: https://azuremfa.stepup.example.com
             default_session: 'symfony2'
             goutte:
                guzzle_parameters:

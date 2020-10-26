@@ -14,7 +14,7 @@ folders:
         type: "nfs"
 sites:
     -
-        map: azure-mfa.stepup.example.com
+        map: azuremfa.stepup.example.com
         to: /home/vagrant/code/public
         type: symfony4
 name: azure-mfa

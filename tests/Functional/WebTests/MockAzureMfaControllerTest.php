@@ -216,8 +216,8 @@ class MockAzureMfaControllerTest extends WebTestCase
         $samlBundle = '';
         return new ServiceProvider(
             [
-                'entityId' => 'https://azure-mfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azure-mfa.stepup.example.com/demo/sp/acs',
+                'entityId' => 'https://azuremfa.stepup.example.com/saml/metadata',
+                'assertionConsumerUrl' => 'https://azuremfa.stepup.example.com/demo/sp/acs',
                 'certificateFile' => $this->publicKey,
                 'privateKeys' => [
                     new PrivateKey(
@@ -235,8 +235,8 @@ class MockAzureMfaControllerTest extends WebTestCase
         $samlBundle = '';
         return new IdentityProvider(
             [
-                'entityId' => 'https://azure-mfa.stepup.example.com/mock/idp/metadata',
-                'ssoUrl' => 'https://azure-mfa.stepup.example.com/mock/sso',
+                'entityId' => 'https://azuremfa.stepup.example.com/mock/idp/metadata',
+                'ssoUrl' => 'https://azuremfa.stepup.example.com/mock/sso',
                 'certificateFile' => $this->publicKey,
                 'privateKeys' => [
                     new PrivateKey(
