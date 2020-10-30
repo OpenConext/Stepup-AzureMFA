@@ -1,3 +1,7 @@
+# 1.3.0
+ - Update dependencies
+ - Use bootstrap theme
+
 # 1.2.1
  - Add support for component_info in deploy
  - Security updates in dependencies
