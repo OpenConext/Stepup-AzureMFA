@@ -1,3 +1,6 @@
+# Next release
+ - Set focus on email-input in registration flow
+
 # 1.3.0
  - Update dependencies
  - Use bootstrap theme
