@@ -31,7 +31,8 @@ final class EmailAddressType extends AbstractType
         $builder
             ->add('emailAddress', TextType::class, [
               'label' => 'page.registration.form.email.label',
-              'attr' => ['type' => 'email'], 'required' => true
+              'attr' => ['type' => 'email', 'autofocus' => true],
+              'required' => true,
             ])
             ->add('submit', SubmitType::class, [
               'label' => 'page.registration.form.email.submit',
