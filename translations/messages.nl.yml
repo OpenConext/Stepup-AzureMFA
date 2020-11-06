@@ -69,7 +69,8 @@ page.registration.register_user: Gebruiker registreren
 page.registration.error_response: Foutreactie
 page.registration.random_default_error: willekeurige registratiefout
 page.registration.submit_error: Zend een registratie mislukt response
-page.registration.form.email.label: E-mailadres
+page.registration.form.email.label: Vul hier je email adres van je instelling in:
+page.registration.form.email.placeholder: Jouw email adres
 page.registration.form.email.submit: Volgende
 
 page.authentication.title: Authenticeer (verifieer) de gebruiker
