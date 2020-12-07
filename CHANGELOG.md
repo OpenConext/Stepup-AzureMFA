@@ -1,5 +1,6 @@
 # Next release
  - Set focus on email-input in registration flow
+ - Case insensitive email check
 
 # 1.3.0
  - Update dependencies
