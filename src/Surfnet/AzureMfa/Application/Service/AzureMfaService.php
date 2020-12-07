@@ -221,7 +221,7 @@ class AzureMfaService
             );
         }
 
-        if (!in_array($user->getEmailAddress()->getEmailAddress(), $attributes[self::SAML_EMAIL_ATTRIBUTE])) {
+        if (!in_array(strtolower($user->getEmailAddress()->getEmailAddress()), array_map('strtolower', $attributes[self::SAML_EMAIL_ATTRIBUTE]))) {
             throw new MailAttributeMismatchException(
                 'The mail attribute from the Azure MFA assertion did not contain the email address provided during registration'
             );
