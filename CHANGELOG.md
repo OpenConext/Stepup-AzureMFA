@@ -1,6 +1,9 @@
-# Next release
+# 1.3.2
+  - Case insensitive email check
+
+# 1.3.1
+ - Add placeholder to email registration
  - Set focus on email-input in registration flow
- - Case insensitive email check
 
 # 1.3.0
  - Update dependencies
