@@ -1,3 +1,6 @@
+# Unreleased
+ - Fix client-side email validation
+
 # 1.3.2
   - Case insensitive email check
 
