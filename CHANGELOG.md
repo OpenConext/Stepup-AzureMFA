@@ -1,5 +1,7 @@
 # Unreleased
  - Fix client-side email validation
+ - Add monitoring endpoints /health and /info
+ - Update dependencies
 
 # 1.3.2
   - Case insensitive email check
