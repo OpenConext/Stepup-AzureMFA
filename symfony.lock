@@ -45,6 +45,9 @@
     "container-interop/container-interop": {
         "version": "1.2.0"
     },
+    "dbrekelmans/bdi": {
+        "version": "0.3"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -104,6 +107,9 @@
     },
     "nikic/php-parser": {
         "version": "v4.2.2"
+    },
+    "openconext/monitor-bundle": {
+        "version": "2.0"
     },
     "pdepend/pdepend": {
         "version": "2.5.2"
@@ -447,6 +453,9 @@
     "symfony/polyfill-intl-idn": {
         "version": "v1.11.0"
     },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.22.0"
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.11.0"
     },
@@ -455,6 +464,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.11.0"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.22.0"
     },
     "symfony/process": {
         "version": "v4.4.0"
