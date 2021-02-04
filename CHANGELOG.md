@@ -1,4 +1,4 @@
-# Unreleased
+# 1.3.3
  - Fix client-side email validation
  - Add monitoring endpoints /health and /info
  - Update dependencies
