@@ -106,6 +106,13 @@ class DefaultController extends AbstractController
             return $this->registrationService->replyToServiceProvider();
         }
 
+        $attribs = $this->authenticationService->getGsspUserAttributes();
+        if ($attribs && $attribs->getAttributeValue('urn:mace:dir:attribute-def:mail')) {
+            $emailAddr = new EmailAddress($attribs->getAttributeValue('urn:mace:dir:attribute-def:mail'));
+            $user = $this->azureMfaService->startRegistration($emailAddr);
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
+        }
+
         $requiresRegistration = $this->registrationService->registrationRequired();
         $response = new Response(null, $requiresRegistration ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
 
