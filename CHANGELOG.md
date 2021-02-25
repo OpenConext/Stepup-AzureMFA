@@ -1,3 +1,6 @@
+# Next
+ - Use email address from GSSP saml extension, skip asking the user for his emailaddress
+
 # 1.3.3
  - Fix client-side email validation
  - Add monitoring endpoints /health and /info
