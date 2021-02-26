@@ -1,4 +1,4 @@
-# Next
+# 1.4.0
  - Use email address from GSSP saml extension, skip asking the user for his emailaddress
 
 # 1.3.3
