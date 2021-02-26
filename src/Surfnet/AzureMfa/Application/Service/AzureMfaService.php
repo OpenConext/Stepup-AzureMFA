@@ -23,6 +23,7 @@ use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextExcept
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\AzureADException;
+use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
 use Surfnet\AzureMfa\Domain\Exception\MailAttributeMismatchException;
 use Surfnet\AzureMfa\Domain\Exception\MissingMailAttributeException;
 use Surfnet\AzureMfa\Domain\User;
@@ -149,6 +150,11 @@ class AzureMfaService
 
         $this->logger->info('Retrieve the institution for the authenticating/registering user');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
+        if (null === $institution) {
+            $message = 'The provided email address did not match any of our configured email domains.';
+            $this->logger->info($message);
+            throw new InstitutionNotFoundException($message);
+        }
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
         $destination = $azureMfaIdentityProvider->getSsoLocation();
 
