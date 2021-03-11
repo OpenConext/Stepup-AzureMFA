@@ -14,7 +14,7 @@ framework:
         cookie_samesite: 'none'
     assets: ~
     #esi: true
-    fragments: true
+    fragments: false
     php_errors:
         log: false
     templating:
