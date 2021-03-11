@@ -1,3 +1,7 @@
+# Unreleased
+- Disable unused fragments
+- Update dependencies
+
 # 1.4.0
  - Use email address from GSSP saml extension, skip asking the user for his emailaddress
 
