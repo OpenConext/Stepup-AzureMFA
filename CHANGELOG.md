@@ -1,6 +1,7 @@
-# Unreleased
+# 1.4.1
 - Disable unused fragments
 - Update dependencies
+- Add X-UA-Compatible header fix issues with embedded browsers
 
 # 1.4.0
  - Use email address from GSSP saml extension, skip asking the user for his emailaddress
