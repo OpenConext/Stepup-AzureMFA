@@ -1,3 +1,7 @@
+# Next
+- Add favicon
+- Update dependencies
+
 # 1.4.1
 - Disable unused fragments
 - Update dependencies
