@@ -20,7 +20,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "bootstrap": "^3"
+        "bootstrap": "^3",
+        "lodash": "^4.17.20"
     },
     "resolutions": {
         "lodash": "^4.17.20"
