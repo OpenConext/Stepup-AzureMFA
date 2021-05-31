@@ -1,4 +1,4 @@
-# Next
+# 1.4.2
 - Add favicon
 - Update dependencies
 
