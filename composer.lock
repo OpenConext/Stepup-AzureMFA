@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7f47cbfd4598e3c1918d8cc9533d0a4",
+    "content-hash": "d2043e75c9b027e95ae5153919e2fb15",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -486,16 +486,16 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "2.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
-                "reference": "90909dfb64437d8d88554fe2894bb1d9f618203f"
+                "reference": "f06e967b702bc5d78d85c39ba4a90219af152a67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/90909dfb64437d8d88554fe2894bb1d9f618203f",
-                "reference": "90909dfb64437d8d88554fe2894bb1d9f618203f",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/f06e967b702bc5d78d85c39ba4a90219af152a67",
+                "reference": "f06e967b702bc5d78d85c39ba4a90219af152a67",
                 "shasum": ""
             },
             "require": {
@@ -534,7 +534,7 @@
                 "stepup",
                 "surfnet"
             ],
-            "time": "2020-06-22T08:25:58+00:00"
+            "time": "2021-09-28T11:09:57+00:00"
         },
         {
             "name": "psr/cache",
@@ -2642,6 +2642,7 @@
                     "type": "tidelift"
                 }
             ],
+            "abandoned": "use `EnglishInflector` from the String component instead",
             "time": "2021-05-10T14:36:02+00:00"
         },
         {
