@@ -6,8 +6,8 @@
         "css-loader": "^5.0.0",
         "import-glob-loader": "^1",
         "jquery": "^3",
-        "node-sass": "^4",
         "regenerator-runtime": "^0.13.2",
+        "sass": "^1.43.4",
         "sass-loader": "^12",
         "webpack-notifier": "^1.12.0"
     },

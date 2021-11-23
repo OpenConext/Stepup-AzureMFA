@@ -18,10 +18,7 @@
 
 namespace Surfnet\AzureMfa\Domain\Institution\ValueObject;
 
-use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
 use Surfnet\AzureMfa\Domain\Exception\InvalidEntityIdException;
-use function openssl_x509_fingerprint;
-use function openssl_x509_parse;
 
 class EntityId
 {
