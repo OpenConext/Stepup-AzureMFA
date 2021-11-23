@@ -29,6 +29,6 @@ interface IdentityProviderFactoryInterface
         EntityId $entityId,
         Destination $ssoLocation,
         CertificateCollection $certificates,
-        bool $isAzureDA
+        bool $isAzureAD
     ): IdentityProviderInterface;
 }

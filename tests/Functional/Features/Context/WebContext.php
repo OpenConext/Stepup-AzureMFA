@@ -111,7 +111,7 @@ class WebContext implements Context, KernelAwareContext
     public function callIdentityProviderSSOActionWithAuthnRequest()
     {
         $this->minkContext->visit('https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp');
-        $this->minkContext->selectOption('idp', 'https://azure-mfa.stepup.example.com/saml/metadata');
+        $this->minkContext->selectOption('idp', 'https://azuremfa.stepup.example.com/saml/metadata');
         $this->minkContext->pressButton('Login');
     }
 
@@ -122,7 +122,7 @@ class WebContext implements Context, KernelAwareContext
     {
         /** @var RequestStack $stack */
         $stack = $this->kernel->getContainer()->get('request_stack');
-        $stack->push(Request::create('https://azure-mfa.stepup.example.com'));
+        $stack->push(Request::create('https://azuremfa.stepup.example.com'));
         $ip = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
         $stack->pop();
 
@@ -187,9 +187,9 @@ class WebContext implements Context, KernelAwareContext
     public function iSendARegistrationRequestRequestTo($destination)
     {
         $authnRequest = new AuthnRequest();
-        $authnRequest->setAssertionConsumerServiceURL('https://azure-mfa.stepup.example.com/saml/acs');
+        $authnRequest->setAssertionConsumerServiceURL('https://azuremfa.stepup.example.com/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://azure-mfa.stepup.example.com/saml/metadata');
+        $authnRequest->setIssuer('https://azuremfa.stepup.example.com/saml/metadata');
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -208,12 +208,12 @@ class WebContext implements Context, KernelAwareContext
     public function iSendAnAuthenticationRequestRequestToWithNameID($destination, $nameId = "")
     {
         $authnRequest = new AuthnRequest();
-        $authnRequest->setAssertionConsumerServiceURL('https://azure-mfa.stepup.example.com/saml/acs');
+        $authnRequest->setAssertionConsumerServiceURL('https://azuremfa.stepup.example.com/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://azure-mfa.stepup.example.com/saml/metadata');
+        $authnRequest->setIssuer('https://azuremfa.stepup.example.com/saml/metadata');
         $authnRequest->setNameId(['Value' => $nameId]);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
-        $authnRequest->setRequesterID(['https://azure-mfa.stepup.example.com/saml/metadata']);
+        $authnRequest->setRequesterID(['https://azuremfa.stepup.example.com/saml/metadata']);
         // Sign with random key, does not mather for now.
         $authnRequest->setSignatureKey(
             $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))

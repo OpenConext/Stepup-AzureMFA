@@ -223,7 +223,8 @@ class MockGateway
 
         $signature = base64_decode($request->get(self::PARAMETER_SIGNATURE));
 
-        if (!$key->verifySignature($query, $signature)) {
+        $isVerified = $key->verifySignature($query, $signature);
+        if ($isVerified === false || $isVerified < 1) {
             throw new BadRequestHttpException(
                 'Validation of the signature in the AuthnRequest failed'
             );

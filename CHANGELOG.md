@@ -1,3 +1,37 @@
+# 1.4.3
+**Features**
+- Secure the way the verifySignature method is used #73 
+- #73 includes a commit that replaces node-sass with vanilla js sass
+
+# 1.4.2
+- Add favicon
+- Update dependencies
+
+# 1.4.1
+- Disable unused fragments
+- Update dependencies
+- Add X-UA-Compatible header fix issues with embedded browsers
+
+# 1.4.0
+ - Use email address from GSSP saml extension, skip asking the user for his emailaddress
+
+# 1.3.3
+ - Fix client-side email validation
+ - Add monitoring endpoints /health and /info
+ - Update dependencies
+ - Update webpack-notifier and node-notifier
+
+# 1.3.2
+  - Case insensitive email check
+
+# 1.3.1
+ - Add placeholder to email registration
+ - Set focus on email-input in registration flow
+
+# 1.3.0
+ - Update dependencies
+ - Use bootstrap theme
+
 # 1.2.1
  - Add support for component_info in deploy
  - Security updates in dependencies

@@ -1,21 +1,31 @@
 {
-  "devDependencies": {
-    "@symfony/webpack-encore": "~0",
-    "compass-mixins": "~0",
-    "css-loader": "~0",
-    "import-glob-loader": "~1",
-    "jquery": "~3",
-    "node-sass": "~4",
-    "sass-loader": "~7",
-    "select2": "~4",
-    "serialize-javascript": "^3.1"
-  },
-  "resolutions": {
-    "js-yaml": "^3.13.1",
-    "yargs-parser": "^13.1.2",
-    "http-proxy": "1.18.1"
-  },
-  "dependencies": {
-    "js-yaml": "^3.13.1"
-  }
+    "devDependencies": {
+        "@symfony/webpack-encore": "^1",
+        "compass-mixins": "^0.12.10",
+        "core-js": "^3.0.0",
+        "css-loader": "^5.0.0",
+        "import-glob-loader": "^1",
+        "jquery": "^3",
+        "regenerator-runtime": "^0.13.2",
+        "sass": "^1.43.4",
+        "sass-loader": "^12",
+        "webpack-notifier": "^1.12.0"
+    },
+    "license": "Apache-2.0",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "bootstrap": "^3",
+        "lodash": "^4.17.20"
+    },
+    "resolutions": {
+        "lodash": "^4.17.20",
+        "tar": ">3.2.3",
+        "trim-newlines": ">=3.0.1"
+    }
 }

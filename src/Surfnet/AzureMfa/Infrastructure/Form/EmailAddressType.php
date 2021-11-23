@@ -19,8 +19,8 @@
 namespace Surfnet\AzureMfa\Infrastructure\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,9 +29,10 @@ final class EmailAddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('emailAddress', TextType::class, [
+            ->add('emailAddress', EmailType::class, [
               'label' => 'page.registration.form.email.label',
-              'attr' => ['type' => 'email'], 'required' => true
+              'attr' => ['autofocus' => true, 'placeholder' => 'page.registration.form.email.placeholder'],
+              'required' => true,
             ])
             ->add('submit', SubmitType::class, [
               'label' => 'page.registration.form.email.submit',

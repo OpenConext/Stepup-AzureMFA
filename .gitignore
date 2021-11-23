@@ -49,6 +49,7 @@ homestead/vendor
 /public/bundles/
 /var/
 /vendor/
+/drivers/
 ###< symfony/framework-bundle ###
 
 ###> symfony/webpack-encore-bundle ###

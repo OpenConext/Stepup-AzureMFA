@@ -106,6 +106,13 @@ class DefaultController extends AbstractController
             return $this->registrationService->replyToServiceProvider();
         }
 
+        $attribs = $this->authenticationService->getGsspUserAttributes();
+        if ($attribs && $attribs->getAttributeValue('urn:mace:dir:attribute-def:mail')) {
+            $emailAddr = new EmailAddress($attribs->getAttributeValue('urn:mace:dir:attribute-def:mail'));
+            $user = $this->azureMfaService->startRegistration($emailAddr);
+            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
+        }
+
         $requiresRegistration = $this->registrationService->registrationRequired();
         $response = new Response(null, $requiresRegistration ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
 
@@ -178,7 +185,7 @@ class DefaultController extends AbstractController
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf(
-                    'The authentication or registration failed. Rejecting the Azure MFA response. Errormessage: "%s"',
+                    'The authentication or registration failed. Rejecting the Azure MFA response. Error message: "%s"',
                     $e->getMessage()
                 )
             );
