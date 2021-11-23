@@ -1,3 +1,8 @@
+# 1.4.3
+**Features**
+- Secure the way the verifySignature method is used #73 
+- #73 includes a commit that replaces node-sass with vanilla js sass
+
 # 1.4.2
 - Add favicon
 - Update dependencies
