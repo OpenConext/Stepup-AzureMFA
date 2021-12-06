@@ -1,3 +1,6 @@
+# 1.4.4
+- Added browserlist entry in package.json to ensure IE 11 support
+
 # 1.4.3
 **Features**
 - Secure the way the verifySignature method is used #73 
