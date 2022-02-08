@@ -1,3 +1,6 @@
+# 1.4.5
+- Add Github Actions tag automation workflow
+
 # 1.4.4
 - Added browserlist entry in package.json to ensure IE 11 support
 

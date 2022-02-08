@@ -22,6 +22,8 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-zlib": "*",
+    "incenteev/composer-parameter-handler": "^2.1",
+    "openconext/monitor-bundle": "^2.1",
     "sensio/framework-extra-bundle": "^5.4",
     "surfnet/stepup-bundle": "^4.1",
     "surfnet/stepup-gssp-bundle": "^4.0.1",
@@ -40,8 +42,7 @@
     "symfony/twig-bundle": "^4.3",
     "symfony/validator": "^4.3",
     "symfony/webpack-encore-bundle": "^1.6",
-    "symfony/yaml": "^4.3",
-    "openconext/monitor-bundle": "^2.1"
+    "symfony/yaml": "^4.3"
   },
   "require-dev": {
     "behat/mink": "^1.7",
@@ -118,9 +119,11 @@
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
     },
     "post-install-cmd": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "@auto-scripts"
     ],
     "post-update-cmd": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "@auto-scripts"
     ]
   },
@@ -130,6 +133,10 @@
       "!/.env.local.php",
       "!/var/cache/prod",
       "!/public/build",
+      "/.env.dist",
+      "/.github",
+      "/.gitignore",
+      "/symfony.lock",
       "/node_modules",
       "/dev",
       "/bin/phpunit",
@@ -174,6 +181,14 @@
     "symfony": {
       "allow-contrib": false,
       "require": "4.4.*"
-    }
+    },
+    "incenteev-parameters": [
+      {
+        "file": "config/packages/parameters.yaml"
+      },
+      {
+        "file": "config/packages/institutions.yaml"
+      }
+    ]
   }
 }
