@@ -1,3 +1,6 @@
+# 1.4.4
+- Add Github Actions tag automation workflow
+
 # 1.4.3
 **Features**
 - Secure the way the verifySignature method is used #73 
