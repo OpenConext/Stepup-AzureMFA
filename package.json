@@ -22,9 +22,8 @@
     },
     "dependencies": {
         "bootstrap": "^3",
-        "lodash": "^4.17.20"
-    },
-    "resolutions": {
+        "lodash": "^4.17.20",
         "postcss": ">=8.2.13"
-    }
+    },
+    "resolutions": {}
 }

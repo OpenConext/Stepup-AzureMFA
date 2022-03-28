@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62ed87857621a1a993d7bc41df09f1ea",
+    "content-hash": "f46b0dee11d1d9849a11fe2632b326b6",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -38,12 +38,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Assert\\": "lib/Assert"
-                },
                 "files": [
                     "lib/Assert/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Assert\\": "lib/Assert"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -307,12 +307,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Promise\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -333,16 +333,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.8.2",
+            "version": "1.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "dc960a912984efb74d0a90222870c72c87f10c91"
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/dc960a912984efb74d0a90222870c72c87f10c91",
-                "reference": "dc960a912984efb74d0a90222870c72c87f10c91",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/337e3ad8e5716c15f9657bd214d16cc5e69df268",
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268",
                 "shasum": ""
             },
             "require": {
@@ -367,12 +367,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -380,12 +380,33 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com",
+                    "homepage": "https://github.com/gmponos"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://github.com/sagikazarmark"
+                },
+                {
                     "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
                     "homepage": "https://github.com/Tobion"
                 }
             ],
@@ -400,7 +421,21 @@
                 "uri",
                 "url"
             ],
-            "time": "2021-04-26T09:17:50+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/psr7",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-03-20T21:51:18+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -523,10 +558,6 @@
                 "logging",
                 "psr-3"
             ],
-            "support": {
-                "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/1.26.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/Seldaek",
@@ -1092,10 +1123,6 @@
                 "Apache-2.0"
             ],
             "description": "A Symfony 3 bundle (with SF 4 support) to aid the creation of GSSP (Generic SAML Step-up Provider) device support.",
-            "support": {
-                "issues": "https://github.com/OpenConext/Stepup-gssp-bundle/issues",
-                "source": "https://github.com/OpenConext/Stepup-gssp-bundle/tree/4.0.1"
-            },
             "time": "2021-02-25T13:46:18+00:00"
         },
         {
@@ -1150,10 +1177,6 @@
                 "stepup",
                 "surfnet"
             ],
-            "support": {
-                "issues": "https://github.com/OpenConext/Stepup-saml-bundle/issues",
-                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/4.2.1"
-            },
             "time": "2021-02-25T13:49:08+00:00"
         },
         {
@@ -3111,12 +3134,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3140,9 +3163,6 @@
                 "polyfill",
                 "portable"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3227,9 +3247,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-icu/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3279,12 +3296,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3314,9 +3331,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3364,12 +3378,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3398,9 +3412,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3448,12 +3459,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3478,9 +3489,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3525,12 +3533,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php72\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php72\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3554,9 +3562,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php72/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3601,12 +3606,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php73\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php73\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3633,9 +3638,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php73/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3680,12 +3682,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php80\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3716,9 +3718,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.22.1"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -5169,31 +5168,32 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.13.1",
+            "version": "v2.14.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "57e96259776ddcacf1814885fc3950460c8e18ef"
+                "reference": "19c898bda30c5edea573bbb9ee1235d8cf6956ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/57e96259776ddcacf1814885fc3950460c8e18ef",
-                "reference": "57e96259776ddcacf1814885fc3950460c8e18ef",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/19c898bda30c5edea573bbb9ee1235d8cf6956ed",
+                "reference": "19c898bda30c5edea573bbb9ee1235d8cf6956ed",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.3",
                 "symfony/polyfill-ctype": "^1.8",
-                "symfony/polyfill-mbstring": "^1.3"
+                "symfony/polyfill-mbstring": "^1.3",
+                "symfony/polyfill-php72": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
+                "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.13-dev"
+                    "dev-master": "2.14-dev"
                 }
             },
             "autoload": {
@@ -5240,7 +5240,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-05T15:09:04+00:00"
+            "time": "2022-03-25T09:34:52+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -5376,10 +5376,6 @@
                 "symfony",
                 "testing"
             ],
-            "support": {
-                "issues": "https://github.com/Behat/Behat/issues",
-                "source": "https://github.com/Behat/Behat/tree/v3.8.1"
-            },
             "time": "2020-11-07T15:55:18+00:00"
         },
         {
@@ -5440,10 +5436,6 @@
                 "gherkin",
                 "parser"
             ],
-            "support": {
-                "issues": "https://github.com/Behat/Gherkin/issues",
-                "source": "https://github.com/Behat/Gherkin/tree/v4.8.0"
-            },
             "time": "2021-02-04T12:44:21+00:00"
         },
         {
@@ -5886,9 +5878,6 @@
             "keywords": [
                 "browser-driver-installer"
             ],
-            "support": {
-                "source": "https://github.com/dbrekelmans/bdi/tree/0.3"
-            },
             "time": "2020-12-13T21:43:40+00:00"
         },
         {
@@ -5966,10 +5955,6 @@
                 "uppercase",
                 "words"
             ],
-            "support": {
-                "issues": "https://github.com/doctrine/inflector/issues",
-                "source": "https://github.com/doctrine/inflector/tree/2.0.x"
-            },
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -6035,10 +6020,6 @@
                 "constructor",
                 "instantiate"
             ],
-            "support": {
-                "issues": "https://github.com/doctrine/instantiator/issues",
-                "source": "https://github.com/doctrine/instantiator/tree/1.4.0"
-            },
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -6108,10 +6089,6 @@
             "keywords": [
                 "scraper"
             ],
-            "support": {
-                "issues": "https://github.com/FriendsOfPHP/Goutte/issues",
-                "source": "https://github.com/FriendsOfPHP/Goutte/tree/v3.3.1"
-            },
             "time": "2020-11-01T09:30:18+00:00"
         },
         {
@@ -6174,9 +6151,6 @@
                 "test",
                 "web"
             ],
-            "support": {
-                "source": "https://github.com/FriendsOfBehat/MinkExtension/tree/v2.5.0"
-            },
             "time": "2021-01-21T09:27:44+00:00"
         },
         {
@@ -6456,10 +6430,6 @@
                 "test double",
                 "testing"
             ],
-            "support": {
-                "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/1.3.4"
-            },
             "time": "2021-02-24T09:51:00+00:00"
         },
         {
@@ -6489,12 +6459,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
                 "files": [
                     "src/DeepCopy/deep_copy.php"
-                ]
+                ],
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6508,10 +6478,6 @@
                 "object",
                 "object graph"
             ],
-            "support": {
-                "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.10.2"
-            },
             "funding": [
                 {
                     "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
@@ -6679,10 +6645,6 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "support": {
-                "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/master"
-            },
             "time": "2020-06-27T14:33:11+00:00"
         },
         {
@@ -6730,10 +6692,6 @@
                 }
             ],
             "description": "Library for handling version information and constraints",
-            "support": {
-                "issues": "https://github.com/phar-io/version/issues",
-                "source": "https://github.com/phar-io/version/tree/3.1.0"
-            },
             "time": "2021-02-23T14:00:09+00:00"
         },
         {
@@ -6781,12 +6739,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Facebook\\WebDriver\\": "lib/"
-                },
                 "files": [
                     "lib/Exception/TimeoutException.php"
-                ]
+                ],
+                "psr-4": {
+                    "Facebook\\WebDriver\\": "lib/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6902,10 +6860,6 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "support": {
-                "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/master"
-            },
             "time": "2020-09-03T19:13:55+00:00"
         },
         {
@@ -6951,10 +6905,6 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "support": {
-                "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.4.0"
-            },
             "time": "2020-09-17T18:55:26+00:00"
         },
         {
@@ -7159,10 +7109,6 @@
                 "testing",
                 "xunit"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/7.0.14"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7219,10 +7165,6 @@
                 "filesystem",
                 "iterator"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-file-iterator/issues",
-                "source": "https://github.com/sebastianbergmann/php-file-iterator/tree/2.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7319,10 +7261,6 @@
             "keywords": [
                 "timer"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-timer/issues",
-                "source": "https://github.com/sebastianbergmann/php-timer/tree/2.1.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7378,10 +7316,6 @@
             "keywords": [
                 "tokenizer"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-token-stream/issues",
-                "source": "https://github.com/sebastianbergmann/php-token-stream/tree/3.1.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7579,10 +7513,6 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/issues",
-                "source": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/tree/1.0.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7653,10 +7583,6 @@
                 "compare",
                 "equality"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/comparator/issues",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/3.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7719,10 +7645,6 @@
                 "unidiff",
                 "unified diff"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/diff/issues",
-                "source": "https://github.com/sebastianbergmann/diff/tree/3.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7782,10 +7704,6 @@
                 "environment",
                 "hhvm"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/environment/issues",
-                "source": "https://github.com/sebastianbergmann/environment/tree/4.2.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7859,10 +7777,6 @@
                 "export",
                 "exporter"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/exporter/issues",
-                "source": "https://github.com/sebastianbergmann/exporter/tree/3.1.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -7967,10 +7881,6 @@
             "keywords": [
                 "global state"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/global-state/issues",
-                "source": "https://github.com/sebastianbergmann/global-state/tree/3.0.1"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -8024,10 +7934,6 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/object-enumerator/issues",
-                "source": "https://github.com/sebastianbergmann/object-enumerator/tree/3.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -8079,10 +7985,6 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/object-reflector/issues",
-                "source": "https://github.com/sebastianbergmann/object-reflector/tree/1.1.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -8193,10 +8095,6 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/recursion-context/issues",
-                "source": "https://github.com/sebastianbergmann/recursion-context/tree/3.0.1"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -8245,10 +8143,6 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/resource-operations/issues",
-                "source": "https://github.com/sebastianbergmann/resource-operations/tree/2.0.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -8301,10 +8195,6 @@
             ],
             "description": "Collection of value objects that represent the types of the PHP type system",
             "homepage": "https://github.com/sebastianbergmann/type",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/type/issues",
-                "source": "https://github.com/sebastianbergmann/type/tree/1.1.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -8899,10 +8789,6 @@
                 "testing",
                 "webdriver"
             ],
-            "support": {
-                "issues": "https://github.com/symfony/panther/issues",
-                "source": "https://github.com/symfony/panther/tree/v0.9.0"
-            },
             "funding": [
                 {
                     "url": "https://www.panthera.org/donate",
@@ -9150,51 +9036,6 @@
             "time": "2021-01-27T09:09:26+00:00"
         },
         {
-            "name": "symfony/test-pack",
-            "version": "v1.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/test-pack.git",
-                "reference": "e61756c97cbedae00b7cf43b87abcfadfeb2746c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/test-pack/zipball/e61756c97cbedae00b7cf43b87abcfadfeb2746c",
-                "reference": "e61756c97cbedae00b7cf43b87abcfadfeb2746c",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/browser-kit": "*",
-                "symfony/css-selector": "*",
-                "symfony/phpunit-bridge": "*"
-            },
-            "type": "symfony-pack",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A pack for functional and end-to-end testing within a Symfony app",
-            "support": {
-                "issues": "https://github.com/symfony/test-pack/issues",
-                "source": "https://github.com/symfony/test-pack/tree/v1.0.7"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-19T08:52:28+00:00"
-        },
-        {
             "name": "symfony/web-profiler-bundle",
             "version": "v4.4.23",
             "source": {
@@ -9307,6 +9148,7 @@
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
             "homepage": "https://github.com/theseer/fDOMDocument",
+            "abandoned": true,
             "time": "2017-06-30T11:53:12+00:00"
         },
         {
