@@ -5,7 +5,7 @@ Encore
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
     .addStyleEntry('global', './public/scss/application.scss')
-    .addLoader({ test: /\.scss$/, loader: 'import-glob-loader' })
+    .addLoader({ test: /\.scss$/, loader: 'webpack-import-glob-loader' })
     .enableSassLoader(function (options) {
         options.sassOptions = {
             outputStyle: 'expanded',
