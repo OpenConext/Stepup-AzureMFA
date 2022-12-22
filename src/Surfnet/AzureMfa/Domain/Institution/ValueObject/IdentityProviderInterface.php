@@ -26,7 +26,7 @@ interface IdentityProviderInterface
 
     public function getCertificates() : CertificateCollection;
 
-    public function getEntityId() : EntityId;
+    public function entityId() : EntityId;
 
     public function isAzureAD() : bool;
 }

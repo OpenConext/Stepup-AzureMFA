@@ -68,9 +68,9 @@ class ConfigurationFactoryTest extends TestCase
 
         $this->assertEquals('institution-a.example.com', $institutionA->getName());
         $this->assertInstanceOf(Destination::class, $institutionA->getIdentityProvider()->getSsoLocation());
-        $this->assertInstanceOf(EntityId::class, $institutionA->getIdentityProvider()->getEntityId());
+        $this->assertInstanceOf(EntityId::class, $institutionA->getIdentityProvider()->entityId());
         $this->assertEquals('https://adfs.stepup.example.com/adfs/ls/', $institutionA->getIdentityProvider()->getSsoLocation()->getUrl());
-        $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->getEntityId()->getEntityId());
+        $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->entityId()->getEntityId());
 
         // Todo: at this point we do not know how we want to work with this collection. Update test coverage once this becomes clear!
         $this->assertInstanceOf(EmailDomainCollection::class, $institutionA->getEmailDomainCollection());
@@ -78,9 +78,9 @@ class ConfigurationFactoryTest extends TestCase
 
         $this->assertEquals('harting-college.nl', $harting->getName());
         $this->assertInstanceOf(Destination::class, $harting->getIdentityProvider()->getSsoLocation());
-        $this->assertInstanceOf(EntityId::class, $harting->getIdentityProvider()->getEntityId());
+        $this->assertInstanceOf(EntityId::class, $harting->getIdentityProvider()->entityId());
         $this->assertEquals('https://adfs.harting-college.nl/adfs/ls/', $harting->getIdentityProvider()->getSsoLocation()->getUrl());
-        $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->getEntityId()->getEntityId());
+        $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->entityId()->getEntityId());
         $this->assertInstanceOf(EmailDomainCollection::class, $harting->getEmailDomainCollection());
         $this->assertInstanceOf(CertificateCollection::class, $harting->getIdentityProvider()->getCertificates());
     }

@@ -35,7 +35,7 @@ final class ErrorPageHelper
 
     public function generateMetadata(Request $request): array
     {
-        $timestamp = (new DateTime)->format(DateTime::ISO8601);
+        $timestamp = (new DateTime)->format(DateTime::ATOM);
         $hostname = $request->getHost();
         $userAgent = $request->headers->get('User-Agent');
         $ipAddress = $request->getClientIp();

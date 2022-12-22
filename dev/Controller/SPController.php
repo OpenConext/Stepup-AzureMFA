@@ -118,10 +118,10 @@ final class SPController extends AbstractController
             return $this->render('dev/acs.html.twig', [
                 'requestId' => $response->getId(),
                 'nameId' => $nameID ? [
-                    'value' => $nameID->value,
-                    'format' => $nameID->Format,
+                    'value' => $nameID->getValue(),
+                    'format' => $nameID->getFormat(),
                 ] : [],
-                'issuer' => $response->getIssuer(),
+                'issuer' => $response->getIssuer()->getValue(),
                 'relayState' => $request->get(AuthnRequest::PARAMETER_RELAY_STATE, ''),
                 'authenticatingAuthority' => $response->getAuthenticatingAuthority(),
                 'xml' => $this->toFormattedXml($xml),
@@ -133,7 +133,7 @@ final class SPController extends AbstractController
                 'error' => $e->getMessage(),
                 'status' => $samlResponse->getStatus(),
                 'requestId' => $samlResponse->getId(),
-                'issuer' => $samlResponse->getIssuer(),
+                'issuer' => $samlResponse->getIssuer()->getValue(),
                 'relayState' => $request->get(AuthnRequest::PARAMETER_RELAY_STATE, ''),
                 'xml' => $this->toFormattedXml($xml),
             ]);

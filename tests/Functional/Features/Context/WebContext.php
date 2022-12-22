@@ -34,6 +34,8 @@ use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;
+use SAML2\XML\saml\Issuer;
+use SAML2\XML\saml\NameID;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -152,7 +154,9 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://unkown_service_provider/saml/acs');
         $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
-        $authnRequest->setIssuer('https://unkown_service_provider/saml/metadata');
+        $issuer = new Issuer();
+        $issuer->setValue('https://unkown_service_provider/saml/metadata');
+        $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -189,7 +193,9 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://azuremfa.stepup.example.com/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://azuremfa.stepup.example.com/saml/metadata');
+        $issuer = new Issuer();
+        $issuer->setValue('https://azuremfa.stepup.example.com/saml/metadata');
+        $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -210,8 +216,12 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://azuremfa.stepup.example.com/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://azuremfa.stepup.example.com/saml/metadata');
-        $authnRequest->setNameId(['Value' => $nameId]);
+        $issuer = new Issuer();
+        $issuer->setValue('https://azuremfa.stepup.example.com/saml/metadata');
+        $authnRequest->setIssuer($issuer);
+        $nameIdVO = new NameID();
+        $nameIdVO->setValue($nameId);
+        $authnRequest->setNameId($nameIdVO);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
         $authnRequest->setRequesterID(['https://azuremfa.stepup.example.com/saml/metadata']);
         // Sign with random key, does not mather for now.

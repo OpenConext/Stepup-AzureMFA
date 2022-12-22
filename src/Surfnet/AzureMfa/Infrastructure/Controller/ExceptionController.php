@@ -26,13 +26,15 @@ use Surfnet\StepupBundle\Controller\ExceptionController as BaseExceptionControll
 use Surfnet\StepupBundle\Exception\Art;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ExceptionController extends BaseExceptionController
 {
     private $errorPageHelper;
 
-    public function __construct(ErrorPageHelper $errorPageHelper)
+    public function __construct(TranslatorInterface $translator, ErrorPageHelper $errorPageHelper)
     {
+        parent::__construct($translator);
         $this->errorPageHelper = $errorPageHelper;
     }
 
