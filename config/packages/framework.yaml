@@ -13,7 +13,7 @@ framework:
         # remote Azure MFA IdP's
         cookie_samesite: 'none'
     assets: ~
-    #esi: true
+    esi: false
     fragments: false
     php_errors:
         log: false
