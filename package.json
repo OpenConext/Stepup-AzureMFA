@@ -28,7 +28,7 @@
     "dependencies": {
         "bootstrap": "^3",
         "lodash": "^4.17.20",
-        "postcss": ">=8.2.13"
+        "postcss": ">=8.4.31"
     },
     "resolutions": {
         "loader-utils": "^1.4.1"
