@@ -3,7 +3,7 @@ framework:
     secret: '%env(APP_SECRET)%'
     csrf_protection: true
     http_method_override: true
-
+    error_controller: Surfnet\AzureMfa\Infrastructure\Controller\ExceptionController::showAction
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
@@ -17,6 +17,3 @@ framework:
     fragments: false
     php_errors:
         log: false
-    templating:
-        engines:
-            - twig
