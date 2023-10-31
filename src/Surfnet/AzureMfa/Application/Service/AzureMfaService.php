@@ -140,11 +140,6 @@ class AzureMfaService
         return $userId;
     }
 
-    /**
-     * @param User $user
-     * @param bool $forceAuthn
-     * @return RedirectResponse
-     */
     public function createAuthnRequest(User $user, bool $forceAuthn = false): string
     {
         $this->logger->info('Creating a SAML2 AuthnRequest to send to the Azure MFA IdP');
