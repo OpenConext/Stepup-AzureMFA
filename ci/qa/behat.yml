@@ -3,22 +3,22 @@ default:
         progress:
             paths: false
     extensions:
-        Behat\Symfony2Extension:
+        FriendsOfBehat\SymfonyExtension:
+            bootstrap: tests/Functional/Features/bootstrap/bootstrap.php
             kernel:
-                bootstrap: tests/Functional/Features/bootstrap/bootstrap.php
                 class: Surfnet\AzureMfa\Infrastructure\Kernel
         Behat\MinkExtension:
             base_url: https://azuremfa.stepup.example.com
-            default_session: 'symfony2'
             goutte:
-               guzzle_parameters:
+                guzzle_parameters:
                     curl.CURLOPT_SSL_VERIFYPEER: false
                     curl.CURLOPT_CERTINFO: false
                     ssl.certificate_authority: false
                     verify: false
+
             sessions:
-                symfony2:
-                    symfony2: ~
+                symfony:
+                    symfony: ~
         Behatch\Extension: ~
     suites:
         default:
