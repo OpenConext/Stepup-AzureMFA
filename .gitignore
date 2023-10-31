@@ -80,3 +80,10 @@ behat.yml
 ###< behat/symfony2-extension ###
 
 local-php-security-checker
+###> friends-of-behat/symfony-extension ###
+/behat.yml
+###< friends-of-behat/symfony-extension ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
