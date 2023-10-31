@@ -45,9 +45,9 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
         parent::__construct($configuration);
     }
 
-    public function getEntityId() : EntityId
+    public function getEntityId() : ?string
     {
-        return new EntityId(parent::getEntityId());
+        return parent::getEntityId();
     }
 
     public function getSsoLocation(): Destination

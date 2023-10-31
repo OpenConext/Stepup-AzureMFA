@@ -62,7 +62,7 @@ final class ExceptionController extends BaseExceptionController
      * @param Exception $exception
      * @return array View parameters 'title' and 'description'
      */
-    protected function getPageTitleAndDescription(Exception $exception)
+    protected function getPageTitleAndDescription(Exception $exception): array
     {
         return parent::getPageTitleAndDescription($exception);
     }
@@ -71,7 +71,7 @@ final class ExceptionController extends BaseExceptionController
      * @param Exception $exception
      * @return int HTTP status code
      */
-    protected function getStatusCode(Exception $exception)
+    protected function getStatusCode(Exception $exception): int
     {
         return parent::getStatusCode($exception);
     }
