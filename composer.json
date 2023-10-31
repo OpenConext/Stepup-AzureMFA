@@ -67,54 +67,26 @@
     "symfony/web-profiler-bundle": "4.4.*"
   },
   "scripts": {
-    "test": [
+    "check": [
+      "@composer-validate",
+      "@docheader",
       "@lint",
-      "@static-analysis",
-      "@phpunit",
-      "@behat",
-      "@security-tests"
-    ],
-    "lint": [
-      "@lint-php",
-      "@lint-yml",
-      "@lint-composer"
-    ],
-    "lint-php": "vendor/bin/parallel-lint dev src",
-    "lint-yml": "bin/console lint:yaml config",
-    "lint-composer": "composer validate",
-    "static-analysis": [
-      "@license-headers",
-      "@phpmd",
+      "@phpcpd",
       "@phpcs",
-      "@phpcpd"
+      "@phpmd",
+      "@phpstan"
     ],
-    "license-headers": "vendor/bin/docheader check src/ dev/ tests/",
-    "phpmd": "vendor/bin/phpmd ./src text phpmd.xml  --suffixes php",
-    "phpcs": [
-      "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./src"
-    ],
-    "phpcpd": [
-      "vendor/bin/phpcpd  ./src",
-      "vendor/bin/phpcpd  ./tests"
-    ],
-    "phpunit": "vendor/bin/phpunit",
-    "behat": "vendor/bin/behat  --config behat.yml --tags '~@remote'",
-    "security-tests": [
-      "wget -q https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64 -O local-php-security-checker && chmod +x ./local-php-security-checker && ./local-php-security-checker",
-      "yarn audit"
-    ],
-    "coverage": [
-      "@phpunit-coverage",
-      "mkdir -p coverage/reports",
-      "vendor/bin/phpcov merge coverage/reports --html coverage"
-    ],
-    "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
-    "frontend-install": [
-      "yarn install"
-    ],
-    "encore": [
-      "./node_modules/.bin/encore"
-    ],
+
+    "behat": "./ci/qa/behat",
+    "composer-validate": "./ci/qa/validate",
+    "docheader": "./ci/qa/docheader",
+    "lint": "./ci/qa/lint",
+    "phpcs": "./ci/qa/phpcs",
+    "phpcpd": "./ci/qa/phpcpd",
+    "phpcbf": "./ci/qa/phpcbf",
+    "phpmd": "./ci/qa/phpmd",
+    "phpstan": "./ci/qa/phpstan",
+    "phpstan-baseline": "./ci/qa/phpstan-update-baseline",
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
@@ -143,15 +115,10 @@
       "/translations/sp",
       "/coverage",
       "/docs",
-      "/homestead",
       "tests",
       "/build",
-      "/travis-ci-apache.conf",
-      "/.travis.php.ini",
-      "/.travis.yml",
       "/tsconfig.json",
       "/tslint.json",
-      "/Vagrantfile",
       "/webpack.config.js",
       "/jest.config.js",
       "/.docheader",
@@ -165,8 +132,9 @@
       "/config/packages/test",
       "/node_modules",
       "/coverage",
-      "/homestead",
       "/build",
+      "/ci",
+      "/docker",
       "/var/log",
       "/var/sessions"
     ]
