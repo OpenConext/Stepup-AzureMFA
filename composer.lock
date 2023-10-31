@@ -2126,16 +2126,16 @@
         },
         {
             "name": "surfnet/stepup-bundle",
-            "version": "6.0.7",
+            "version": "6.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-bundle.git",
-                "reference": "90c50a700f3b4387ad4e189198847daf45f99838"
+                "reference": "03cacebc35fcc4956f714cf9507d7f39508a0d32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-bundle/zipball/90c50a700f3b4387ad4e189198847daf45f99838",
-                "reference": "90c50a700f3b4387ad4e189198847daf45f99838",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-bundle/zipball/03cacebc35fcc4956f714cf9507d7f39508a0d32",
+                "reference": "03cacebc35fcc4956f714cf9507d7f39508a0d32",
                 "shasum": ""
             },
             "require": {
@@ -2144,7 +2144,7 @@
                 "ext-openssl": "*",
                 "guzzlehttp/guzzle": "^7.8",
                 "monolog/monolog": "^3",
-                "php": "^8.1",
+                "php": "^8.2",
                 "surfnet/stepup-saml-bundle": "^6.0",
                 "symfony/config": "^5.4|^6.3",
                 "symfony/dependency-injection": "^5.4|^6.3",
@@ -2191,9 +2191,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Stepup-bundle/issues",
-                "source": "https://github.com/OpenConext/Stepup-bundle/tree/6.0.7"
+                "source": "https://github.com/OpenConext/Stepup-bundle/tree/6.0.8"
             },
-            "time": "2023-10-24T08:58:35+00:00"
+            "time": "2023-10-31T14:34:06+00:00"
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
@@ -2254,16 +2254,16 @@
         },
         {
             "name": "surfnet/stepup-saml-bundle",
-            "version": "6.0.10",
+            "version": "6.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
-                "reference": "71e12fcc9885c697c9bc05f9277b2379b48bec57"
+                "reference": "eb76841769878f10f83342d1ca515bd71b2fdc97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/71e12fcc9885c697c9bc05f9277b2379b48bec57",
-                "reference": "71e12fcc9885c697c9bc05f9277b2379b48bec57",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/eb76841769878f10f83342d1ca515bd71b2fdc97",
+                "reference": "eb76841769878f10f83342d1ca515bd71b2fdc97",
                 "shasum": ""
             },
             "require": {
@@ -2320,9 +2320,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Stepup-saml-bundle/issues",
-                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/6.0.10"
+                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/6.0.11"
             },
-            "time": "2023-10-30T13:16:47+00:00"
+            "time": "2023-10-31T13:31:24+00:00"
         },
         {
             "name": "symfony/asset",

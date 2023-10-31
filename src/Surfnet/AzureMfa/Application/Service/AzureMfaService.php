@@ -34,6 +34,7 @@ use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -72,13 +73,13 @@ class AzureMfaService
         EmailDomainMatchingService $matchingService,
         ServiceProvider $serviceProvider,
         PostBinding $postBinding,
-        SessionInterface $session,
+        RequestStack $requestStack,
         LoggerInterface $logger
     ) {
         $this->matchingService = $matchingService;
         $this->serviceProvider = $serviceProvider;
         $this->postBinding = $postBinding;
-        $this->session = $session;
+        $this->session = $requestStack->getSession();
         $this->logger = $logger;
     }
 
