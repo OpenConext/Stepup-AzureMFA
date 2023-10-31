@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/../../
+
+./bin/console lint:yaml config --no-ansi
+
+# https://github.com/overtrue/phplint
+./vendor/bin/phplint --no-ansi -n --no-progress --configuration=ci/qa/phplint.yaml $1
