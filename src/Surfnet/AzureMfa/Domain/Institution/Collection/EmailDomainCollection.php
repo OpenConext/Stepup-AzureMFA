@@ -42,7 +42,7 @@ class EmailDomainCollection implements IteratorAggregate
         $this->emailDomains = $domains;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->emailDomains);
     }
