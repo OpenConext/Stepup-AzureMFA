@@ -24,6 +24,9 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEmailAddressException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use function get_debug_type;
+use function getType;
+use function is_string;
 
 class EmailDomainInConfigurationValidator extends ConstraintValidator
 {
@@ -44,9 +47,15 @@ class EmailDomainInConfigurationValidator extends ConstraintValidator
             return;
         }
 
+        // The EmailAddress constructor specifically requires a string value, any other value
+        // will not do.
+        if (!is_string($value)) {
+            throw new UnexpectedTypeException($value, get_debug_type($value));
+        }
+
         try {
             $email = new EmailAddress($value);
-        } catch (InvalidEmailAddressException $e) {
+        } catch (InvalidEmailAddressException) {
             throw new UnexpectedTypeException($constraint, EmailDomainInConfiguration::class);
         }
 

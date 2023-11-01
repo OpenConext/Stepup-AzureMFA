@@ -38,7 +38,11 @@ class Certificate
 
     public function getFingerprint(): string
     {
-        return openssl_x509_fingerprint($this->certData, 'sha256');
+        $fingerprint = openssl_x509_fingerprint($this->certData, 'sha256');
+        if ($fingerprint === false) {
+            throw new InvalidCertificateException('Unable to get the fingerprint from the certData using SHA256 digest algorithm');
+        }
+        return $fingerprint;
     }
 
     /**

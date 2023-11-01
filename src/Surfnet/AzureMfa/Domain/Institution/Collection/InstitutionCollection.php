@@ -55,8 +55,8 @@ class InstitutionCollection
     public function getByEmailDomain(EmailAddress $address): Institution
     {
         foreach ($this->institutions as $institution) {
-            /** @var EmailDomainInterface $domain */
             $domainCollection = $institution->getEmailDomainCollection();
+            /** @var EmailDomainInterface $domain */
             foreach ($domainCollection as $domain) {
                 if ($domain->domainMatches($address)) {
                     return $institution;

@@ -17,6 +17,7 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\Twig;
 
+use RuntimeException;
 use Surfnet\SamlBundle\Entity\HostedEntities;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -36,9 +37,13 @@ final class GsspExtension extends AbstractExtension
 
     public function generateDemoSPUrl(): string
     {
+        $idp = $this->hostedEntities->getIdentityProvider();
+        if (is_null($idp) || is_null($idp->getEntityId())) {
+            throw new RuntimeException('No Hosted IdP was configured, this is required to generate the Demo SP entity id');
+        }
         return sprintf(
             'https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?idp=%s',
-            urlencode($this->hostedEntities->getIdentityProvider()->getEntityId())
+            urlencode($idp->getEntityId())
         );
     }
 }

@@ -32,6 +32,9 @@ final class LocaleController extends AbstractController
     {
         // Make sure we redirect back to this host.
         $referer = $request->headers->get('referer');
+        if (is_null($referer)) {
+            return new Response('Referrer is not present', Response::HTTP_BAD_REQUEST);
+        }
         if ($request->getHost() !== parse_url($referer, PHP_URL_HOST)) {
             return new Response(sprintf('Cannot be requested from %s', $referer), Response::HTTP_BAD_REQUEST);
         }

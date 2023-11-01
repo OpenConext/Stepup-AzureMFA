@@ -31,7 +31,7 @@ final class ErrorPageHelper
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|null>
      */
     public function generateMetadata(Request $request): array
     {
