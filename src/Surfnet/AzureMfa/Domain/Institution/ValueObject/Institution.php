@@ -23,23 +23,12 @@ use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 
 class Institution
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private IdentityProviderInterface $identityProvider;
 
-    /**
-     * @var IdentityProviderInterface
-     */
-    private $identityProvider;
-
-    /**
-     * @var EmailDomainCollection
-     */
-    private $emailDomainCollection;
+    private EmailDomainCollection $emailDomainCollection;
 
     public function __construct(
-        string $name,
+        private string $name,
         IdentityProviderInterface $identityProvider,
         EmailDomainCollection $domainCollection
     ) {
@@ -52,7 +41,7 @@ class Institution
         $this->emailDomainCollection = $domainCollection;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -62,7 +51,7 @@ class Institution
         return $this->identityProvider;
     }
 
-    public function getEmailDomainCollection() : EmailDomainCollection
+    public function getEmailDomainCollection(): EmailDomainCollection
     {
         return $this->emailDomainCollection;
     }

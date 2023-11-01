@@ -25,9 +25,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class EmailDomainInConfiguration extends Constraint
 {
-    public $message = 'The provided email address did not match any of our configured email domains.';
+    public string $message = 'The provided email address did not match any of our configured email domains.';
 
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return EmailDomainInConfigurationValidator::class;
     }

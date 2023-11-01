@@ -26,16 +26,10 @@ class UserId
     const SEPARATOR = '|';
     const VALID_UNIQUE_ID = '/^[a-z0-9]{1,6}-[a-z0-9]{1,4}$/';
 
-    /**
-     * @var string
-     */
-    private $userId;
-    /**
-     * @var EmailAddress
-     */
-    private $emailAddress;
 
-    public function __construct(string $userId)
+    private EmailAddress $emailAddress;
+
+    public function __construct(private readonly string $userId)
     {
         if (empty($userId)) {
             throw new InvalidUserIdException('An empty id was specified');
@@ -55,18 +49,16 @@ class UserId
 
         try {
             $this->emailAddress = new EmailAddress($emailAddress);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             throw new InvalidUserIdException('An invalid id was specified');
         }
-
-        $this->userId = $userId;
     }
 
     public static function generate(EmailAddress $emailAddress): UserId
     {
         $length = 4;
-        $timeBasedHash =  base_convert(time(), 10, 36);
-        $uniqueHash = base_convert(mt_rand(0, pow(36, $length)), 10, 36);
+        $timeBasedHash =  base_convert((string)time(), 10, 36);
+        $uniqueHash = base_convert((string)mt_rand(0, pow(36, $length)), 10, 36);
         $id = $timeBasedHash . '-' . $uniqueHash . self::SEPARATOR . $emailAddress->getEmailAddress();
         return new self($id);
     }
@@ -76,17 +68,11 @@ class UserId
         return ($this->userId === $userId->getUserId());
     }
 
-    /**
-     * @return string
-     */
     public function getUserId(): string
     {
         return $this->userId;
     }
 
-    /**
-     * @return EmailAddress
-     */
     public function getEmailAddress(): EmailAddress
     {
         return $this->emailAddress;

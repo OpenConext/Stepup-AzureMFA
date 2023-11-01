@@ -40,43 +40,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DefaultController extends AbstractController
 {
-    /**
-     * @var AuthenticationService
-     */
-    private $authenticationService;
-
-    /**
-     * @var RegistrationService
-     */
-    private $registrationService;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var AzureMfaService
-     */
-    private $azureMfaService;
-
-    /**
-     * @var AuthenticationHelperInterface
-     */
-    private $authenticationHelper;
-
     public function __construct(
-        AuthenticationService $authenticationService,
-        AuthenticationHelperInterface $authenticationHelper,
-        RegistrationService $registrationService,
-        AzureMfaService $azureMfaService,
-        LoggerInterface $logger
-    ) {
-        $this->authenticationService = $authenticationService;
-        $this->authenticationHelper = $authenticationHelper;
-        $this->registrationService = $registrationService;
-        $this->azureMfaService = $azureMfaService;
-        $this->logger = $logger;
+        private readonly AuthenticationService $authenticationService,
+        private readonly AuthenticationHelperInterface $authenticationHelper,
+        private readonly RegistrationService $registrationService,
+        private readonly AzureMfaService $azureMfaService,
+        private readonly LoggerInterface $logger
+    )
+    {
     }
 
     /**
@@ -84,7 +55,7 @@ class DefaultController extends AbstractController
      *
      * @Route("/", name="homepage")
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         return $this->render('default/index.html.twig');
     }
@@ -96,7 +67,7 @@ class DefaultController extends AbstractController
      *
      * @Route("/registration", name="azure_mfa_registration")
      */
-    public function registrationAction(Request $request)
+    public function registrationAction(Request $request): RedirectResponse|Response
     {
         $this->logger->info('Verifying if there is a pending registration from SP');
 
@@ -144,11 +115,11 @@ class DefaultController extends AbstractController
      *
      * @Route("/authentication", name="azure_mfa_authentication")
      */
-    public function authenticationAction(Request $request)
+    public function authenticationAction(): RedirectResponse|Response
     {
         $requiresAuthentication = $this->authenticationService->authenticationRequired();
         if (!$requiresAuthentication) {
-            return new Response(null, $requiresAuthentication ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
+            return new Response(null, Response::HTTP_BAD_REQUEST);
         }
         $nameId = $this->authenticationService->getNameId();
 
@@ -162,7 +133,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/saml/acs", name="azure_mfa_acs")
      */
-    public function acsAction(Request $request)
+    public function acsAction(Request $request): Response
     {
         $this->logger->info('Receiving response from the Azure MFA remote IdP');
 

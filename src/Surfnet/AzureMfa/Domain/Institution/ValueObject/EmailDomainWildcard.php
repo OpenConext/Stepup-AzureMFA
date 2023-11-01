@@ -50,11 +50,9 @@ class EmailDomainWildcard implements EmailDomainInterface
 {
     const WILDCARD_CHARACTER = '*';
 
-    private $emailDomain;
+    private string $regexTemplate = '/.+%s$/';
 
-    private $regexTemplate = '/.+%s$/';
-
-    public function __construct(string $emailDomain)
+    public function __construct(private string $emailDomain)
     {
         // Domain can not be empty
         if (empty($emailDomain)) {
@@ -62,7 +60,7 @@ class EmailDomainWildcard implements EmailDomainInterface
         }
 
         // Valid wildcard must be used
-        if (strstr($emailDomain, self::WILDCARD_CHARACTER) === false) {
+        if (!str_contains($emailDomain, self::WILDCARD_CHARACTER)) {
             throw new InvalidEmailDomainException(
                 sprintf(
                     'No wildcard character was specified, please use "%s" as wildcard.',
@@ -79,16 +77,14 @@ class EmailDomainWildcard implements EmailDomainInterface
         if (strlen($emailDomain) < 2) {
             throw new InvalidEmailDomainException('Please specify more than just the wildcard character.');
         }
-
-        $this->emailDomain = $emailDomain;
     }
 
-    public function getEmailDomain() : string
+    public function getEmailDomain(): string
     {
         return $this->emailDomain;
     }
 
-    public function domainMatches(EmailAddress $emailAddress) : bool
+    public function domainMatches(EmailAddress $emailAddress): bool
     {
         $wildcardStripped = str_replace(self::WILDCARD_CHARACTER, '', $this->emailDomain);
         $escapedDomain = preg_quote($wildcardStripped);

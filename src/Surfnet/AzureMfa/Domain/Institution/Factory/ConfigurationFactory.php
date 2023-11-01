@@ -38,25 +38,16 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
  */
 class ConfigurationFactory
 {
-    /**
-     * @var array
-     */
-    private $configurationData;
-
-    /**
-     * @var IdentityProviderFactoryInterface
-     */
-    private $identityProviderFactory;
+    private array $configurationData;
 
     public function __construct(
         ConfigurationValidatorInterface $validator,
-        IdentityProviderFactoryInterface $identityProviderFactory
+        private readonly IdentityProviderFactoryInterface $identityProviderFactory
     ) {
         $this->configurationData = $validator->process()['institutions'];
-        $this->identityProviderFactory = $identityProviderFactory;
     }
 
-    public function build() : InstitutionConfigurationInterface
+    public function build(): InstitutionConfigurationInterface
     {
         $institutions = [];
         foreach ($this->configurationData as $institutionName => $institutionData) {
@@ -78,7 +69,10 @@ class ConfigurationFactory
         return new InstitutionConfiguration($institutions);
     }
 
-    private function buildEmailDomains(array $emailDomains)
+    /**
+     * @param array<string> $emailDomains
+     */
+    private function buildEmailDomains(array $emailDomains): EmailDomainCollection
     {
         $domainCollection = [];
         foreach ($emailDomains as $domain) {
@@ -87,7 +81,7 @@ class ConfigurationFactory
         return new EmailDomainCollection($domainCollection);
     }
 
-    private function buildEmailDomain($domain) : EmailDomainInterface
+    private function buildEmailDomain(string $domain): EmailDomainInterface
     {
         if (substr($domain, 0, 1) === EmailDomainWildcard::WILDCARD_CHARACTER) {
             return new EmailDomainWildcard($domain);
@@ -95,7 +89,10 @@ class ConfigurationFactory
         return new EmailDomain($domain);
     }
 
-    private function buildCertificates(array $certificates) : CertificateCollection
+    /**
+     * @param array<string> $certificates
+     */
+    private function buildCertificates(array $certificates): CertificateCollection
     {
         $certCollection = new CertificateCollection();
         foreach ($certificates as $certData) {

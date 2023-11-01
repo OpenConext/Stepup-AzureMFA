@@ -42,7 +42,7 @@ class Kernel extends BaseKernel
 
     public function getProjectDir(): string
     {
-        return \dirname(__DIR__, 4);
+        return dirname(__DIR__, 4);
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
@@ -62,8 +62,8 @@ class Kernel extends BaseKernel
     {
         $confDir = $this->getProjectDir().'/config';
 
-        $routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
+        $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, 'glob');
+        $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, 'glob');
     }
 }

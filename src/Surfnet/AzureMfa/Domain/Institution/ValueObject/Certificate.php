@@ -19,12 +19,10 @@
 namespace Surfnet\AzureMfa\Domain\Institution\ValueObject;
 
 use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
-use function openssl_x509_fingerprint;
-use function openssl_x509_parse;
 
 class Certificate
 {
-    private $certData;
+    private string $certData;
 
     public function __construct(string $certData)
     {
@@ -52,7 +50,6 @@ class Certificate
         $certData = $this->certData;
         $certData = str_replace(sprintf($stripFormat, 'BEGIN'), '', $certData);
         $certData = str_replace(sprintf($stripFormat, 'END'), '', $certData);
-        $certData = str_replace(PHP_EOL, '', $certData);
-        return $certData;
+        return str_replace(PHP_EOL, '', $certData);
     }
 }

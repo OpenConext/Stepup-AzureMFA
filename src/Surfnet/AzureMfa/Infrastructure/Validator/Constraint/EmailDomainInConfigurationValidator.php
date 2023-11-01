@@ -27,28 +27,19 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class EmailDomainInConfigurationValidator extends ConstraintValidator
 {
-    /**
-     * @var EmailDomainMatchingService
-     */
-    private $matchingService;
 
-    public function __construct(EmailDomainMatchingService $service)
+    public function __construct(private readonly EmailDomainMatchingService $matchingService)
     {
-        $this->matchingService = $service;
     }
 
-    /**
-     * @param mixed $value
-     * @param Constraint $constraint
-     */
-    public function validate($value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof EmailDomainInConfiguration) {
             throw new UnexpectedTypeException($constraint, EmailDomainInConfiguration::class);
         }
 
-        // custom constraints should ignore null and empty values to allow
-        // other constraints (NotBlank, NotNull, etc.) take care of that
+        // Custom constraints should ignore null and empty values to allow
+        // other constraints (NotBlank, NotNull, etc.) take care of that.
         if (null === $value || '' === $value) {
             return;
         }
@@ -63,7 +54,5 @@ class EmailDomainInConfigurationValidator extends ConstraintValidator
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }
-
-        return;
     }
 }

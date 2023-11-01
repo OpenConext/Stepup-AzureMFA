@@ -36,8 +36,6 @@ class EmailDomainMatchingService
 
     /**
      * Based on the email domain, this method will find a matching institution
-     * @param EmailAddress $emailAddress
-     * @return Institution|null
      */
     public function findInstitutionByEmail(EmailAddress $emailAddress) :? Institution
     {

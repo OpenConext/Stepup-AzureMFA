@@ -17,13 +17,13 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\EventSubscriber;
 
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Handles the lang selection based on cookie.
@@ -32,15 +32,10 @@ final class LocaleResponseListener implements EventSubscriberInterface
 {
     const STEPUP_LOCALE_COOKIE = 'stepup_locale';
 
-    private $translator;
-    private $requestStack;
-
     public function __construct(
-        TranslatorInterface $translator,
-        RequestStack $requestStack
+        private readonly Translator $translator,
+        private readonly RequestStack $requestStack
     ) {
-        $this->translator = $translator;
-        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents()
@@ -53,10 +48,8 @@ final class LocaleResponseListener implements EventSubscriberInterface
 
     /**
      * Sets the application locale based on stepup cookie.
-     *
-     * @param RequestEvent $event
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
         $local = $request->cookies->get(self::STEPUP_LOCALE_COOKIE, $request->getLocale());
@@ -66,12 +59,10 @@ final class LocaleResponseListener implements EventSubscriberInterface
 
     /**
      * Preserves the current selected locale as user cookie.
-     *
-     * @param ResponseEvent $event
      */
-    public function onKernelResponse(ResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event): void
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         $response = $event->getResponse();
         $cookie = new Cookie(
             self::STEPUP_LOCALE_COOKIE,
@@ -85,12 +76,10 @@ final class LocaleResponseListener implements EventSubscriberInterface
 
     /**
      * Return's the naked domain for the cookie variables so that is shared between the different sub-domains.
-     *
-     * @return string
      */
-    private function getNakedDomain()
+    private function getNakedDomain(): string
     {
-        $masterRequest = $this->requestStack->getMasterRequest();
+        $masterRequest = $this->requestStack->getMainRequest();
         $host = $masterRequest->getHost();
         $parts = explode('.', $host);
         return implode('.', array_slice($parts, -2, 2));

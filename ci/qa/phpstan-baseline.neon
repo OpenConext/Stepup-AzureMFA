@@ -1,2 +1,41 @@
 parameters:
 	ignoreErrors:
+		-
+			message: "#^Parameter \\#2 \\$identityProvider of method Surfnet\\\\SamlBundle\\\\Http\\\\PostBinding\\:\\:processResponse\\(\\) expects Surfnet\\\\SamlBundle\\\\Entity\\\\IdentityProvider, Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\ValueObject\\\\IdentityProviderInterface given\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Application/Service/AzureMfaService.php
+
+		-
+			message: "#^Parameter \\#2 \\$identityProvider of static method Surfnet\\\\SamlBundle\\\\SAML2\\\\AuthnRequestFactory\\:\\:createNewRequest\\(\\) expects Surfnet\\\\SamlBundle\\\\Entity\\\\IdentityProvider, Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\ValueObject\\\\IdentityProviderInterface given\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Application/Service/AzureMfaService.php
+
+		-
+			message: "#^Class Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\Collection\\\\EmailDomainCollection implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Domain/Institution/Collection/EmailDomainCollection.php
+
+		-
+			message: "#^Method Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\Collection\\\\EmailDomainCollection\\:\\:getIterator\\(\\) return type with generic class ArrayIterator does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Domain/Institution/Collection/EmailDomainCollection.php
+
+		-
+			message: "#^Method Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\Configuration\\\\ConfigurationValidatorInterface\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Domain/Institution/Configuration/ConfigurationValidatorInterface.php
+
+		-
+			message: "#^Property Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\Factory\\\\ConfigurationFactory\\:\\:\\$configurationData type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Domain/Institution/Factory/ConfigurationFactory.php
+
+		-
+			message: "#^Method Surfnet\\\\AzureMfa\\\\Infrastructure\\\\Institution\\\\ConfigurationValidator\\:\\:__construct\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Infrastructure/Institution/ConfigurationValidator.php
+
+		-
+			message: "#^Method Surfnet\\\\AzureMfa\\\\Infrastructure\\\\Institution\\\\ConfigurationValidator\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Infrastructure/Institution/ConfigurationValidator.php

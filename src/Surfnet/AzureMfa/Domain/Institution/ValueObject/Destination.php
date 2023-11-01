@@ -22,7 +22,7 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidDestinationException;
 
 class Destination
 {
-    private $url;
+    private string $url;
 
     public function __construct(string $url)
     {
