@@ -55,6 +55,6 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
 
     public function isAzureAD(): bool
     {
-        return $this->get('isAzureAD');
+        return (bool) $this->get('isAzureAD', false);
     }
 }

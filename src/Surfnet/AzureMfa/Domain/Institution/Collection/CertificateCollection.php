@@ -20,6 +20,7 @@ namespace Surfnet\AzureMfa\Domain\Institution\Collection;
 
 use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
+use function var_export;
 
 class CertificateCollection
 {
@@ -38,6 +39,15 @@ class CertificateCollection
 
     public function first(): Certificate
     {
-        return reset($this->certificates);
+        $first = reset($this->certificates);
+        if (!$first instanceof Certificate) {
+            throw new InvalidCertificateException(
+                sprintf(
+                    'Found unexpected data at the position of the first certificate. Should be Certificate, found %s',
+                    var_export($first, true)
+                )
+            );
+        }
+        return $first;
     }
 }

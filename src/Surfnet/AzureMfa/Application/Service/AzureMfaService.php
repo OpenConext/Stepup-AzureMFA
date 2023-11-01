@@ -100,6 +100,7 @@ class AzureMfaService
     public function finishRegistration(UserId $userId): UserId
     {
         $this->logger->info('Finishing the registration');
+        /** @var User $user */
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
@@ -127,6 +128,7 @@ class AzureMfaService
     public function finishAuthentication(UserId $userId): UserId
     {
         $this->logger->info('Finishing the authentication');
+        /** @var User $user */
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
@@ -186,12 +188,18 @@ class AzureMfaService
 
     public function handleResponse(Request $request): User
     {
-        // Load the registering/authenticating user
+        /**
+         * Load the registering/authenticating user
+         * @var User $user
+         */
         $user = $this->session->get('user');
 
         // Retrieve its institution and identity provider
         $this->logger->info('Match the user email address to one of the registered institutions');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
+        if (is_null($institution)) {
+            throw new AzureADException('The Institution could not be found using the users mail address');
+        }
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
 
         $this->logger->info('Process the SAML Response');
@@ -209,7 +217,6 @@ class AzureMfaService
         if ($azureMfaIdentityProvider->isAzureAD()) {
             $this->logger->info('This is an AzureAD IdP. Validating authnmethodsreferences in the response.');
             if (!isset($attributes['http://schemas.microsoft.com/claims/authnmethodsreferences']) || !in_array('http://schemas.microsoft.com/claims/multipleauthn', $attributes['http://schemas.microsoft.com/claims/authnmethodsreferences'])) {
-                // TODO: Create a proper AuthnmethodsreferencesMissingException
                 throw new AzureADException(
                     'No http://schemas.microsoft.com/claims/multipleauthn in authnmethodsreferences.'
                 );
