@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -46,8 +48,7 @@ class DefaultController extends AbstractController
         private readonly RegistrationService $registrationService,
         private readonly AzureMfaService $azureMfaService,
         private readonly LoggerInterface $logger
-    )
-    {
+    ) {
     }
 
     /**
@@ -147,7 +148,7 @@ class DefaultController extends AbstractController
                 $this->logger->info('Finishing the registration');
                 $userId = $this->azureMfaService->finishRegistration($user->getUserId());
                 $this->registrationService->register($userId->getUserId());
-            } else if ($user->getStatus()->isRegistered()) {
+            } elseif ($user->getStatus()->isRegistered()) {
                 // Handle authentication, this user is already registered
                 $this->logger->info('Process the authentication');
                 $this->azureMfaService->finishAuthentication($user->getUserId());

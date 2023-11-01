@@ -65,7 +65,7 @@ yarn-error.log
 ###< phpunit/phpunit ###
 
 ###> squizlabs/php_codesniffer ###
-/.phpcs-cache
+/ci/qa/.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
 
