@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -30,8 +32,8 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
         EntityId $entityId,
         Destination $destination,
         private readonly CertificateCollection $certificates,
-        bool $isAzureAD)
-    {
+        bool $isAzureAD
+    ) {
         $configuration = [
             // The entityId is not configured in the
             'entityId' => $entityId->getEntityId(),

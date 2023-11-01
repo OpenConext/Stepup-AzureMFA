@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -26,8 +28,7 @@ class ConfigurationValidator implements ConfigurationValidatorInterface
     public function __construct(
         private readonly ConfigurationDefinition $configurationDefinition,
         private readonly array $configuration
-    )
-    {
+    ) {
     }
 
     /**

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 /**
  * Copyright 2019 SURFnet B.V.
@@ -26,8 +28,8 @@ class User
     public function __construct(
         private readonly UserId $userId,
         private readonly EmailAddress $emailAddress,
-        private readonly UserStatus $status)
-    {
+        private readonly UserStatus $status
+    ) {
     }
 
     public function getUserId(): UserId
