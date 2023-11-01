@@ -26,13 +26,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class ErrorPageHelper
 {
-    private $requestId;
-
-    public function __construct(RequestId $requestId)
+    public function __construct(private readonly RequestId $requestId)
     {
-        $this->requestId = $requestId;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function generateMetadata(Request $request): array
     {
         $timestamp = (new DateTime)->format(DateTime::ISO8601);

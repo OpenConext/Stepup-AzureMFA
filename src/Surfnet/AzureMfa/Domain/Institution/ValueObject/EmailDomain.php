@@ -23,7 +23,7 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
 
 class EmailDomain implements EmailDomainInterface
 {
-    private $emailDomain;
+    private string $emailDomain;
 
     public function __construct(string $emailDomain)
     {
@@ -38,12 +38,12 @@ class EmailDomain implements EmailDomainInterface
         $this->emailDomain = $emailDomain;
     }
 
-    public function getEmailDomain() : string
+    public function getEmailDomain(): string
     {
         return $this->emailDomain;
     }
 
-    public function domainMatches(EmailAddress $emailAddress) : bool
+    public function domainMatches(EmailAddress $emailAddress): bool
     {
         return $emailAddress->getDomain() === $this->emailDomain;
     }

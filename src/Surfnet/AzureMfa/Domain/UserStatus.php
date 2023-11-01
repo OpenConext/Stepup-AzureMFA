@@ -23,14 +23,8 @@ class UserStatus
     const USER_REGISTRATION_PENDING = 0;
     const USER_REGISTERED = 1;
 
-    /**
-     * @var int
-     */
-    private $status;
-
-    public function __construct(int $status)
+    public function __construct(private readonly int $status)
     {
-        $this->status = $status;
     }
 
     public static function pending(): UserStatus

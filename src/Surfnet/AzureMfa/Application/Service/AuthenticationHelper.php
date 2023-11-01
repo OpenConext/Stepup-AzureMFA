@@ -29,15 +29,9 @@ use Surfnet\GsspBundle\Service\AuthenticationService;
  */
 class AuthenticationHelper implements AuthenticationHelperInterface
 {
-    /**
-     * @var string
-     */
-    private $regex;
+    private string $regex;
 
-    /**
-     * @var AuthenticationService
-     */
-    private $authenticationService;
+    private AuthenticationService $authenticationService;
 
     public function __construct(string $regex, AuthenticationService $authService)
     {
@@ -45,7 +39,7 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         $this->authenticationService = $authService;
     }
 
-    public function useForceAuthn() : bool
+    public function useForceAuthn(): bool
     {
         $issuer = '';
         $requesterIds = $this->authenticationService->getScopingRequesterIds();

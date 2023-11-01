@@ -22,5 +22,5 @@ use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
 
 interface InstitutionConfigurationInterface
 {
-    public function getInstitutions() : InstitutionCollection;
+    public function getInstitutions(): InstitutionCollection;
 }

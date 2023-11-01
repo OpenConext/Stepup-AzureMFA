@@ -22,9 +22,7 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEmailAddressException;
 
 class EmailAddress
 {
-    private $emailAddress;
-
-    public function __construct(string $emailAddress)
+    public function __construct(private readonly string $emailAddress)
     {
         if (empty($emailAddress)) {
             throw new InvalidEmailAddressException('An empty email address was specified');
@@ -32,11 +30,9 @@ class EmailAddress
         if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidEmailAddressException('The provided email address is invalid');
         }
-
-        $this->emailAddress = $emailAddress;
     }
 
-    public function getEmailAddress() : string
+    public function getEmailAddress(): string
     {
         return $this->emailAddress;
     }
@@ -45,7 +41,7 @@ class EmailAddress
      * Returns the lower cased domain name of the email address
      * @return string
      */
-    public function getDomain() : string
+    public function getDomain(): string
     {
         $explosion = explode('@', $this->emailAddress);
         return strtolower(end($explosion));

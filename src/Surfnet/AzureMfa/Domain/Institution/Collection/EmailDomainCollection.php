@@ -28,8 +28,11 @@ class EmailDomainCollection implements IteratorAggregate
     /**
      * @var EmailDomainInterface[]
      */
-    private $emailDomains = [];
+    private array $emailDomains = [];
 
+    /**
+     * @param EmailDomainInterface[] $domains
+     */
     public function __construct(array $domains)
     {
         foreach ($domains as $domain) {

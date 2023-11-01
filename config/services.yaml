@@ -28,7 +28,6 @@ services:
 
     Surfnet\AzureMfa\Infrastructure\Twig\GlobalViewParameters:
         arguments:
-            $locales: '%locales%'
             $supportUrl: '%support_url%'
             $supportEmail: '%support_email%'
 

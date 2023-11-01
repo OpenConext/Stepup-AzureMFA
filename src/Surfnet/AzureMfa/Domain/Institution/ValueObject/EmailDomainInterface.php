@@ -22,7 +22,7 @@ use Surfnet\AzureMfa\Domain\EmailAddress;
 
 interface EmailDomainInterface
 {
-    public function getEmailDomain() : string;
+    public function getEmailDomain(): string;
 
-    public function domainMatches(EmailAddress $emailAddress) : bool;
+    public function domainMatches(EmailAddress $emailAddress): bool;
 }

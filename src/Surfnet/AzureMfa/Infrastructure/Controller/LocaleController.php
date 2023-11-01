@@ -28,9 +28,9 @@ final class LocaleController extends AbstractController
     /**
      * @Route("/local/{lang}", name="local")
      */
-    public function localeAction(Request $request, $lang)
+    public function localeAction(Request $request, string $lang): RedirectResponse|Response
     {
-        // Make sure we redirect back to the this host.
+        // Make sure we redirect back to this host.
         $referer = $request->headers->get('referer');
         if ($request->getHost() !== parse_url($referer, PHP_URL_HOST)) {
             return new Response(sprintf('Cannot be requested from %s', $referer), Response::HTTP_BAD_REQUEST);

@@ -29,6 +29,7 @@ use Surfnet\AzureMfa\Domain\Exception\MissingMailAttributeException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
+use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
@@ -151,6 +152,7 @@ class AzureMfaService
             $this->logger->info($message);
             throw new InstitutionNotFoundException($message);
         }
+
         $azureMfaIdentityProvider = $institution->getIdentityProvider();
         $destination = $azureMfaIdentityProvider->getSsoLocation();
 
@@ -182,9 +184,6 @@ class AzureMfaService
         );
     }
 
-    /**
-     * @param Request $request
-     */
     public function handleResponse(Request $request): User
     {
         // Load the registering/authenticating user

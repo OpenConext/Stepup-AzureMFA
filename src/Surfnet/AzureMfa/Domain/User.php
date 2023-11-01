@@ -23,45 +23,23 @@ class User
     const USER_REGISTRATION_PENDING = 0;
     const USER_REGISTERED = 1;
 
-    /**
-     * @var UserId
-     */
-    private $userId;
-    /**
-     * @var EmailAddress
-     */
-    private $emailAddress;
-    /**
-     * @var UserStatus
-     */
-    private $status;
-
-    public function __construct(UserId $userId, EmailAddress $emailAddress, UserStatus $status)
+    public function __construct(
+        private readonly UserId $userId,
+        private readonly EmailAddress $emailAddress,
+        private readonly UserStatus $status)
     {
-        $this->userId = $userId;
-        $this->emailAddress = $emailAddress;
-        $this->status = $status;
     }
 
-    /**
-     * @return UserId
-     */
     public function getUserId(): UserId
     {
         return $this->userId;
     }
 
-    /**
-     * @return EmailAddress
-     */
     public function getEmailAddress(): EmailAddress
     {
         return $this->emailAddress;
     }
 
-    /**
-     * @return UserStatus
-     */
     public function getStatus(): UserStatus
     {
         return $this->status;

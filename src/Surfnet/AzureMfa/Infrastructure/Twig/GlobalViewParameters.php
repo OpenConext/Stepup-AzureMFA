@@ -26,54 +26,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GlobalViewParameters
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
 
     /**
-     * @var string[]
+     * @param string[] $supportUrl
      */
-    private $locales;
-
-    /**
-     * @var string[]
-     */
-    private $supportUrl;
-
-    private $supportEmail;
-
-    /**
-     * @var ErrorPageHelper
-     */
-    private $errorPageHelper;
-
-    /**
-     * @var RequestStack
-     */
-    private $request;
-
     public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        ErrorPageHelper $errorPageHelper,
-        RequestStack $request,
-        array $supportUrl,
-        string $supportEmail = null
+        private readonly TranslatorInterface $translator,
+        private readonly ErrorPageHelper $errorPageHelper,
+        private readonly RequestStack $request,
+        private readonly array $supportUrl,
+        private readonly ?string $supportEmail = null
     ) {
-        $this->translator = $translator;
-        $this->locales = $locales;
-        $this->supportUrl = $supportUrl;
-        $this->supportEmail = $supportEmail;
-        $this->errorPageHelper = $errorPageHelper;
-        $this->request = $request;
     }
 
-    public function getSupportUrl() : string
+    public function getSupportUrl(): string
     {
         return $this->supportUrl[$this->translator->getLocale()];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getRequestInformation(): array
     {
         $metadata = $this->errorPageHelper->generateMetadata($this->request->getCurrentRequest());

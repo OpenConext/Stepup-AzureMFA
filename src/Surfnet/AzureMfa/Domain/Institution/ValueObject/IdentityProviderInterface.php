@@ -22,11 +22,11 @@ use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 
 interface IdentityProviderInterface
 {
-    public function getSsoLocation() : Destination;
+    public function getSsoLocation(): Destination;
 
-    public function getCertificates() : CertificateCollection;
+    public function getCertificates(): CertificateCollection;
 
-    public function getEntityId() : ?string;
+    public function getEntityId(): ?string;
 
-    public function isAzureAD() : bool;
+    public function isAzureAD(): bool;
 }
