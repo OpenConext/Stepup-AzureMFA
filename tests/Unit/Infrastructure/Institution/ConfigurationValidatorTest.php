@@ -98,27 +98,27 @@ class ConfigurationValidatorTest extends TestCase
             ],
             'invalid entity id' => [
                 'invalid_entity_id.yaml',
-                'Invalid type for path "institution_configuration.institutions.institution-a.example.com.entity_id". Expected scalar, but got array.'
+                'Invalid type for path "institution_configuration.institutions.institution-a.example.com.entity_id". Expected "scalar", but got "array".'
             ],
             'invalid certificates' => [
                 'invalid_certificates.yaml',
-                'Invalid type for path "institution_configuration.institutions.institution-a.example.com.certificates". Expected array, but got string'
+                'Invalid type for path "institution_configuration.institutions.institution-a.example.com.certificates". Expected "array", but got "string"'
             ],
             'missing destination' => [
                 'missing_sso_location.yaml',
-                'The child node "sso_location" at path "institution_configuration.institutions.institution-a.example.com" must be configured.'
+                'The child config "sso_location" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
             ],
             'missing email domains' => [
                 'missing_email_domains.yaml',
-                'The child node "email_domains" at path "institution_configuration.institutions.institution-a.example.com" must be configured.'
+                'The child config "email_domains" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
             ],
             'missing entity_id' => [
                 'missing_entity_id.yaml',
-                'The child node "entity_id" at path "institution_configuration.institutions.institution-a.example.com" must be configured.'
+                'The child config "entity_id" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
             ],
             'missing certificates' => [
                 'missing_certificates.yaml',
-                'The child node "certificates" at path "institution_configuration.institutions.institution-a.example.com" must be configured.'
+                'The child config "certificates" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
             ],
         ];
     }

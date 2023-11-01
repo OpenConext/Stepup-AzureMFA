@@ -21,13 +21,13 @@ declare(strict_types = 1);
 namespace Surfnet\AzureMfa\Infrastructure\EventSubscriber;
 
 use RuntimeException;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Handles the lang selection based on cookie.
@@ -37,7 +37,7 @@ final class LocaleResponseListener implements EventSubscriberInterface
     const STEPUP_LOCALE_COOKIE = 'stepup_locale';
 
     public function __construct(
-        private readonly Translator $translator,
+        private readonly TranslatorInterface $translator,
         private readonly RequestStack $requestStack
     ) {
     }

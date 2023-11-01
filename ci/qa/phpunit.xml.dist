@@ -2,10 +2,10 @@
 
 <!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.4/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.6/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="vendor/autoload.php"
+         bootstrap="../../vendor/autoload.php"
 >
     <php>
         <ini name="error_reporting" value="-1"/>
@@ -14,37 +14,20 @@
         <server name="APP_SECRET" value="SECRETFORTEST"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
         <server name="SYMFONY_PHPUNIT_REMOVE" value=""/>
-        <server name="SYMFONY_PHPUNIT_VERSION" value="8.4"/>
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.6"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
     </php>
 
     <testsuites>
         <testsuite name="unit tests">
-            <directory suffix="Test.php">tests</directory>
+            <directory suffix="Test.php">../../tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>src</directory>
+            <directory>../../src</directory>
         </whitelist>
     </filter>
 
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-            <arguments>
-                <array>
-                    <!-- set this option to 0 to disable the DebugClassLoader integration -->
-                    <element key="debug-class-loader">
-                        <integer>0</integer>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-        <listener class="Symfony\Component\Panther\ServerListener" />
-    </listeners>
-
-    <extensions>
-        <extension class="Symfony\Component\Panther\ServerExtension" />
-    </extensions>
 </phpunit>
