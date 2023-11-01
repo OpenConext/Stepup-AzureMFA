@@ -119,9 +119,6 @@
     "php": {
         "version": "7.2"
     },
-    "php-webdriver/webdriver": {
-        "version": "1.10.0"
-    },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
     },
@@ -424,9 +421,6 @@
     },
     "symfony/options-resolver": {
         "version": "v4.4.19"
-    },
-    "symfony/panther": {
-        "version": "v0.9.0"
     },
     "symfony/phpunit-bridge": {
         "version": "5.1",

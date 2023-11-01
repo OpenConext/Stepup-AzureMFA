@@ -77,7 +77,7 @@ class ConfigurationFactoryTest extends TestCase
 
         $this->assertEquals('harting-college.nl', $harting->getName());
         $this->assertInstanceOf(Destination::class, $harting->getIdentityProvider()->getSsoLocation());
-        $this->assertInstanceOf(EntityId::class, $harting->getIdentityProvider()->getEntityId());
+        $this->assertIsString(EntityId::class, $harting->getIdentityProvider()->getEntityId());
         $this->assertEquals('https://adfs.harting-college.nl/adfs/ls/', $harting->getIdentityProvider()->getSsoLocation()->getUrl());
         $this->assertEquals('https://adfs.harting-college.nl/', $harting->getIdentityProvider()->getEntityId());
         $this->assertInstanceOf(EmailDomainCollection::class, $harting->getEmailDomainCollection());
