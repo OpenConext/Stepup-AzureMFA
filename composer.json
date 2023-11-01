@@ -51,7 +51,6 @@
     "behat/mink-goutte-driver": "^2.0",
     "behat/mink-selenium2-driver": "^1.6",
     "friends-of-behat/symfony-extension": "^2.4",
-    "dbrekelmans/bdi": "^1.1",
     "overtrue/phplint": "*",
     "malukenho/docheader": "^1",
     "mockery/mockery": "^1.6",
@@ -65,7 +64,6 @@
     "soyuka/contexts": "^3.3",
     "symfony/browser-kit": "^6.3",
     "symfony/css-selector": "^6.3",
-    "symfony/panther": "^2.1",
     "symfony/phpunit-bridge": "^6.3",
     "symfony/stopwatch": "^6.3",
     "symfony/web-profiler-bundle": "^6.3"
@@ -78,7 +76,8 @@
       "@phpcpd",
       "@phpcs",
       "@phpmd",
-      "@phpstan"
+      "@phpstan",
+      "@test"
     ],
 
     "behat": "./ci/qa/behat",
@@ -91,6 +90,7 @@
     "phpmd": "./ci/qa/phpmd",
     "phpstan": "./ci/qa/phpstan",
     "phpstan-baseline": "./ci/qa/phpstan-update-baseline",
+    "test": "./ci/qa/phpunit",
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"

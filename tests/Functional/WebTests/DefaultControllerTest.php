@@ -17,16 +17,14 @@
 
 namespace Surfnet\AzureMfa\Test\Functional\WebTests;
 
-use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DefaultControllerTest extends PantherTestCase
+class DefaultControllerTest extends WebTestCase
 {
     public function testIndex()
     {
-        $client = static::createPantherClient();
-
+        $client = static::createClient();
         $crawler = $client->request('GET', '/');
-
         $this->assertEquals(200, $client->getInternalResponse()->getStatusCode());
         $this->assertStringContainsString('Welcome to the Azure MFA', $crawler->filter('h2')->text());
     }

@@ -36,6 +36,11 @@ parameters:
 			path: ../../src/Surfnet/AzureMfa/Infrastructure/Controller/DefaultController.php
 
 		-
+			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Infrastructure/EventSubscriber/LocaleResponseListener.php
+
+		-
 			message: "#^Method Surfnet\\\\AzureMfa\\\\Infrastructure\\\\Institution\\\\ConfigurationValidator\\:\\:__construct\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../../src/Surfnet/AzureMfa/Infrastructure/Institution/ConfigurationValidator.php
