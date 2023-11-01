@@ -23,20 +23,11 @@ use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationValidator implements ConfigurationValidatorInterface
 {
-    /**
-     * @var array
-     */
-    private $configuration;
-
-    /**
-     * @var ConfigurationDefinition
-     */
-    private $configurationDefinition;
-
-    public function __construct(ConfigurationDefinition $configurationDefinition, array $configuration)
+    public function __construct(
+        private readonly ConfigurationDefinition $configurationDefinition,
+        private readonly array $configuration
+    )
     {
-        $this->configurationDefinition = $configurationDefinition;
-        $this->configuration = $configuration;
     }
 
     /**
@@ -44,16 +35,13 @@ class ConfigurationValidator implements ConfigurationValidatorInterface
      * configuration
      *
      * @see: src/Surfnet/AzureMfa/Infrastructure/Institution/ConfigurationDefinition.php
-     * @return array
      */
-    public function process() : array
+    public function process(): array
     {
         $processor = new Processor();
-        $processedConfiguration = $processor->processConfiguration(
+        return $processor->processConfiguration(
             $this->configurationDefinition,
             $this->configuration
         );
-
-        return $processedConfiguration;
     }
 }

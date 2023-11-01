@@ -2,6 +2,6 @@ includes:
     - ./phpstan-baseline.neon
     - ../../vendor/phpstan/phpstan-symfony/extension.neon
 parameters:
-	level: 3
+	level: 6
 	paths:
 		- ../../src

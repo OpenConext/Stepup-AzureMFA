@@ -22,15 +22,11 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEntityIdException;
 
 class EntityId
 {
-    private $entityId;
-
-    public function __construct(string $entityId)
+    public function __construct(private string $entityId)
     {
         if (empty($entityId)) {
             throw new InvalidEntityIdException('The IdP EntityId can not be an empty string.');
         }
-
-        $this->entityId = $entityId;
     }
 
     public function getEntityId(): string

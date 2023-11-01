@@ -24,10 +24,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class ConfigurationDefinition implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('institution_configuration');
 
@@ -36,10 +33,7 @@ class ConfigurationDefinition implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param ArrayNodeDefinition $node
-     */
-    private function addInstitutionDefinitions(ArrayNodeDefinition $node)
+    private function addInstitutionDefinitions(ArrayNodeDefinition $node): void
     {
         $node
             ->children()

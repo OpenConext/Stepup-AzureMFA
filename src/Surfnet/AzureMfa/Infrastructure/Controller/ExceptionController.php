@@ -29,14 +29,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ExceptionController extends BaseExceptionController
 {
-    private $errorPageHelper;
-
-    public function __construct(ErrorPageHelper $errorPageHelper)
+    public function __construct(private readonly ErrorPageHelper $errorPageHelper)
     {
-        $this->errorPageHelper = $errorPageHelper;
     }
 
-    public function showAction(Request $request, Exception $exception)
+    public function showAction(Request $request, Exception $exception): Response
     {
         $statusCode = $this->getStatusCode($exception);
 
@@ -59,18 +56,13 @@ final class ExceptionController extends BaseExceptionController
     }
 
     /**
-     * @param Exception $exception
-     * @return array View parameters 'title' and 'description'
+     * @return array<string, string>
      */
     protected function getPageTitleAndDescription(Exception $exception): array
     {
         return parent::getPageTitleAndDescription($exception);
     }
 
-    /**
-     * @param Exception $exception
-     * @return int HTTP status code
-     */
     protected function getStatusCode(Exception $exception): int
     {
         return parent::getStatusCode($exception);

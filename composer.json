@@ -21,6 +21,7 @@
   "require": {
     "ext-dom": "*",
     "ext-libxml": "*",
+    "ext-openssl": "*",
     "ext-zlib": "*",
     "incenteev/composer-parameter-handler": "^2.1",
     "openconext/monitor-bundle": "^4.0",

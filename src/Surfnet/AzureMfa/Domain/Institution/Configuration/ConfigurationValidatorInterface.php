@@ -20,5 +20,5 @@ namespace Surfnet\AzureMfa\Domain\Institution\Configuration;
 
 interface ConfigurationValidatorInterface
 {
-    public function process() : array;
+    public function process(): array;
 }

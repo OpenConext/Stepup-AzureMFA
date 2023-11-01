@@ -31,7 +31,7 @@ class InstitutionCollection
      */
     private $institutions = [];
 
-    public function add(Institution $institution)
+    public function add(Institution $institution): void
     {
         if (array_key_exists($institution->getName(), $this->institutions)) {
             throw new InvalidInstitutionException(
@@ -44,7 +44,7 @@ class InstitutionCollection
         $this->institutions[$institution->getName()] = $institution;
     }
 
-    public function getByName(string $name) : Institution
+    public function getByName(string $name): Institution
     {
         if (array_key_exists($name, $this->institutions) === false) {
             throw new InstitutionNotFoundException(sprintf('Unable to get the institution identified by "%s".', $name));
@@ -52,7 +52,7 @@ class InstitutionCollection
         return $this->institutions[$name];
     }
 
-    public function getByEmailDomain(EmailAddress $address) : Institution
+    public function getByEmailDomain(EmailAddress $address): Institution
     {
         foreach ($this->institutions as $institution) {
             /** @var EmailDomainInterface $domain */

@@ -20,8 +20,5 @@ namespace Surfnet\AzureMfa\Application\Service;
 
 interface AuthenticationHelperInterface
 {
-    /**
-     * @return boolean
-     */
-    public function useForceAuthn() : bool;
+    public function useForceAuthn(): bool;
 }

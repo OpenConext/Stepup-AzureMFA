@@ -28,9 +28,9 @@ final class EmailAddressDto
      * @Assert\Email
      * @Surfnet\AzureMfa\Infrastructure\Validator\Constraint\EmailDomainInConfiguration
      */
-    private $emailAddress = '';
+    private string $emailAddress = '';
 
-    public function setEmailAddress(string $emailAddress)
+    public function setEmailAddress(string $emailAddress): void
     {
         $this->emailAddress = $emailAddress;
     }

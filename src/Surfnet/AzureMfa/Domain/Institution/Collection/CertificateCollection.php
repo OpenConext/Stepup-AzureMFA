@@ -28,7 +28,7 @@ class CertificateCollection
      */
     private $certificates = [];
 
-    public function add(Certificate $certificate)
+    public function add(Certificate $certificate): void
     {
         if (array_key_exists($certificate->getFingerprint(), $this->certificates)) {
             throw new InvalidCertificateException('This certificate was already added to the collection');
@@ -36,7 +36,7 @@ class CertificateCollection
         $this->certificates[$certificate->getFingerprint()] = $certificate;
     }
 
-    public function first() : Certificate
+    public function first(): Certificate
     {
         return reset($this->certificates);
     }

@@ -26,12 +26,11 @@ use Surfnet\SamlBundle\Entity\IdentityProvider;
 
 class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProviderInterface
 {
-    /**
-     * @var CertificateCollection
-     */
-    private $certificates;
-
-    public function __construct(EntityId $entityId, Destination $destination, CertificateCollection $certificates, bool $isAzureAD)
+    public function __construct(
+        EntityId $entityId,
+        Destination $destination,
+        private readonly CertificateCollection $certificates,
+        bool $isAzureAD)
     {
         $configuration = [
             // The entityId is not configured in the
@@ -41,13 +40,7 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
             'isAzureAD' => $isAzureAD,
         ];
 
-        $this->certificates = $certificates;
         parent::__construct($configuration);
-    }
-
-    public function getEntityId() : ?string
-    {
-        return parent::getEntityId();
     }
 
     public function getSsoLocation(): Destination

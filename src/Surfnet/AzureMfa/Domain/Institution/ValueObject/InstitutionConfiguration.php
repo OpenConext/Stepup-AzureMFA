@@ -24,11 +24,11 @@ use Surfnet\AzureMfa\Domain\Institution\Configuration\InstitutionConfigurationIn
 
 class InstitutionConfiguration implements InstitutionConfigurationInterface
 {
-    /**
-     * @var InstitutionCollection
-     */
-    private $institutions;
+    private InstitutionCollection $institutions;
 
+    /**
+     * @param array<string, Institution> $institutions
+     */
     public function __construct(array $institutions)
     {
         $this->institutions = new InstitutionCollection();
