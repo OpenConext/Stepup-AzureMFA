@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\AzureMfa\Infrastructure\Twig;
 
+use RuntimeException;
 use Surfnet\AzureMfa\Infrastructure\Service\ErrorPageHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -45,11 +46,15 @@ final class GlobalViewParameters
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|null>
      */
     public function getRequestInformation(): array
     {
-        $metadata = $this->errorPageHelper->generateMetadata($this->request->getCurrentRequest());
+        $currentRequest = $this->request->getCurrentRequest();
+        if (is_null($currentRequest)) {
+            throw new RuntimeException('Unable to get request information, as no request is present in the RequestStack');
+        }
+        $metadata = $this->errorPageHelper->generateMetadata($currentRequest);
         return [
             'supportEmail' => $this->supportEmail,
             'hostname' => $metadata['hostname'],

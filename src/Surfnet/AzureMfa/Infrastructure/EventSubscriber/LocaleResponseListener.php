@@ -17,6 +17,7 @@
 
 namespace Surfnet\AzureMfa\Infrastructure\EventSubscriber;
 
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -62,11 +63,14 @@ final class LocaleResponseListener implements EventSubscriberInterface
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
-        $request = $this->requestStack->getMainRequest();
+        $mainRequest = $this->requestStack->getMainRequest();
+        if (is_null($mainRequest)) {
+            throw new RuntimeException('Unable to get main request to set the stepup_locale cookie on');
+        }
         $response = $event->getResponse();
         $cookie = new Cookie(
             self::STEPUP_LOCALE_COOKIE,
-            $request->getLocale(),
+            $mainRequest->getLocale(),
             0,
             '/',
             $this->getNakedDomain()
@@ -79,8 +83,11 @@ final class LocaleResponseListener implements EventSubscriberInterface
      */
     private function getNakedDomain(): string
     {
-        $masterRequest = $this->requestStack->getMainRequest();
-        $host = $masterRequest->getHost();
+        $mainRequest = $this->requestStack->getMainRequest();
+        if (is_null($mainRequest)) {
+            throw new RuntimeException('Unable to get main request to set the stepup_locale cookie on');
+        }
+        $host = $mainRequest->getHost();
         $parts = explode('.', $host);
         return implode('.', array_slice($parts, -2, 2));
     }
