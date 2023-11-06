@@ -29,7 +29,7 @@ class CertificateCollection
     /**
      * @var Certificate[]
      */
-    private $certificates = [];
+    private array $certificates = [];
 
     public function add(Certificate $certificate): void
     {

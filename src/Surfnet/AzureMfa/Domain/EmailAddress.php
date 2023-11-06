@@ -26,7 +26,7 @@ class EmailAddress
 {
     public function __construct(private readonly string $emailAddress)
     {
-        if (empty($emailAddress)) {
+        if ($emailAddress === '') {
             throw new InvalidEmailAddressException('An empty email address was specified');
         }
         if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL) === false) {

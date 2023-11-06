@@ -31,7 +31,7 @@ class InstitutionCollection
     /**
      * @var Institution[]
      */
-    private $institutions = [];
+    private array $institutions = [];
 
     public function add(Institution $institution): void
     {

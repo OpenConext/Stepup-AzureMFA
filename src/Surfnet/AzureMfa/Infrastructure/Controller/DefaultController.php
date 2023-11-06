@@ -53,10 +53,9 @@ class DefaultController extends AbstractController
 
     /**
      * Replace this example code with whatever you need/
-     *
-     * @Route("/", name="homepage")
      */
-    public function indexAction(): Response
+    #[Route(path: '/', name: 'homepage')]
+    public function index(): Response
     {
         return $this->render('default/index.html.twig');
     }
@@ -65,10 +64,9 @@ class DefaultController extends AbstractController
      * Replace this example code with whatever you need.
      *
      * See @see RegistrationService for a more clean example.
-     *
-     * @Route("/registration", name="azure_mfa_registration")
      */
-    public function registrationAction(Request $request): RedirectResponse|Response
+    #[Route(path: '/registration', name: 'azure_mfa_registration')]
+    public function registration(Request $request): RedirectResponse|Response
     {
         $this->logger->info('Verifying if there is a pending registration from SP');
 
@@ -113,10 +111,9 @@ class DefaultController extends AbstractController
      * Replace this example code with whatever you need.
      *
      * See @see AuthenticationService for a more clean example.
-     *
-     * @Route("/authentication", name="azure_mfa_authentication")
      */
-    public function authenticationAction(): RedirectResponse|Response
+    #[Route(path: '/authentication', name: 'azure_mfa_authentication')]
+    public function authentication(): RedirectResponse|Response
     {
         $requiresAuthentication = $this->authenticationService->authenticationRequired();
         if (!$requiresAuthentication) {
@@ -131,10 +128,8 @@ class DefaultController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/saml/acs", name="azure_mfa_acs")
-     */
-    public function acsAction(Request $request): Response
+    #[Route(path: '/saml/acs', name: 'azure_mfa_acs')]
+    public function acs(Request $request): Response
     {
         $this->logger->info('Receiving response from the Azure MFA remote IdP');
 

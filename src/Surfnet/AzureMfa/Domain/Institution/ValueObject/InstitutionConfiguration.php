@@ -26,7 +26,7 @@ use Surfnet\AzureMfa\Domain\Institution\Configuration\InstitutionConfigurationIn
 
 class InstitutionConfiguration implements InstitutionConfigurationInterface
 {
-    private InstitutionCollection $institutions;
+    private readonly InstitutionCollection $institutions;
 
     /**
      * @param array<string, Institution> $institutions
