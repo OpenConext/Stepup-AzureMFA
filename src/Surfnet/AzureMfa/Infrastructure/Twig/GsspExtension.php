@@ -33,9 +33,7 @@ final class GsspExtension extends AbstractExtension
 
     public function getFunctions(): array
     {
-        return array(
-            new TwigFunction('demoSpUrl', array($this, 'generateDemoSPUrl')),
-        );
+        return [new TwigFunction('demoSpUrl', $this->generateDemoSPUrl(...))];
     }
 
     public function generateDemoSPUrl(): string

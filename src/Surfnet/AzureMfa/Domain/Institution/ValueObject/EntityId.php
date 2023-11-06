@@ -24,9 +24,9 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEntityIdException;
 
 class EntityId
 {
-    public function __construct(private string $entityId)
+    public function __construct(private readonly string $entityId)
     {
-        if (empty($entityId)) {
+        if ($entityId === '') {
             throw new InvalidEntityIdException('The IdP EntityId can not be an empty string.');
         }
     }

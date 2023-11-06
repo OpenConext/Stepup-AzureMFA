@@ -33,7 +33,7 @@ final class ExceptionController extends BaseExceptionController
     {
     }
 
-    public function showAction(Request $request, Exception $exception): Response
+    public function show(Request $request, Exception $exception): Response
     {
         $statusCode = $this->getStatusCode($exception);
 

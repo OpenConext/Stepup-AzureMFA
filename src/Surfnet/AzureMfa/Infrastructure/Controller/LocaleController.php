@@ -28,10 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class LocaleController extends AbstractController
 {
-    /**
-     * @Route("/local/{lang}", name="local")
-     */
-    public function localeAction(Request $request, string $lang): RedirectResponse|Response
+    #[Route(path: '/local/{lang}', name: 'local')]
+    public function locale(Request $request, string $lang): RedirectResponse|Response
     {
         // Make sure we redirect back to this host.
         $referer = $request->headers->get('referer');

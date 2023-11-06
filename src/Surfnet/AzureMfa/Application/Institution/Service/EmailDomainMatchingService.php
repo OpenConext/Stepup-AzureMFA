@@ -29,7 +29,7 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
 class EmailDomainMatchingService
 {
-    private InstitutionConfigurationInterface $configuration;
+    private readonly InstitutionConfigurationInterface $configuration;
 
     public function __construct(ConfigurationFactory $factory)
     {
@@ -44,7 +44,7 @@ class EmailDomainMatchingService
         $institutions = $this->configuration->getInstitutions();
         try {
             return $institutions->getByEmailDomain($emailAddress);
-        } catch (InstitutionNotFoundException $e) {
+        } catch (InstitutionNotFoundException) {
             return null;
         }
     }

@@ -25,18 +25,18 @@ use Surfnet\AzureMfa\Infrastructure\Service\ErrorPageHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class GlobalViewParameters
+final readonly class GlobalViewParameters
 {
 
     /**
      * @param string[] $supportUrl
      */
     public function __construct(
-        private readonly TranslatorInterface $translator,
-        private readonly ErrorPageHelper $errorPageHelper,
-        private readonly RequestStack $request,
-        private readonly array $supportUrl,
-        private readonly ?string $supportEmail = null
+        private TranslatorInterface $translator,
+        private ErrorPageHelper $errorPageHelper,
+        private RequestStack $request,
+        private array $supportUrl,
+        private ?string $supportEmail = null
     ) {
     }
 

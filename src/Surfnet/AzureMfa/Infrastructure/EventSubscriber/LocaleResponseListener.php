@@ -32,13 +32,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Handles the lang selection based on cookie.
  */
-final class LocaleResponseListener implements EventSubscriberInterface
+final readonly class LocaleResponseListener implements EventSubscriberInterface
 {
-    const STEPUP_LOCALE_COOKIE = 'stepup_locale';
+    public const STEPUP_LOCALE_COOKIE = 'stepup_locale';
 
     public function __construct(
-        private readonly TranslatorInterface $translator,
-        private readonly RequestStack $requestStack
+        private TranslatorInterface $translator,
+        private RequestStack $requestStack
     ) {
     }
 

@@ -31,14 +31,8 @@ use Surfnet\GsspBundle\Service\AuthenticationService;
  */
 class AuthenticationHelper implements AuthenticationHelperInterface
 {
-    private string $regex;
-
-    private AuthenticationService $authenticationService;
-
-    public function __construct(string $regex, AuthenticationService $authService)
+    public function __construct(private readonly string $regex, private readonly AuthenticationService $authenticationService)
     {
-        $this->regex = $regex;
-        $this->authenticationService = $authService;
     }
 
     public function useForceAuthn(): bool
@@ -46,13 +40,9 @@ class AuthenticationHelper implements AuthenticationHelperInterface
         $issuer = '';
         $requesterIds = $this->authenticationService->getScopingRequesterIds();
         // If Scoping=>RequesterIDs are set, get the first entry, which is the original issuer of the authn request.
-        if (!empty($requesterIds)) {
+        if ($requesterIds !== []) {
             $issuer = array_shift($requesterIds);
         }
-
-        if (preg_match($this->regex, $issuer) == false) {
-            return false;
-        }
-        return true;
+        return preg_match($this->regex, $issuer) != false;
     }
 }

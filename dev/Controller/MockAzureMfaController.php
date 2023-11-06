@@ -21,6 +21,7 @@ use Dev\Mock\MockGateway;
 use Exception;
 use SAML2\Constants;
 use SAML2\Response as SamlResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,33 +31,15 @@ use Twig\Environment;
 
 class MockAzureMfaController extends AbstractController
 {
-    /**
-     * @var MockGateway
-     */
-    private $mockStepupGateway;
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    public function __construct(MockGateway $mockStepupGateway, Environment $twig)
+    public function __construct(private readonly MockGateway $mockStepupGateway, private readonly Environment $twig)
     {
-        $this->mockStepupGateway = $mockStepupGateway;
-        $this->twig = $twig;
     }
 
     /**
      * This is the sso action used to mock a GSSP callout
-     *
-     * @Route(
-     *     "/mock/sso",
-     *     name="mock_sso"
-     * )
-     *
-     * @param Request $request
-     * @return string|Response
      */
-    public function ssoAction(Request $request)
+    #[Route(path: '/mock/sso', name: 'mock_sso')]
+    public function sso(Request $request): SymfonyResponse
     {
         if (!in_array($this->getParameter('kernel.environment'), ['test', 'dev'])) {
             throw new Exception('Invalid environment encountered.');
@@ -105,16 +88,11 @@ class MockAzureMfaController extends AbstractController
         } catch (BadRequestHttpException $e) {
             return new Response($e->getMessage(), $e->getStatusCode());
         } catch (Exception $e) {
-            return new Response($e->getMessage(), 500);
+            return new Response($e->getMessage(), SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @param Request $request
-     * @param string $status
-     * @return array
-     */
-    private function getSelectedResponse(Request $request, $status)
+    private function getSelectedResponse(Request $request, string $status): array
     {
         switch (true) {
             case ($status == 'success'):
@@ -153,12 +131,7 @@ class MockAzureMfaController extends AbstractController
         }
     }
 
-    /**
-     * @param Request $request
-     * @param SamlResponse $samlResponse
-     * @return array
-     */
-    private function getResponseData(Request $request, SamlResponse $samlResponse)
+    private function getResponseData(Request $request, SamlResponse $samlResponse): array
     {
         $rawResponse = $this->mockStepupGateway->parsePostResponse($samlResponse);
 
@@ -170,20 +143,12 @@ class MockAzureMfaController extends AbstractController
         ];
     }
 
-    /**
-     * @param Request $request
-     * @return string
-     */
-    private function getFullRequestUri(Request $request)
+    private function getFullRequestUri(Request $request): string
     {
         return $request->getSchemeAndHttpHost() . $request->getBasePath() . $request->getPathInfo();
     }
 
-    /**
-     * @param string $data
-     * @return array
-     */
-    private function parseAttributes($data)
+    private function parseAttributes(string $data): array
     {
         @json_decode($data);
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -200,20 +165,20 @@ class MockAzureMfaController extends AbstractController
             if (!array_key_exists('name', $attr)) {
                 throw new BadRequestHttpException(sprintf(
                     'Could not parse the attributes because no valid name was given %s',
-                    json_encode($data)
+                    json_encode($data, JSON_THROW_ON_ERROR)
                 ));
             }
             if (!array_key_exists('value', $attr)) {
                 throw new BadRequestHttpException(sprintf(
                     'Could not parse the attributes because no valid value was given %s',
-                    json_encode($data)
+                    json_encode($data, JSON_THROW_ON_ERROR)
                 ));
             }
 
             if (!is_array($attr['value'])) {
                 throw new BadRequestHttpException(sprintf(
                     'Could not parse the attributes because a value should be an array with strings %s',
-                    json_encode($data)
+                    json_encode($data, JSON_THROW_ON_ERROR)
                 ));
             }
 
@@ -221,7 +186,7 @@ class MockAzureMfaController extends AbstractController
                 if (!is_string($value)) {
                     throw new BadRequestHttpException(sprintf(
                         'Could not parse the attributes because if a value is an array it should consist of strings %s',
-                        json_encode($data)
+                        json_encode($data, JSON_THROW_ON_ERROR)
                     ));
                 }
             }

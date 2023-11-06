@@ -20,14 +20,12 @@ namespace Dev\Mock;
 
 final class MockConfiguration
 {
-    private $identityProviderEntityId;
-    private $serviceProviderEntityId;
-    private $publicKeyCertData;
-    private $privateKeyPem;
+    private readonly string|bool $publicKeyCertData;
+    private readonly string|bool $privateKeyPem;
 
     public function __construct(
-        string $identityProviderEntityId,
-        string $serviceProviderEntityId,
+        private readonly string $identityProviderEntityId,
+        private readonly string $serviceProviderEntityId,
         string $privateKeyPath,
         string $publicCertPath
     ) {
@@ -38,9 +36,6 @@ final class MockConfiguration
         if (!is_file($publicCertPath)) {
             throw new \InvalidArgumentException('Unable to find private key: '. $publicCertPath);
         }
-
-        $this->identityProviderEntityId = $identityProviderEntityId;
-        $this->serviceProviderEntityId = $serviceProviderEntityId;
         $this->privateKeyPem = file_get_contents($privateKeyPath);
         $this->publicKeyCertData = file_get_contents($publicCertPath);
     }

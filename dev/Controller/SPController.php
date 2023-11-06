@@ -19,6 +19,7 @@ namespace Dev\Controller;
 
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use DOMDocument;
 use SAML2\Assertion;
@@ -26,7 +27,6 @@ use SAML2\Configuration\PrivateKey;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;
 use SAML2\Response;
-use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
@@ -36,21 +36,14 @@ use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Demo SP.
- */
 final class SPController extends AbstractController
 {
-    private $identityProvider;
-    private $serviceProvider;
-    private $postBinding;
+    private readonly ServiceProvider $serviceProvider;
 
     public function __construct(
-        IdentityProvider $identityProvider,
-        PostBinding $postBinding
+        private readonly IdentityProvider $identityProvider,
+        private readonly PostBinding $postBinding
     ) {
-        $this->identityProvider = $identityProvider;
-        $this->postBinding = $postBinding;
         $baseDir = dirname(__DIR__, 2);
         $this->serviceProvider = new ServiceProvider(
             [
@@ -67,14 +60,8 @@ final class SPController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/demo/sp", name="sp_demo")
-     *
-     * See @see RegistrationService for a more clean example.
-     *
-     * @throws Exception
-     */
-    public function demoSpAction(Request $request)
+    #[Route(path: '/demo/sp', name: 'sp_demo')]
+    public function demoSp(Request $request): SymfonyResponse
     {
         if (!$request->isMethod(Request::METHOD_POST)) {
             return $this->render('dev/sp.html.twig');
@@ -100,26 +87,21 @@ final class SPController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/demo/sp/acs", name="sp_demo_acs")
-     *
-     * See @see RegistrationService for a more clean example.
-     */
-    public function assertionConsumerServiceAction(Request $request)
+    #[Route(path: '/demo/sp/acs', name: 'sp_demo_acs')]
+    public function assertionConsumerService(Request $request): SymfonyResponse
     {
         $xmlResponse = $request->request->get('SAMLResponse');
         $xml = base64_decode($xmlResponse);
         try {
-            /** @var Assertion $response */
             $response = $this->postBinding->processResponse($request, $this->identityProvider, $this->serviceProvider);
 
             $nameID = $response->getNameId();
 
             return $this->render('dev/acs.html.twig', [
                 'requestId' => $response->getId(),
-                'nameId' => $nameID ? [
-                    'value' => $nameID->value,
-                    'format' => $nameID->Format,
+                'nameId' => $nameID !== null ? [
+                    'value' => $nameID->getValue(),
+                    'format' => $nameID->getFormat(),
                 ] : [],
                 'issuer' => $response->getIssuer(),
                 'relayState' => $request->get(AuthnRequest::PARAMETER_RELAY_STATE, ''),
@@ -143,33 +125,25 @@ final class SPController extends AbstractController
     /**
      * Formats xml.
      *
-     * @param string $xml
      *
      * @return string
      */
-    private function toFormattedXml($xml)
+    private function toFormattedXml(string|bool $xml): string|bool
     {
-        $domxml = new DOMDocument('1.0');
-        $domxml->preserveWhiteSpace = false;
-        $domxml->formatOutput = true;
-        $domxml->loadXML($xml);
+        $domXml = new DOMDocument('1.0');
+        $domXml->preserveWhiteSpace = false;
+        $domXml->formatOutput = true;
+        $domXml->loadXML($xml);
 
-        return $domxml->saveXML();
+        return $domXml->saveXML();
     }
 
     /**
-     * @param string $xml
-     *
-     * @return Message
-     *
      * @throws Exception
      */
-    private function toUnsignedErrorResponse($xml)
+    private function toUnsignedErrorResponse(string $xml): Message
     {
-        $previous = libxml_disable_entity_loader(true);
         $asXml = DOMDocumentFactory::fromString($xml);
-        libxml_disable_entity_loader($previous);
-
         return Response::fromXML($asXml->documentElement);
     }
 }

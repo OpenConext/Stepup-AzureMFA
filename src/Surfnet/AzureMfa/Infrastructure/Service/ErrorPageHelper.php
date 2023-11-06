@@ -24,9 +24,9 @@ use DateTime;
 use Surfnet\StepupBundle\Request\RequestId;
 use Symfony\Component\HttpFoundation\Request;
 
-final class ErrorPageHelper
+final readonly class ErrorPageHelper
 {
-    public function __construct(private readonly RequestId $requestId)
+    public function __construct(private RequestId $requestId)
     {
     }
 

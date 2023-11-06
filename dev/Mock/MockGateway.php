@@ -40,36 +40,24 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class MockGateway
 {
 
-    const PARAMETER_REQUEST = 'SAMLRequest';
-    const PARAMETER_RELAY_STATE = 'RelayState';
-    const PARAMETER_SIGNATURE = 'Signature';
-    const PARAMETER_SIGNATURE_ALGORITHM = 'SigAlg';
+    final public const PARAMETER_REQUEST = 'SAMLRequest';
+    final public const PARAMETER_RELAY_STATE = 'RelayState';
+    final public const PARAMETER_SIGNATURE = 'Signature';
+    final public const PARAMETER_SIGNATURE_ALGORITHM = 'SigAlg';
+
+    private readonly \DateTime $currentTime;
 
     /**
-     * @var DateTime
-     */
-    private $currentTime;
-
-    /**
-     * @var MockConfiguration
-     */
-    private $gatewayConfiguration;
-
-    /**
-     * @param MockConfiguration $gatewayConfiguration
      * @throws Exception
      */
     public function __construct(
-        MockConfiguration $gatewayConfiguration
+        private readonly MockConfiguration $gatewayConfiguration
     ) {
-        $this->gatewayConfiguration = $gatewayConfiguration;
         $this->currentTime = new DateTime();
     }
 
     /**
-     * @param Request $request
      * @param string $fullRequestUri
-     * @param array $attributes
      * @return Response
      * @throws Exception
      */
@@ -79,7 +67,7 @@ class MockGateway
         $authnRequest = $this->parseRequest($request, $fullRequestUri);
 
         // get parameters from authnRequest
-        $nameId = $authnRequest->getNameId() ? $authnRequest->getNameId()->value : null;
+        $nameId = $authnRequest->getNameId() !== null ? $authnRequest->getNameId()->value : null;
         $destination = $authnRequest->getAssertionConsumerServiceURL();
         $authnContextClassRef = current($authnRequest->getRequestedAuthnContext()['AuthnContextClassRef']);
         $requestId = $authnRequest->getId();
@@ -95,7 +83,6 @@ class MockGateway
     }
 
     /**
-     * @param Request $request
      * @param string $fullRequestUri
      * @param string $status
      * @param string $subStatus
@@ -156,14 +143,14 @@ class MockGateway
             throw new BadRequestHttpException('Missing a request, did not receive a request or request was empty');
         }
 
-        $samlRequest = base64_decode($requestData, true);
+        $samlRequest = base64_decode((string) $requestData, true);
         if ($samlRequest === false) {
             throw new BadRequestHttpException('Failed decoding the request, did not receive a valid base64 string');
         }
 
         // Catch any errors gzinflate triggers
         $errorNo = $errorMessage = null;
-        set_error_handler(function ($number, $message) use (&$errorNo, &$errorMessage) {
+        set_error_handler(function ($number, $message) use (&$errorNo, &$errorMessage): void {
             $errorNo      = $number;
             $errorMessage = $message;
         });
@@ -190,7 +177,7 @@ class MockGateway
         if (!$authnRequest instanceof SAML2AuthnRequest) {
             throw new RuntimeException(sprintf(
                 'The received request is not an AuthnRequest, "%s" received instead',
-                substr(get_class($authnRequest), strrpos($authnRequest, '_') + 1)
+                substr($authnRequest::class, strrpos($authnRequest, '_') + 1)
             ));
         }
 
@@ -214,14 +201,14 @@ class MockGateway
 
         // 5. Validate key
         // Note: $authnRequest->validate throws an Exception when the signature does not match.
-        $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, array('type' => 'public'));
+        $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'public']);
         $key->loadKey($this->gatewayConfiguration->getIdentityProviderPublicKeyCertData());
 
         // The query string to validate needs to be urlencoded again because Symfony has already decoded this for us
-        $query = self::PARAMETER_REQUEST . '=' . urlencode($requestData);
-        $query .= '&' . self::PARAMETER_SIGNATURE_ALGORITHM . '=' . urlencode($request->get(self::PARAMETER_SIGNATURE_ALGORITHM));
+        $query = self::PARAMETER_REQUEST . '=' . urlencode((string) $requestData);
+        $query .= '&' . self::PARAMETER_SIGNATURE_ALGORITHM . '=' . urlencode((string) $request->get(self::PARAMETER_SIGNATURE_ALGORITHM));
 
-        $signature = base64_decode($request->get(self::PARAMETER_SIGNATURE));
+        $signature = base64_decode((string) $request->get(self::PARAMETER_SIGNATURE));
 
         $isVerified = $key->verifySignature($query, $signature);
         if ($isVerified === false || $isVerified < 1) {
@@ -234,7 +221,6 @@ class MockGateway
     }
 
     /**
-     * @param Response $response
      * @return string
      */
     public function parsePostResponse(Response $response)
@@ -250,7 +236,7 @@ class MockGateway
      * @param string|null $message The textual message
      * @return Response
      */
-    private function createFailureResponse($destination, $requestId, $status, $subStatus = null, $message = null)
+    private function createFailureResponse(string $destination, string $requestId, array $status, $subStatus = null, $message = null): \SAML2\Response
     {
         $response = new Response();
         $response->setDestination($destination);
@@ -260,11 +246,11 @@ class MockGateway
 
 
         if (!$this->isValidResponseStatus($status)) {
-            throw new LogicException(sprintf('Trying to set invalid Response Status'));
+            throw new LogicException('Trying to set invalid Response Status');
         }
 
         if ($subStatus && !$this->isValidResponseSubStatus($subStatus)) {
-            throw new LogicException(sprintf('Trying to set invalid Response SubStatus'));
+            throw new LogicException('Trying to set invalid Response SubStatus');
         }
 
         $status = ['Code' => $status];
@@ -281,12 +267,11 @@ class MockGateway
     }
 
     /**
-     * @param Assertion $newAssertion
      * @param string $destination The ACS location
      * @param string $requestId The requestId
      * @return Response
      */
-    private function createNewAuthnResponse(Assertion $newAssertion, $destination, $requestId)
+    private function createNewAuthnResponse(Assertion $newAssertion, string $destination, string $requestId): \SAML2\Response
     {
         $response = new Response();
         $response->setAssertions([$newAssertion]);
@@ -306,7 +291,7 @@ class MockGateway
      * @param string $requestId The requestId
      * @return Assertion
      */
-    private function createNewAssertion($nameId, $authnContextClassRef, $destination, $requestId)
+    private function createNewAssertion($nameId, $authnContextClassRef, $destination, $requestId): \SAML2\Assertion
     {
         $newAssertion = new Assertion();
         $newAssertion->setNotBefore($this->currentTime->getTimestamp());
@@ -328,11 +313,10 @@ class MockGateway
     }
 
     /**
-     * @param Assertion $newAssertion
      * @param string $destination The ACS location
      * @param string $requestId The requestId
      */
-    private function addSubjectConfirmationFor(Assertion $newAssertion, $destination, $requestId)
+    private function addSubjectConfirmationFor(Assertion $newAssertion, $destination, $requestId): void
     {
         $confirmation         = new SubjectConfirmation();
         $confirmation->Method = Constants::CM_BEARER;
@@ -348,10 +332,9 @@ class MockGateway
     }
 
     /**
-     * @param Assertion $assertion
      * @param $authnContextClassRef
      */
-    private function addAuthenticationStatementTo(Assertion $assertion, $authnContextClassRef)
+    private function addAuthenticationStatementTo(Assertion $assertion, string $authnContextClassRef): void
     {
         $assertion->setAuthnInstant($this->getTimestamp());
         $assertion->setAuthnContextClassRef($authnContextClassRef);
@@ -362,7 +345,7 @@ class MockGateway
      * @param string $interval a DateInterval compatible interval to skew the time with
      * @return int
      */
-    private function getTimestamp($interval = null)
+    private function getTimestamp($interval = null): int
     {
         $time = clone $this->currentTime;
 
@@ -374,10 +357,9 @@ class MockGateway
     }
 
     /**
-     * @param Assertion $assertion
      * @return Assertion
      */
-    private function signAssertion(Assertion $assertion)
+    private function signAssertion(Assertion $assertion): Assertion
     {
         $assertion->setSignatureKey($this->loadPrivateKey());
         $assertion->setCertificates([$this->getPublicCertificate()]);
@@ -388,7 +370,7 @@ class MockGateway
     /**
      * @return XMLSecurityKey
      */
-    private function loadPrivateKey()
+    private function loadPrivateKey(): \RobRichards\XMLSecLibs\XMLSecurityKey
     {
         $xmlSecurityKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
         $xmlSecurityKey->loadKey($this->gatewayConfiguration->getIdentityProviderGetPrivateKeyPem());
@@ -404,7 +386,7 @@ class MockGateway
         return $this->gatewayConfiguration->getIdentityProviderPublicKeyCertData();
     }
 
-    private function isValidResponseStatus($status)
+    private function isValidResponseStatus(array $status): bool
     {
         return in_array($status, [
             Constants::STATUS_SUCCESS,            // weeee!
@@ -414,7 +396,7 @@ class MockGateway
         ]);
     }
 
-    private function isValidResponseSubStatus($subStatus)
+    private function isValidResponseSubStatus($subStatus): bool
     {
         return in_array($subStatus, [
             Constants::STATUS_AUTHN_FAILED,               // failed authentication
