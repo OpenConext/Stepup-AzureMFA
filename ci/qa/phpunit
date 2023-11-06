@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/../../
+
+
+./vendor/bin/phpunit -c ci/qa/phpunit.xml.dist
