@@ -22,8 +22,8 @@ namespace Surfnet\AzureMfa\Domain;
 
 class UserStatus
 {
-    const USER_REGISTRATION_PENDING = 0;
-    const USER_REGISTERED = 1;
+    final public const USER_REGISTRATION_PENDING = 0;
+    final public const USER_REGISTERED = 1;
 
     public function __construct(private readonly int $status)
     {

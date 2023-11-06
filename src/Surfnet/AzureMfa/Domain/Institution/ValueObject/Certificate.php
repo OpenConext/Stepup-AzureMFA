@@ -28,7 +28,7 @@ class Certificate
 
     public function __construct(string $certData)
     {
-        if (empty($certData)) {
+        if ($certData === '') {
             throw new InvalidCertificateException('The IdP certificate can not be an empty string.');
         }
         if (!openssl_x509_parse($certData)) {

@@ -25,15 +25,15 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidUserIdException;
 
 class UserId
 {
-    const SEPARATOR = '|';
-    const VALID_UNIQUE_ID = '/^[a-z0-9]{1,6}-[a-z0-9]{1,4}$/';
+    final public const SEPARATOR = '|';
+    final public const VALID_UNIQUE_ID = '/^[a-z0-9]{1,6}-[a-z0-9]{1,4}$/';
 
 
     private EmailAddress $emailAddress;
 
     public function __construct(private readonly string $userId)
     {
-        if (empty($userId)) {
+        if ($userId === '') {
             throw new InvalidUserIdException('An empty id was specified');
         }
 
@@ -60,7 +60,7 @@ class UserId
     {
         $length = 4;
         $timeBasedHash =  base_convert((string)time(), 10, 36);
-        $uniqueHash = base_convert((string)mt_rand(0, pow(36, $length)), 10, 36);
+        $uniqueHash = base_convert((string)random_int(0, 36 ** $length), 10, 36);
         $id = $timeBasedHash . '-' . $uniqueHash . self::SEPARATOR . $emailAddress->getEmailAddress();
         return new self($id);
     }

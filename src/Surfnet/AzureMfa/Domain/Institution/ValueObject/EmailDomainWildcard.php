@@ -50,14 +50,14 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
  */
 class EmailDomainWildcard implements EmailDomainInterface
 {
-    const WILDCARD_CHARACTER = '*';
+    final public const WILDCARD_CHARACTER = '*';
 
     private string $regexTemplate = '/.+%s$/';
 
-    public function __construct(private string $emailDomain)
+    public function __construct(private readonly string $emailDomain)
     {
         // Domain can not be empty
-        if (empty($emailDomain)) {
+        if ($emailDomain === '') {
             throw new InvalidEmailDomainException('The email domain can not be an empty string.');
         }
 

@@ -31,11 +31,9 @@ use Surfnet\AzureMfa\Domain\Exception\MissingMailAttributeException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
-use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -45,45 +43,18 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class AzureMfaService
 {
-    const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
+    final public const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
 
-    /**
-     * @var EmailDomainMatchingService
-     */
-    private $matchingService;
-
-    /**
-     * @var PostBinding
-     */
-    private $postBinding;
-
-    /**
-     * @var ServiceProvider
-     */
-    private $serviceProvider;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private readonly SessionInterface $session;
 
     public function __construct(
-        EmailDomainMatchingService $matchingService,
-        ServiceProvider $serviceProvider,
-        PostBinding $postBinding,
+        private readonly EmailDomainMatchingService $matchingService,
+        private readonly ServiceProvider $serviceProvider,
+        private readonly PostBinding $postBinding,
         RequestStack $requestStack,
-        LoggerInterface $logger
+        private readonly LoggerInterface $logger
     ) {
-        $this->matchingService = $matchingService;
-        $this->serviceProvider = $serviceProvider;
-        $this->postBinding = $postBinding;
         $this->session = $requestStack->getSession();
-        $this->logger = $logger;
     }
 
     public function startRegistration(EmailAddress $emailAddress): User

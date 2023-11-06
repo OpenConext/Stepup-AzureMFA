@@ -25,11 +25,11 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
 
 class EmailDomain implements EmailDomainInterface
 {
-    private string $emailDomain;
+    private readonly string $emailDomain;
 
     public function __construct(string $emailDomain)
     {
-        if (empty($emailDomain)) {
+        if ($emailDomain === '') {
             throw new InvalidEmailDomainException('The email domain can not be an empty string.');
         }
 

@@ -26,10 +26,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class EmailAddressDto
 {
     /**
-     * @Assert\NotBlank
-     * @Assert\Email
      * @Surfnet\AzureMfa\Infrastructure\Validator\Constraint\EmailDomainInConfiguration
      */
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private string $emailAddress = '';
 
     public function setEmailAddress(string $emailAddress): void

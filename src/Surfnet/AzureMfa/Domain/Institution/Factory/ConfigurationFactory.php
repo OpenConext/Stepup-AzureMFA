@@ -40,7 +40,7 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
  */
 class ConfigurationFactory
 {
-    private array $configurationData;
+    private readonly array $configurationData;
 
     public function __construct(
         ConfigurationValidatorInterface $validator,

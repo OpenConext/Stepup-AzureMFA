@@ -24,11 +24,11 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidDestinationException;
 
 class Destination
 {
-    private string $url;
+    private readonly string $url;
 
     public function __construct(string $url)
     {
-        if (empty($url)) {
+        if ($url === '') {
             throw new InvalidDestinationException('The destination URL can not be an empty string.');
         }
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
