@@ -1,4 +1,15 @@
 form {
+
+  .form-group {
+    margin-bottom: 1em;
+    font-size:larger;
+    label {
+      padding-right: 1em;
+    }
+    input[type=text] {
+      padding: 5px;
+    }
+  }
   .form-row {
     position: relative;
   }

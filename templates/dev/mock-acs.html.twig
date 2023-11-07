@@ -1,8 +1,12 @@
-<html>
+{% extends 'base.html.twig' %}
+
+{% block title %}Select response{% endblock %}
+
+{% block body %}
     <h2>Select response</h2>
     <form method="post" action="{{ action }}">
 
-        <h3>Attributes</h3>
+        <h3blue>Attributes</h3blue>
         <textarea name="attributes" style="width:800px; height: 500px;">
 [
 {
@@ -13,10 +17,15 @@
 }
 ]
         </textarea>
-        <br/>
+        <br/><br />
 
         {% for id, response in responses %}
-            <button name="status" value="{{ response }}" type="submit">{{ response }}</button><br/>
+            {% if response == 'success' %}
+                {% set color = 'green' %}
+            {% else %}
+                {% set color = 'blue' %}
+            {% endif %}
+            <button name="status" class="button {{ color }}" value="{{ response }}" type="submit">{{ response }}</button>
         {% endfor %}
     </form>
-</html>
+{% endblock body %}

@@ -106,6 +106,7 @@ page.sp.authentication.title: Authentication
 page.sp.authenticate_user: Authenticate user
 
 page.sp.registration.title: Registration
+page.sp.authentication.nameid_explained: "The NameId for the AzureMFA GSSP looks consists of two parts delimited by a <b>|</b>. First you state the SecondFactor Identifier, followed by the mail address of the identity. Below you can see an example:<br/><br/> <pre>q2b27d-0000|user@harting-college.nl</pre><br/>"
 page.sp.register_user: Register user
 
 page.acs.title: Demo Service provider ACS

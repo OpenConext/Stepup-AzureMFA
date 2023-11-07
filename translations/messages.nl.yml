@@ -94,6 +94,7 @@ page.sp.title: Demo service provider
 page.sp.sub_title: Demo service provider
 
 page.sp.authentication.title: Verificatie
+page.sp.authentication.nameid_explained: "Het NameId van de identity is een samengestelde waarde; het SecondFactor Identifier en het mailadress van de instelling. Gescheiden door een <b>|</b>. Hieronder zie je een voorbeeld:<br/><br/> <pre>q2b27d-0000|user@harting-college.nl</pre><br/>"
 page.sp.authenticate_user: Gebruiker verifiëren
 
 page.sp.registration.title: Registratie
