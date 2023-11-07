@@ -6,12 +6,12 @@ Feature: When an user needs to register for a new token
 
   Scenario: When an user needs to register for a new token
     # The user request a registration from the service provider
-    Given I am on "https://azuremfa.stepup.example.com/demo/sp"
+    Given I am on "https://azuremfa.dev.openconext.local/demo/sp"
     Then I should see "Demo service provider"
     When I press "Register user"
 
     # The user register himself at the IdP
-    Then I should be on "https://azuremfa.stepup.example.com/registration"
+    Then I should be on "https://azuremfa.dev.openconext.local/registration"
     And I should see "Registration"
 
     # GSSP assigns a subject name id to the user
@@ -19,17 +19,17 @@ Feature: When an user needs to register for a new token
     When I press "email_address_submit"
 
     # The MFA SSO page
-    Then I should be on "https://azuremfa.stepup.example.com/mock/sso"
+    Then I should be on "https://azuremfa.dev.openconext.local/mock/sso"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                  |
       | urn:mace:dir:attribute-def:mail                            | user@stepup.example.com |
 
     # The GSSP acs page.
-    Then I should be on "https://azuremfa.stepup.example.com/saml/sso_return"
+    Then I should be on "https://azuremfa.dev.openconext.local/saml/sso_return"
     And I press "Submit"
 
     # Back at the SP.
-    Then I should be on "https://azuremfa.stepup.example.com/demo/sp/acs"
+    Then I should be on "https://azuremfa.dev.openconext.local/demo/sp/acs"
     And I should see "Demo Service provider ConsumerAssertionService endpoint"
     And I should see "urn:oasis:names:tc:SAML:2.0:status:Succes"
     And I should see a NameID with email address "user@stepup.example.com"

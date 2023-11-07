@@ -216,8 +216,8 @@ class MockAzureMfaControllerTest extends WebTestCase
         $samlBundle = '';
         return new ServiceProvider(
             [
-                'entityId' => 'https://azuremfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azuremfa.stepup.example.com/demo/sp/acs',
+                'entityId' => 'https://azuremfa.dev.openconext.local/saml/metadata',
+                'assertionConsumerUrl' => 'https://azuremfa.dev.openconext.local/demo/sp/acs',
                 'certificateFile' => $this->publicKey,
                 'privateKeys' => [
                     new PrivateKey(
@@ -235,8 +235,8 @@ class MockAzureMfaControllerTest extends WebTestCase
         $samlBundle = '';
         return new IdentityProvider(
             [
-                'entityId' => 'https://azuremfa.stepup.example.com/mock/idp/metadata',
-                'ssoUrl' => 'https://azuremfa.stepup.example.com/mock/sso',
+                'entityId' => 'https://azuremfa.dev.openconext.local/mock/idp/metadata',
+                'ssoUrl' => 'https://azuremfa.dev.openconext.local/mock/sso',
                 'certificateFile' => $this->publicKey,
                 'privateKeys' => [
                     new PrivateKey(

@@ -44,15 +44,14 @@ final class SPController extends AbstractController
         private readonly IdentityProvider $identityProvider,
         private readonly PostBinding $postBinding
     ) {
-        $baseDir = dirname(__DIR__, 2);
         $this->serviceProvider = new ServiceProvider(
             [
-                'entityId' => 'https://azuremfa.stepup.example.com/saml/metadata',
-                'assertionConsumerUrl' => 'https://azuremfa.stepup.example.com/demo/sp/acs',
-                'certificateFile' => $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer',
+                'entityId' => 'https://azuremfa.dev.openconext.local/saml/metadata',
+                'assertionConsumerUrl' => 'https://azuremfa.dev.openconext.local/demo/sp/acs',
+                'certificateFile' => '/config/azuremfa/azuremfa_idp.crt',
                 'privateKeys' => [
                     new PrivateKey(
-                        $baseDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem',
+                        '/config/azuremfa/azuremfa_idp.key',
                         'default'
                     ),
                 ],
