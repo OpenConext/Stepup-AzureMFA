@@ -8,7 +8,7 @@ default:
             kernel:
                 class: Surfnet\AzureMfa\Infrastructure\Kernel
         Behat\MinkExtension:
-            base_url: https://azuremfa.stepup.example.com
+            base_url: https://azuremfa.dev.openconext.local
             goutte:
                 guzzle_parameters:
                     curl.CURLOPT_SSL_VERIFYPEER: false

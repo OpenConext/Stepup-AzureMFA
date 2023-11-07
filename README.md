@@ -17,7 +17,7 @@ Authentication and registration flows
 -------------------------------------
 
 The application provides internal (SpBundle) and a remote service provider. Instructions for this are given 
-on the homepage of this example project [Homepage](https://azuremfa.stepup.example.com/app_dev.php/).
+on the homepage of this example project [Homepage](https://azuremfa.dev.openconext.local/).
 
 ![flow](docs/flow.png)
 <!---
@@ -106,7 +106,7 @@ for production
 
 If everything goes as planned you can go to:
 
-[https://azuremfa.stepup.example.com](https://azuremfa.stepup.example.com/app_dev.php)
+[https://azuremfa.dev.stepup.local](https://azuremfa.dev.stepup.local/)
 
 
 Configuring institutions using Azure MFA 
