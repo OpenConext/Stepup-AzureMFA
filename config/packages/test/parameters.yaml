@@ -1,4 +1,4 @@
 parameters:
     # overridden for test (behat)
     saml_remote_sp_certificate: '%kernel.project_dir%/../../../../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'
-    ra_issuer_entity_id_regex: '@@^https://azuremfa.stepup.example.com/saml/metadata$@'
+    ra_issuer_entity_id_regex: '@@^https://azuremfa.dev.openconext.local/saml/metadata$@'
