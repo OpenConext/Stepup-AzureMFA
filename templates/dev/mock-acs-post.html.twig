@@ -1,12 +1,15 @@
-<html>
+{% extends 'base.html.twig' %}
 
+{% block title %}Post SAML response back to SSO{% endblock %}
+
+{% block body %}
     <h2>Post SAML response back to SSO</h2>
     <form method="post" action="{{ response.acu }}" id="postResponse">
         <input type="hidden" name="SAMLResponse" value="{{ response.encodedResponse }}"/>
         {% if response.relayState|length > 0 %}
             <input type="hidden" name="RelayState" value="{{ response.relayState|escape }}"/>
         {% endif %}
-        <input type="submit" value="Post"/>
+        <button type="submit" class="button green">Submit assertion</button>
     </form>
 
     <script type="text/javascript">
@@ -17,4 +20,4 @@
                 }, 2000);
         };
     </script>
-</html>
+{% endblock body %}
