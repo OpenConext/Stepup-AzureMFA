@@ -23,6 +23,13 @@ namespace Surfnet\AzureMfa\Domain;
 use Exception;
 use Surfnet\AzureMfa\Domain\Exception\InvalidUserIdException;
 
+/**
+ * The user id consists of two parts, delimited by a PIPE sign
+ * The first part is the second factor identifier. Which is the ID the GSSP can identify the used token with.
+ * The second part is the mail address of the identity. This is used to lookup the identity with the AzureMFA
+ *
+ * Example UserId: q2b27d-a0z9|user@dev.openconext.local
+ */
 class UserId
 {
     final public const SEPARATOR = '|';

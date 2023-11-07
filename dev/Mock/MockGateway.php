@@ -29,6 +29,8 @@ use SAML2\Constants;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;
 use SAML2\Response;
+use SAML2\XML\saml\Issuer;
+use SAML2\XML\saml\NameID;
 use SAML2\XML\saml\SubjectConfirmation;
 use SAML2\XML\saml\SubjectConfirmationData;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +69,7 @@ class MockGateway
         $authnRequest = $this->parseRequest($request, $fullRequestUri);
 
         // get parameters from authnRequest
-        $nameId = $authnRequest->getNameId() !== null ? $authnRequest->getNameId()->value : null;
+        $nameId = $authnRequest->getNameId() !== null ? $authnRequest->getNameId()->getValue() : null;
         $destination = $authnRequest->getAssertionConsumerServiceURL();
         $authnContextClassRef = current($authnRequest->getRequestedAuthnContext()['AuthnContextClassRef']);
         $requestId = $authnRequest->getId();
@@ -166,19 +168,13 @@ class MockGateway
         }
 
         // 1. Parse to xml object
-        // additional security against XXE Processing vulnerability
-        $previous = libxml_disable_entity_loader(true);
         $document = DOMDocumentFactory::fromString($samlRequest);
-        libxml_disable_entity_loader($previous);
 
+        try {
         // 2. Parse saml request
         $authnRequest = Message::fromXML($document->firstChild);
-
-        if (!$authnRequest instanceof SAML2AuthnRequest) {
-            throw new RuntimeException(sprintf(
-                'The received request is not an AuthnRequest, "%s" received instead',
-                substr($authnRequest::class, strrpos($authnRequest, '_') + 1)
-            ));
+        } catch (Exception) {
+            throw new RuntimeException('The received request is not an AuthnRequest');
         }
 
         // 3. Validate destination
@@ -236,7 +232,7 @@ class MockGateway
      * @param string|null $message The textual message
      * @return Response
      */
-    private function createFailureResponse(string $destination, string $requestId, array $status, $subStatus = null, $message = null): \SAML2\Response
+    private function createFailureResponse(string $destination, string $requestId, array $status, $subStatus = null, $message = null): Response
     {
         $response = new Response();
         $response->setDestination($destination);
@@ -266,16 +262,13 @@ class MockGateway
         return $response;
     }
 
-    /**
-     * @param string $destination The ACS location
-     * @param string $requestId The requestId
-     * @return Response
-     */
-    private function createNewAuthnResponse(Assertion $newAssertion, string $destination, string $requestId): \SAML2\Response
+    private function createNewAuthnResponse(Assertion $newAssertion, string $destination, string $requestId): Response
     {
+        $issuer = new Issuer();
+        $issuer->setValue($this->gatewayConfiguration->getIdentityProviderEntityId());
         $response = new Response();
         $response->setAssertions([$newAssertion]);
-        $response->setIssuer($this->gatewayConfiguration->getIdentityProviderEntityId());
+        $response->setIssuer($issuer);
         $response->setIssueInstant($this->getTimestamp());
         $response->setDestination($destination);
         $response->setInResponseTo($requestId);
@@ -291,20 +284,26 @@ class MockGateway
      * @param string $requestId The requestId
      * @return Assertion
      */
-    private function createNewAssertion($nameId, $authnContextClassRef, $destination, $requestId): \SAML2\Assertion
-    {
+    private function createNewAssertion(
+        string $nameId,
+        string $authnContextClassRef,
+        string $destination,
+        string $requestId
+    ): Assertion {
+        $issuer = new Issuer();
+        $issuer->setValue($this->gatewayConfiguration->getIdentityProviderEntityId());
         $newAssertion = new Assertion();
         $newAssertion->setNotBefore($this->currentTime->getTimestamp());
         $newAssertion->setNotOnOrAfter($this->getTimestamp('PT5M'));
-        $newAssertion->setIssuer($this->gatewayConfiguration->getIdentityProviderEntityId());
+        $newAssertion->setIssuer($issuer);
         $newAssertion->setIssueInstant($this->getTimestamp());
         $this->signAssertion($newAssertion);
         $this->addSubjectConfirmationFor($newAssertion, $destination, $requestId);
         if (!is_null($nameId)) {
-            $newAssertion->setNameId([
-                'Format' => Constants::NAMEID_UNSPECIFIED,
-                'Value' => $nameId,
-            ]);
+            $newNameId = new NameID();
+            $newNameId->setFormat(Constants::NAMEID_UNSPECIFIED);
+            $newNameId->setValue($nameId);
+            $newAssertion->setNameId($newNameId);
         }
         $newAssertion->setValidAudiences([$this->gatewayConfiguration->getServiceProviderEntityId()]);
         $this->addAuthenticationStatementTo($newAssertion, $authnContextClassRef);
@@ -318,22 +317,16 @@ class MockGateway
      */
     private function addSubjectConfirmationFor(Assertion $newAssertion, $destination, $requestId): void
     {
-        $confirmation         = new SubjectConfirmation();
-        $confirmation->Method = Constants::CM_BEARER;
-
-        $confirmationData                      = new SubjectConfirmationData();
-        $confirmationData->InResponseTo        = $requestId;
-        $confirmationData->Recipient           = $destination;
-        $confirmationData->NotOnOrAfter        = $newAssertion->getNotOnOrAfter();
-
-        $confirmation->SubjectConfirmationData = $confirmationData;
-
+        $confirmation  = new SubjectConfirmation();
+        $confirmation->setMethod(Constants::CM_BEARER);
+        $confirmationData = new SubjectConfirmationData();
+        $confirmationData->setInResponseTo($requestId);
+        $confirmationData->setRecipient($destination);
+        $confirmationData->setNotOnOrAfter($newAssertion->getNotOnOrAfter());
+        $confirmation->setSubjectConfirmationData($confirmationData);
         $newAssertion->setSubjectConfirmation([$confirmation]);
     }
 
-    /**
-     * @param $authnContextClassRef
-     */
     private function addAuthenticationStatementTo(Assertion $assertion, string $authnContextClassRef): void
     {
         $assertion->setAuthnInstant($this->getTimestamp());
@@ -342,10 +335,9 @@ class MockGateway
     }
 
     /**
-     * @param string $interval a DateInterval compatible interval to skew the time with
-     * @return int
+     * @param ?string $interval a DateInterval compatible interval to skew the time with
      */
-    private function getTimestamp($interval = null): int
+    private function getTimestamp(?string $interval = null): int
     {
         $time = clone $this->currentTime;
 
@@ -356,9 +348,6 @@ class MockGateway
         return $time->getTimestamp();
     }
 
-    /**
-     * @return Assertion
-     */
     private function signAssertion(Assertion $assertion): Assertion
     {
         $assertion->setSignatureKey($this->loadPrivateKey());
@@ -367,10 +356,7 @@ class MockGateway
         return $assertion;
     }
 
-    /**
-     * @return XMLSecurityKey
-     */
-    private function loadPrivateKey(): \RobRichards\XMLSecLibs\XMLSecurityKey
+    private function loadPrivateKey(): XMLSecurityKey
     {
         $xmlSecurityKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
         $xmlSecurityKey->loadKey($this->gatewayConfiguration->getIdentityProviderGetPrivateKeyPem());
@@ -378,10 +364,7 @@ class MockGateway
         return $xmlSecurityKey;
     }
 
-    /**
-     * @return string
-     */
-    private function getPublicCertificate()
+    private function getPublicCertificate(): string|bool
     {
         return $this->gatewayConfiguration->getIdentityProviderPublicKeyCertData();
     }

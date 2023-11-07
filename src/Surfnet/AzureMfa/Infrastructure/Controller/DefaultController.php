@@ -72,7 +72,7 @@ class DefaultController extends AbstractController
 
         if ($request->get('action') === 'error') {
             $this->logger->error('The registration failed, rejecting the registration request');
-            $this->registrationService->reject($request->get('message'));
+            $this->registrationService->reject($request->get('message', ''));
             return $this->registrationService->replyToServiceProvider();
         }
 
@@ -156,7 +156,7 @@ class DefaultController extends AbstractController
                     $e->getMessage()
                 )
             );
-            $this->registrationService->reject($request->get('message'));
+            $this->registrationService->reject($request->get('message', ''));
         }
 
         $this->logger->info('Sending a SAML response to the SP');

@@ -15,6 +15,8 @@
         <div class='alert'>
             <h2>{{ 'page.sp.authentication.title'|trans }}</h2>
 
+            <p>{{ 'page.sp.authentication.nameid_explained'|trans|striptags('<br><pre><b>')|raw }}</p>
+
             <label for="NameID">{{ 'saml.subject_name_id'|trans }}</label>
             <br>
             <input id="NameID" name="NameID" size="50" type="text">
