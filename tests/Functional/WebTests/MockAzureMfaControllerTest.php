@@ -49,13 +49,11 @@ class MockAzureMfaControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->client->followRedirects(true);
+        $this->client->followRedirects();
         $this->client->disableReboot();
 
-        $projectDir = self::$kernel->getProjectDir();
-
-        $this->publicKey = $projectDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer';
-        $this->privateKey = $projectDir . '/vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem';
+        $this->publicKey = '/config/azuremfa/azuremfa_idp.crt';
+        $this->privateKey = '/config/azuremfa/azuremfa_idp.key';
     }
 
     public function testDecisionPage()
@@ -225,7 +223,7 @@ class MockAzureMfaControllerTest extends WebTestCase
                         'default'
                     ),
                 ],
-                'sharedKey' => sprintf('%s/src/Resources/keys/development_publickey.cer', $samlBundle),
+                'sharedKey' => $this->publicKey,
             ]
         );
     }
@@ -311,10 +309,9 @@ class MockAzureMfaControllerTest extends WebTestCase
         $form = $crawler->selectButton($state)->form();
         $form->get('attributes')->setValue($data);
         $crawler = $this->client->submit($form);
-
         // Post response
-        $form = $crawler->selectButton('Post')->form();
 
+        $form = $crawler->selectButton('Submit assertion')->form();
         return $this->client->submit($form);
     }
 }
