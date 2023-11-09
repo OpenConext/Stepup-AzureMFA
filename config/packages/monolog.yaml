@@ -1,0 +1,63 @@
+monolog:
+  channels:
+    - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+  handlers:
+    main:
+      ident: stepup-azure-mfa
+    nested:
+      type: stream
+      path: php://stderr
+      level: debug
+      formatter: 'monolog.formatter.json'
+    deprecation:
+      type: stream
+      channels: [deprecation]
+      path: php://stderr
+
+when@dev:
+  monolog:
+    handlers:
+      main:
+        type: stream
+        path: php://stderr
+        level: debug
+        channels: ["!event"]
+      console:
+        type: console
+        process_psr_3_messages: false
+        channels: ["!event", "!doctrine", "!deprecation", "!console"]
+
+when@test:
+  monolog:
+    handlers:
+      main:
+        path: php://stderr
+        type: fingers_crossed
+        passthru_level: NOTICE
+        action_level: error
+        handler: nested
+        excluded_http_codes: [404, 405]
+        channels: ["!event"]
+      nested:
+        type: stream
+        path: php://stderr
+        level: debug
+
+when@prod:
+  monolog:
+    handlers:
+      main:
+        type: fingers_crossed
+        passthru_level: NOTICE
+        action_level: ERROR
+        handler: nested
+        bubble: false
+        buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+        formatter: surfnet_stepup.monolog.json_formatter
+      console:
+        type: console
+        process_psr_3_messages: false
+        channels: ["!event", "!doctrine"]
+
+
+

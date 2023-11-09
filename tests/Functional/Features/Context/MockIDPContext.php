@@ -23,7 +23,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 
-class MockIDPCOntext implements Context
+class MockIDPContext implements Context
 {
     /**
      * @var MinkContext

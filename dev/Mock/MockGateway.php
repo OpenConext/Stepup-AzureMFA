@@ -41,7 +41,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class MockGateway
 {
-
     final public const PARAMETER_REQUEST = 'SAMLRequest';
     final public const PARAMETER_RELAY_STATE = 'RelayState';
     final public const PARAMETER_SIGNATURE = 'Signature';
@@ -84,15 +83,13 @@ class MockGateway
         );
     }
 
-    /**
-     * @param string $fullRequestUri
-     * @param string $status
-     * @param string $subStatus
-     * @param string $message
-     * @return Response
-     */
-    public function handleSsoFailure(Request $request, $fullRequestUri, $status, $subStatus, $message = '')
-    {
+    public function handleSsoFailure(
+        Request $request,
+        string $fullRequestUri,
+        string $status,
+        string $subStatus,
+        string $message = ''
+    ): Response {
         // parse the authnRequest
         $authnRequest = $this->parseRequest($request, $fullRequestUri);
 
@@ -232,11 +229,13 @@ class MockGateway
      * @param string|null $message The textual message
      * @return Response
      */
-    private function createFailureResponse(string $destination, string $requestId, array $status, $subStatus = null, $message = null): Response
+    private function createFailureResponse(string $destination, string $requestId, string $status, $subStatus = null, $message = null): Response
     {
         $response = new Response();
         $response->setDestination($destination);
-        $response->setIssuer($this->gatewayConfiguration->getIdentityProviderEntityId());
+        $issuer = new Issuer();
+        $issuer->setValue($this->gatewayConfiguration->getIdentityProviderEntityId());
+        $response->setIssuer($issuer);
         $response->setIssueInstant($this->getTimestamp());
         $response->setInResponseTo($requestId);
 
@@ -369,7 +368,7 @@ class MockGateway
         return $this->gatewayConfiguration->getIdentityProviderPublicKeyCertData();
     }
 
-    private function isValidResponseStatus(array $status): bool
+    private function isValidResponseStatus(string $status): bool
     {
         return in_array($status, [
             Constants::STATUS_SUCCESS,            // weeee!

@@ -23,24 +23,28 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use DOMNode;
 use DOMNodeList;
 use Exception;
+use PhpParser\Node\Name;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
+use SAML2\Compat\ContainerSingleton;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;
+use SAML2\XML\saml\Issuer;
+use SAML2\XML\saml\NameID;
+use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
+use Surfnet\SamlBundle\SAML2\BridgeContainer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
-use function GuzzleHttp\Psr7\parse_query;
 
-class WebContext implements Context, KernelAwareContext
+class WebContext implements Context
 {
     /**
      * @var MinkContext
@@ -48,25 +52,16 @@ class WebContext implements Context, KernelAwareContext
     protected $minkContext;
 
     /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
      * @var string
      */
     protected $previousMinkSession;
 
-    /**
-     * Sets HttpKernel instance.
-     * This method will be automatically called by Symfony2Extension
-     * ContextInitializer.
-     *
-     * @param KernelInterface $kernel
-     */
-    public function setKernel(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
+    public function __construct(
+        private readonly KernelInterface $kernel,
+        private readonly IdentityProvider $identityProvider,
+        BridgeContainer $bridgeContainer
+    ) {
+        ContainerSingleton::setContainer($bridgeContainer);
     }
 
     /**
@@ -115,18 +110,9 @@ class WebContext implements Context, KernelAwareContext
         $this->minkContext->pressButton('Login');
     }
 
-    /**
-     * @return \Surfnet\SamlBundle\Entity\IdentityProvider
-     */
-    public function getIdentityProvider()
+    public function getIdentityProvider(): IdentityProvider
     {
-        /** @var RequestStack $stack */
-        $stack = $this->kernel->getContainer()->get('request_stack');
-        $stack->push(Request::create('https://azuremfa.dev.openconext.local'));
-        $ip = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
-        $stack->pop();
-
-        return $ip;
+        return $this->identityProvider;
     }
 
     /**
@@ -152,7 +138,9 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://unkown_service_provider/saml/acs');
         $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
-        $authnRequest->setIssuer('https://unkown_service_provider/saml/metadata');
+        $issuer = new Issuer();
+        $issuer->setValue('https://unkown_service_provider/saml/metadata');
+        $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -189,7 +177,9 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://azuremfa.dev.openconext.local/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://azuremfa.dev.openconext.local/saml/metadata');
+        $issuer = new Issuer();
+        $issuer->setValue('https://azuremfa.dev.openconext.local/saml/metadata');
+        $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -210,8 +200,12 @@ class WebContext implements Context, KernelAwareContext
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://azuremfa.dev.openconext.local/saml/acs');
         $authnRequest->setDestination($destination);
-        $authnRequest->setIssuer('https://azuremfa.dev.openconext.local/saml/metadata');
-        $authnRequest->setNameId(['Value' => $nameId]);
+        $issuer = new Issuer();
+        $issuer->setValue('https://azuremfa.dev.openconext.local/saml/metadata');
+        $nameIdVo = new NameID();
+        $nameIdVo->setValue($nameId);
+        $authnRequest->setIssuer($issuer);
+        $authnRequest->setNameId($nameIdVo);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
         $authnRequest->setRequesterID(['https://azuremfa.dev.openconext.local/saml/metadata']);
         // Sign with random key, does not mather for now.
@@ -336,9 +330,7 @@ class WebContext implements Context, KernelAwareContext
         }
         $responseValue = $samlResponse->getValue();
         $response = base64_decode($responseValue);
-        $previous = libxml_disable_entity_loader(true);
         $responseXml = DOMDocumentFactory::fromString($response);
-        libxml_disable_entity_loader($previous);
 
         return $responseXml;
     }
@@ -408,9 +400,7 @@ class WebContext implements Context, KernelAwareContext
         }
 
         // Parse an XML document from the inflated authnrequest
-        $previous = libxml_disable_entity_loader(true);
         $document = DOMDocumentFactory::fromString($authNRequest);
-        libxml_disable_entity_loader($previous);
 
         // Next create a SAML2 VO
         $authnRequest = Message::fromXML($document->firstChild);

@@ -34,7 +34,7 @@
         <a class="logo" href="{{ url('homepage') }}">
             <img src="{{ asset('images/header-logo.png') }}" alt="SURFconext"/>
         </a>
-        {% if app.environment == 'dev' %}
+        {% if app.environment == 'dev' or app.environment == 'test' %}
         <ul class="links">
             <li class="title"><span>{% block header_title %}{{ 'page.title'|trans }}{% endblock %}</span></li>
         </ul>
@@ -49,7 +49,7 @@
             <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
         {% endfor %}
 
-        {% if app.environment == 'dev' %}
+        {% if app.environment == 'dev' or app.environment == 'test' %}
         <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
         {% endif %}
 

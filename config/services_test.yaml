@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Surfnet\AzureMfa\Test\Features\:
+        resource: '../tests/Functional/Features/*'
+        exclude:
+            - '../tests/Functional/Features/bootstrap'
