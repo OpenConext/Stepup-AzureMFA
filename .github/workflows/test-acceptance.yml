@@ -16,8 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Copy certificate material
+        run: mkdir /config && cp -r ./ci/config/* /config/
+
       - name: Composer install
         run: composer install
+
+      - name: Yarn & Yarn Encore
+        run: yarn && yarn encore production
       
       - name: Run PHPUnit WebTests
         run: composer web-tests
