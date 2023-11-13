@@ -16,8 +16,11 @@
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
   </php>
   <testsuites>
-    <testsuite name="unit tests">
-      <directory suffix="Test.php">../../tests</directory>
+    <testsuite name="UnitTests">
+      <directory suffix="Test.php">../../tests/Unit</directory>
+    </testsuite>
+    <testsuite name="WebTests">
+      <directory suffix="Test.php">../../tests/Functional/WebTests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

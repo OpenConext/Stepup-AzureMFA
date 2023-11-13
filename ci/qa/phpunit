@@ -2,6 +2,4 @@
 
 cd $(dirname $0)/../../
 
-echo $1
-
 APP_ENV=test APP_DEBUG=0 ./vendor/bin/phpunit -c ci/qa/phpunit.xml.dist $1

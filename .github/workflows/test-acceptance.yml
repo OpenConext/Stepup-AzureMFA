@@ -19,5 +19,5 @@ jobs:
       - name: Composer install
         run: composer install
       
-      - name: Run QA tests
-        run: composer behat
+      - name: Run PHPUnit WebTests
+        run: composer web-tests

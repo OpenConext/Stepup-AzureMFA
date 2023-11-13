@@ -77,7 +77,7 @@
       "@phpcs",
       "@phpmd",
       "@phpstan",
-      "@test"
+      "@unit-tests"
     ],
 
     "behat": "./ci/qa/behat",
@@ -91,6 +91,8 @@
     "phpstan": "./ci/qa/phpstan",
     "phpstan-baseline": "./ci/qa/phpstan-update-baseline",
     "test": "./ci/qa/phpunit",
+    "unit-tests": "./ci/qa/phpunit --testsuite=UnitTests",
+    "web-tests": "./ci/qa/phpunit --testsuite=WebTests",
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
