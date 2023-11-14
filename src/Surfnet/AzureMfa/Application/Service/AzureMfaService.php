@@ -123,7 +123,10 @@ class AzureMfaService
         $this->logger->info('Retrieve the institution for the authenticating/registering user');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
         if (null === $institution) {
-            $message = 'The provided email address did not match any of our configured email domains.';
+            $message = sprintf(
+                'The provided email address did not match any of our configured email domains. (%s)',
+                $user->getEmailAddress()->getEmailAddress()
+            );
             $this->logger->info($message);
             throw new InstitutionNotFoundException($message);
         }

@@ -43,6 +43,7 @@ use Surfnet\SamlBundle\SAML2\BridgeContainer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function parse_str;
 
 class WebContext implements Context
 {
@@ -375,7 +376,7 @@ class WebContext implements Context
             throw new Exception('No query parameters found in request');
         }
 
-        $parsedQueryString = parse_query($parsed['query']);
+        parse_str($parsed['query'], $parsedQueryString);
         if (!isset($parsedQueryString['SAMLRequest'])) {
             throw new Exception('No SAMLRequest parameter found in the query string');
         }

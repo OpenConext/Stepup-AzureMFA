@@ -3,7 +3,7 @@
 {% block title %}{{ 'Error - ' ~ title }}{% endblock %}
 
 {% block body %}
-    <p>{{ description }}</p>
+    <p class="error-description">{{ description }}</p>
 
     <table class="table table-bordered">
         <tr>
@@ -34,7 +34,7 @@
         </tr>
     </table>
 
-    <p>{{ 'stepup.error.support_page.text'|trans({'%support_url%': global_view_parameters.supportUrl })|raw }}</p>
+    <p class="error-description">{{ 'stepup.error.support_page.text'|trans({'%support_url%': global_view_parameters.supportUrl })|raw }}</p>
 
     {# For now the back button is not shown on the error page until a more intelligent solution is thought of #}
     {% block back_button %}{% endblock %}

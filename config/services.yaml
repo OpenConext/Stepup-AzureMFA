@@ -22,6 +22,11 @@ services:
         resource: '../src/Surfnet/AzureMfa/Infrastructure/Controller/*'
         tags: ['controller.service_arguments']
 
+    Surfnet\AzureMfa\Infrastructure\Controller\ExceptionController:
+        tags: ['controller.service_arguments']
+        arguments:
+            $errorPageHelper: '@Surfnet\AzureMfa\Infrastructure\Service\ErrorPageHelper'
+
     Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationValidator:
         arguments:
             $configuration: '%institution_configuration%'
