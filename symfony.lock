@@ -14,9 +14,6 @@
     "behat/mink-browserkit-driver": {
         "version": "v1.3.4"
     },
-    "behat/mink-goutte-driver": {
-        "version": "v1.2.1"
-    },
     "behat/symfony2-extension": {
         "version": "2.1.5"
     },
@@ -49,9 +46,6 @@
     },
     "doctrine/lexer": {
         "version": "1.2.1"
-    },
-    "fabpot/goutte": {
-        "version": "v3.3.1"
     },
     "friends-of-behat/mink-extension": {
         "version": "v2.5.0"
@@ -371,12 +365,6 @@
             "src/Kernel.php"
         ]
     },
-    "symfony/http-client": {
-        "version": "v4.4.19"
-    },
-    "symfony/http-client-contracts": {
-        "version": "v1.1.10"
-    },
     "symfony/http-foundation": {
         "version": "v4.4.19"
     },
@@ -397,9 +385,6 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
-    },
-    "symfony/mime": {
-        "version": "v4.4.19"
     },
     "symfony/monolog-bridge": {
         "version": "v4.4.19"
@@ -441,9 +426,6 @@
         "version": "v1.22.1"
     },
     "symfony/polyfill-intl-icu": {
-        "version": "v1.22.1"
-    },
-    "symfony/polyfill-intl-idn": {
         "version": "v1.22.1"
     },
     "symfony/polyfill-intl-normalizer": {
