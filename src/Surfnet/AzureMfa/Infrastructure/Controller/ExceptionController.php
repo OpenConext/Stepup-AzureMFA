@@ -24,33 +24,41 @@ use Exception;
 use Surfnet\AzureMfa\Infrastructure\Service\ErrorPageHelper;
 use Surfnet\StepupBundle\Controller\ExceptionController as BaseExceptionController;
 use Surfnet\StepupBundle\Exception\Art;
+use Surfnet\StepupBundle\Request\RequestId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ExceptionController extends BaseExceptionController
 {
-    public function __construct(private readonly ErrorPageHelper $errorPageHelper)
-    {
+    public function __construct(
+        private readonly ErrorPageHelper $errorPageHelper,
+        TranslatorInterface $translator,
+        RequestId $requestId
+    ) {
+        parent::__construct($translator, $requestId);
     }
 
     public function show(Request $request, Exception $exception): Response
     {
         $statusCode = $this->getStatusCode($exception);
 
-        $template = 'Exception\error.html.twig';
+        $template = '@default/bundles/TwigBundle/Exception/error.html.twig';
         if ($statusCode == 404) {
-            $template = 'Exception\error404.html.twig';
+            $template = '@default/bundles/TwigBundle/Exception/error404.html.twig';
         }
 
         $response = new Response('', $statusCode);
 
         $errorCode = Art::forException($exception);
 
+        $params = $this->errorPageHelper->generateMetadata($request) +
+            ['error_code' => $errorCode] +
+            $this->getPageTitleAndDescription($exception);
+
         return $this->render(
             $template,
-            $this->errorPageHelper->generateMetadata($request) +
-            ['error_code' => $errorCode] +
-            $this->getPageTitleAndDescription($exception),
+            $params,
             $response
         );
     }
