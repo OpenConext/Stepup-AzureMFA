@@ -7,15 +7,10 @@ default:
             bootstrap: tests/Functional/Features/bootstrap/bootstrap.php
             kernel:
                 environment: test
+                debug: false
                 class: Surfnet\AzureMfa\Infrastructure\Kernel
         Behat\MinkExtension:
-            base_url: http://azuremfa.dev.openconext.local/
-            goutte:
-                guzzle_parameters:
-                    curl.CURLOPT_SSL_VERIFYPEER: false
-                    curl.CURLOPT_CERTINFO: false
-                    ssl.certificate_authority: false
-                    verify: false
+            base_url: https://azuremfa.dev.openconext.local/
             sessions:
                 symfony:
                     symfony: ~

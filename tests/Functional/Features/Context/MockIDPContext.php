@@ -66,8 +66,7 @@ class MockIDPContext implements Context
         $this->minkContext->fillField('attributes', $data);
 
         $this->minkContext->pressButton('success');
-
-        $this->minkContext->pressButton('Post');
+        $this->minkContext->pressButton('Submit assertion');
     }
 
     /**
@@ -76,7 +75,7 @@ class MockIDPContext implements Context
     public function theLoginToAzureMFAGetsCancelled(){
 
         $this->minkContext->pressButton('user-cancel');
-        $this->minkContext->pressButton('Post');
+        $this->minkContext->pressButton('Submit assertion');
     }
 
     /**
@@ -85,7 +84,7 @@ class MockIDPContext implements Context
     public function theLoginToAzureMFAFails(){
 
         $this->minkContext->pressButton('unknown');
-        $this->minkContext->pressButton('Post');
+        $this->minkContext->pressButton('Submit assertion');
     }
 
 }

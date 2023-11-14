@@ -68,7 +68,7 @@ class MockGateway
         $authnRequest = $this->parseRequest($request, $fullRequestUri);
 
         // get parameters from authnRequest
-        $nameId = $authnRequest->getNameId() !== null ? $authnRequest->getNameId()->getValue() : null;
+        $nameId = $authnRequest->getNameId() !== null ? $authnRequest->getNameId()->getValue() : '';
         $destination = $authnRequest->getAssertionConsumerServiceURL();
         $authnContextClassRef = current($authnRequest->getRequestedAuthnContext()['AuthnContextClassRef']);
         $requestId = $authnRequest->getId();
