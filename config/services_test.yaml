@@ -7,3 +7,25 @@ services:
         resource: '../tests/Functional/Features/*'
         exclude:
             - '../tests/Functional/Features/bootstrap'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    Dev\:
+        resource: '../dev/*'
+        exclude: '../dev/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    Dev\Controller\:
+        resource: '../dev/Controller'
+        tags: ['controller.service_arguments']
+
+    Dev\Mock\MockConfiguration:
+        arguments:
+            $identityProviderEntityId: 'https://azuremfa.dev.openconext.local/mock/idp/metadata'
+            $serviceProviderEntityId: 'https://azuremfa.dev.openconext.local/saml/metadata'
+            $privateKeyPath: '%saml_idp_privatekey%'
+            $publicCertPath: '%saml_idp_publickey%'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
