@@ -2,9 +2,13 @@ var Encore = require('@symfony/webpack-encore');
 
 Encore
     .setOutputPath('public/build/')
+    .copyFiles({
+        from: './assets/images',
+        to: './images/[path][name].[ext]',
+    })
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
-    .addStyleEntry('global', './public/scss/application.scss')
+    .addStyleEntry('global', './assets/scss/application.scss')
     .addLoader({test: /\.scss$/, loader: 'webpack-import-glob-loader'})
     // Convert sass files.
     .enableSassLoader(function (options) {

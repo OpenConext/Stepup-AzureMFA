@@ -7,15 +7,16 @@
         "compass-mixins": "^0.12",
         "core-js": "^3.33",
         "css-loader": "^6.8",
+        "file-loader": "^6.0.0",
         "import-glob-loader": "^1.1",
         "jquery": "^3.7",
         "regenerator-runtime": "^0.14",
         "sass": "^1.69",
         "sass-loader": "^13.3",
-        "webpack-notifier": "^1.15",
         "webpack": "^5.89",
         "webpack-cli": "^5.1",
-        "webpack-import-glob-loader": "^1.6.3"
+        "webpack-import-glob-loader": "^1.6.3",
+        "webpack-notifier": "^1.15"
     },
     "license": "Apache-2.0",
     "private": true,
