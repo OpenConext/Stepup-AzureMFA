@@ -15,11 +15,31 @@ framework:
         # SameSite is set to none. As we must allow receiving a session cookie from the (trusted)
         # remote Azure MFA IdP's
         cookie_samesite: 'none'
-    assets: ~
+    assets:
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
     esi: false
     fragments: false
     php_errors:
         log: false
+    router:
+        strict_requirements: null
+        utf8: true
+    default_locale: en_GB
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - en_GB
+    validation:
+        email_validation_mode: html5
+
+when@dev:
+    framework:
+        router:
+            strict_requirements: true
+        profiler: { only_exceptions: false }
+    imports:
+        - { resource: ../services_dev.yaml }
+
 
 when@test:
     framework:
@@ -29,3 +49,7 @@ when@test:
             storage_factory_id: session.storage.factory.mock_file
         profiler:
             collect: false
+        router:
+            strict_requirements: true
+        validation:
+            not_compromised_password: false
