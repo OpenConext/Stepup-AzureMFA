@@ -74,24 +74,17 @@ Install
 
 **Copy the parameters.yaml**
 
-`$ cp config/packages/parameters.yaml.dist config/packages/parameters.yaml`
+`$ cp config/openconext/parameters.yaml.dist config/openconext/parameters.yaml`
 
-**Bring up Homestead**
+**Bring up the container in dev-mode**
+From you dev-conf installation start the `stepup` dev-env with AzureMFA in dev mode
 
+For example:
+
+```bash
+cd stepup
+./start-dev-env.sh azuremfa:../../OpenConext-stepup/Stepup-Azure-MFA
 ```
-$ cd homestead
-$ composer install
-$ cd ..
-$ vagrant up
-```
-
-If everything goes as intended, you can develop in the virtual machine.
-
-**Upgrade Homestead regularly**
-
-Issues described in the previous section can be prevented if the base box is up to date.
-
-For detailed instructions, please visit the excellent Homestead [documentation pages](https://laravel.com/docs/5.8/homestead#updating-homestead).
 
 **Building frontend assets:**
 
@@ -114,8 +107,8 @@ Configuring institutions using Azure MFA
 
 The application can be thought to the Azure MFA GSSP via YAML configuration.
 
-In `config/packages/institutions.yaml.dist` you will find a sample configuration. This configuration should be copied to
-`config/packages/institutions.yaml` and be configured to fit your use case.
+In `config/openconext/institutions.yaml.dist` you will find a sample configuration. This configuration should be copied to
+`config/openconext/institutions.yaml` and be configured to fit your use case.
 
 The dist file goes into details about the different configuration options.
 
@@ -130,7 +123,9 @@ Tests and metrics
 To run all required test you can run the following commands from the dev env:
 
 ```bash 
-    composer test 
+    composer check 
+    # To run the behat tests
+    composer behat
 ```
 
 Every part can be run separately. Check "scripts" section of the composer.json file for the different options.
