@@ -31,6 +31,8 @@ framework:
             - en_GB
     validation:
         email_validation_mode: html5
+imports:
+    - { resource: ../openconext/*.yaml }
 
 when@dev:
     framework:
