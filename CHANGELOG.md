@@ -1,3 +1,8 @@
+# 2.0.0
+- Upgrade code to run on Symfony 6.4
+- Updated code to be PHP 8.2 compatible
+- Installed (and moved) QA tests. For example, we now include PHPStan. But no longer run the security tests in the test-integration workflow
+
 # 1.4.5
 - Add Github Actions tag automation workflow
 
