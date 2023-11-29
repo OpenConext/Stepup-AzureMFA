@@ -1,9 +1,8 @@
 Stepup-Azure-MFA
 ===================
 
-<a href="#">
-    <img src="https://travis-ci.org/OpenConext/Stepup-Azure-MFA.svg?branch=develop" alt="build:">
-</a></br>
+[![Run QA tests (static analysis, lint and unit tests)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-integration.yml/badge.svg)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-integration.yml)
+[![Run acceptance tests (Behat)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-acceptance.yml)
 
 GSSP for Microsoft Azure MFA (Multi-factor authentication)
 
@@ -46,32 +45,18 @@ Development environment
 
 The purpose of the development environment is only for running the different test and metric tools.
 
-To get started, first setup the development environment. The dev. env. is a virtual machine. Every task described is run
-from that machine.  
+To get started, first setup the development environment. The development environment is a docker container. That is
+controlled via the [OpenConext-devconf](https://github.com/OpenConext/OpenConext-devconf/) project.
+
+Every task described below should be run from that container.
 
 Requirements
 -------------------
-- vagrant 2.2.x
-    - vagrant-hostsupdater (1.1.1.160, global)
-    - vagrant-vbguest (0.19.0, global)
-- Virtualbox
-- Composer
-
-Other requirements, installed by `homestead/after.sh`
-
-- plantuml *(dev only) For generating plantuml diagrams in readme/markdown files*
-- chromium-browser *(dev only) For running Panther web tests*
-- php7.2-gmp *Dependency of the Stepup-bundle*
+- Docker
+- OpenConext-devconf
 
 Install
 -------------------
-**Create a .env file**
-
-1. `$ cp .env.ci .env`
-1. Edit the `.env` file with the editor of your choice and: 
-    1. Update the `APP_SECRET` to a value of your liking. See [Symfony docs](https://symfony.com/doc/current/reference/configuration/framework.html#secret) for more details about this secret. 
-    1. Set the `APP_ENV` to 'dev'
-
 **Copy the parameters.yaml**
 
 `$ cp config/openconext/parameters.yaml.dist config/openconext/parameters.yaml`
