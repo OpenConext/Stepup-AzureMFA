@@ -163,10 +163,6 @@
       "/config/routes/dev",
       "/config/packages/dev",
       "/config/packages/test",
-      "/node_modules",
-      "/coverage",
-      "/homestead",
-      "/build",
       "/var/log",
       "/var/sessions"
     ]
