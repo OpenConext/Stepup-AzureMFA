@@ -42,9 +42,15 @@
     </div>
 </div>
 
+{% if app.environment == 'prod' %}
+    {% set pages = ['gssp_saml_metadata'] %}
+{% else %}
+    {% set pages = ['homepage', 'gssp_saml_metadata'] %}
+{% endif %}
+
 <div class="navigation-container">
     <div class="navigation">
-        {% for route in ['homepage', 'gssp_saml_metadata'] %}
+        {% for route in pages %}
             {% set translatekey = "page.navigation.route." ~ route %}
             <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
         {% endfor %}

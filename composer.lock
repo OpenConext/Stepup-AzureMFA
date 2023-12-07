@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e028bc33ba817ed0e78f611f49d9e390",
+    "content-hash": "327dec3b5f0862d7ac9b9d61b55301bd",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -2126,16 +2126,16 @@
         },
         {
             "name": "surfnet/stepup-bundle",
-            "version": "6.0.8",
+            "version": "6.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-bundle.git",
-                "reference": "03cacebc35fcc4956f714cf9507d7f39508a0d32"
+                "reference": "39688f25f754236f91c9020555cf950b3b872beb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-bundle/zipball/03cacebc35fcc4956f714cf9507d7f39508a0d32",
-                "reference": "03cacebc35fcc4956f714cf9507d7f39508a0d32",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-bundle/zipball/39688f25f754236f91c9020555cf950b3b872beb",
+                "reference": "39688f25f754236f91c9020555cf950b3b872beb",
                 "shasum": ""
             },
             "require": {
@@ -2191,9 +2191,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Stepup-bundle/issues",
-                "source": "https://github.com/OpenConext/Stepup-bundle/tree/6.0.8"
+                "source": "https://github.com/OpenConext/Stepup-bundle/tree/6.0.9"
             },
-            "time": "2023-10-31T14:34:06+00:00"
+            "time": "2023-12-07T10:57:40+00:00"
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
@@ -3186,6 +3186,70 @@
                 }
             ],
             "time": "2023-05-23T14:45:45+00:00"
+        },
+        {
+            "name": "symfony/expression-language",
+            "version": "v6.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/expression-language.git",
+                "reference": "6c8b12f1e5ee5d91b812fb8628fca86e2fe5d152"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/expression-language/zipball/6c8b12f1e5ee5d91b812fb8628fca86e2fe5d152",
+                "reference": "6c8b12f1e5ee5d91b812fb8628fca86e2fe5d152",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "symfony/cache": "^5.4|^6.0|^7.0",
+                "symfony/deprecation-contracts": "^2.5|^3",
+                "symfony/service-contracts": "^2.5|^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\ExpressionLanguage\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an engine that can compile and evaluate expressions",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/expression-language/tree/v6.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-07-27T06:52:43+00:00"
         },
         {
             "name": "symfony/filesystem",
