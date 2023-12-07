@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use const APPLICATION_ENV;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - A higher level of coupling is favoured over having business
@@ -54,7 +55,11 @@ class DefaultController extends AbstractController
     /**
      * Replace this example code with whatever you need/
      */
-    #[Route(path: '/', name: 'homepage')]
+    #[Route(
+        path: '/',
+        name: 'homepage',
+        condition: "'%app_env%' in ['dev', 'test']"
+    )]
     public function index(): Response
     {
         return $this->render('default/index.html.twig');
