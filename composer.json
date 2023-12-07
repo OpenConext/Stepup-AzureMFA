@@ -32,7 +32,6 @@
     "symfony/config": "^6.4",
     "symfony/console": "^6.4",
     "symfony/dependency-injection": "^6.4",
-    "symfony/dotenv": "^6.4",
     "symfony/flex": "^2.4",
     "symfony/form": "^6.4",
     "symfony/monolog-bundle": "^3.8",
@@ -158,6 +157,9 @@
     }
   },
   "extra": {
+    "runtime": {
+      "disable_dotenv": true
+    },
     "symfony": {
       "allow-contrib": false,
       "require": "6.4.*"
