@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\AzureMfa\Infrastructure\Controller;
 
+use Error;
 use Exception;
 use Surfnet\AzureMfa\Infrastructure\Service\ErrorPageHelper;
 use Surfnet\StepupBundle\Controller\ExceptionController as BaseExceptionController;
@@ -28,6 +29,7 @@ use Surfnet\StepupBundle\Request\RequestId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 final class ExceptionController extends BaseExceptionController
 {
@@ -39,9 +41,12 @@ final class ExceptionController extends BaseExceptionController
         parent::__construct($translator, $requestId);
     }
 
-    public function show(Request $request, Exception $exception): Response
+    public function show(Request $request, Throwable $exception): Response
     {
-        $statusCode = $this->getStatusCode($exception);
+        $statusCode = 500;
+        if ($exception instanceof Error) {
+            $statusCode = $this->getStatusCode($exception);
+        }
 
         $template = '@default/bundles/TwigBundle/Exception/error.html.twig';
         if ($statusCode == 404) {
@@ -66,12 +71,12 @@ final class ExceptionController extends BaseExceptionController
     /**
      * @return array<string, string>
      */
-    protected function getPageTitleAndDescription(Exception $exception): array
+    protected function getPageTitleAndDescription(Throwable $exception): array
     {
         return parent::getPageTitleAndDescription($exception);
     }
 
-    protected function getStatusCode(Exception $exception): int
+    protected function getStatusCode(Throwable $exception): int
     {
         return parent::getStatusCode($exception);
     }
