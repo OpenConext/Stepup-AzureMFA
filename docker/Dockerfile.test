@@ -4,8 +4,8 @@ ADD output.tar /var/www/html/
 # Set the default workdir
 WORKDIR /var/www/html
 # Add the application configuration files
-COPY config/packages/parameters.yaml.dist config/packages/parameters.yaml
-COPY config/packages/institutions.yaml.dist config/packages/institutions.yaml
+COPY config/openconext/parameters.yaml.dist config/openconext/parameters.yaml
+COPY config/openconext/institutions.yaml.dist config/openconext/institutions.yaml
 COPY config/packages/prod/monolog.yaml.docker config/packages/prod/monolog.yaml
 
 # Add the config files for Apache2
