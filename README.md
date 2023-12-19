@@ -50,6 +50,17 @@ controlled via the [OpenConext-devconf](https://github.com/OpenConext/OpenConext
 
 Every task described below should be run from that container.
 
+Setting the desired Symfony application environment
+===================================================
+There are 2 ways you can influence the desired Symfony application environment.
+
+1. Set the `app_env` parameter in `config/openconext/parameters.yaml` to `dev`, `test` or `prod`
+2. Override the `app_env` param by providing an environment variable named `APP_ENV`
+
+- The default value for the application environment will be `prod`
+- Do not try to use a .env file to override the `app_env` param. That file will not be evaluated by Symfony as we decided not use the DotEnv component.
+
+
 Requirements
 -------------------
 - Docker
