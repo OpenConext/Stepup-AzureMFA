@@ -35,7 +35,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use const APPLICATION_ENV;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - A higher level of coupling is favoured over having business
