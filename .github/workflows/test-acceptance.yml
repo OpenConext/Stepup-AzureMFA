@@ -1,4 +1,4 @@
-name: Run acceptance tests (Behat)
+name: Run acceptance tests (WebTests & Behat)
 on: [pull_request]
 
 jobs:
@@ -18,6 +18,9 @@ jobs:
 
       - name: Copy certificate material
         run: mkdir /config && cp -r ./ci/config/* /config/
+
+      - name: Grab the right parameters.yaml
+        run: cp ./config/openconext/parameters.yaml.test.dist ./config/openconext/parameters.yaml
 
       - name: Composer install
         run: composer install
