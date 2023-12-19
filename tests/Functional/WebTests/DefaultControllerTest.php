@@ -24,7 +24,7 @@ class DefaultControllerTest extends WebTestCase
     public function testIndex()
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $crawler = $client->request('GET', 'https://azuremfa.dev.openconext.local');
         $this->assertEquals(200, $client->getInternalResponse()->getStatusCode());
         $this->assertStringContainsString('Welcome to the Azure MFA', $crawler->filter('h2')->text());
     }

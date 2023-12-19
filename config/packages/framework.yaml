@@ -3,7 +3,7 @@ framework:
     trusted_proxies: '192.0.0.1,10.0.0.0/8'
     trusted_headers: [ 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix' ]
 
-    secret: '%app_env%'
+    secret: '%app_secret%'
     csrf_protection: true
     http_method_override: true
     error_controller: Surfnet\AzureMfa\Infrastructure\Controller\ExceptionController::show
