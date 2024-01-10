@@ -26,6 +26,8 @@ class Certificate
 {
     private string $certData;
 
+    private const DIGEST_ALGORITHM = 'sha256';
+
     public function __construct(string $certData)
     {
         if ($certData === '') {
@@ -40,7 +42,7 @@ class Certificate
 
     public function getFingerprint(): string
     {
-        $fingerprint = openssl_x509_fingerprint($this->certData, 'sha256');
+        $fingerprint = openssl_x509_fingerprint($this->certData, self::DIGEST_ALGORITHM);
         if ($fingerprint === false) {
             throw new InvalidCertificateException('Unable to get the fingerprint from the certData using SHA256 digest algorithm');
         }
