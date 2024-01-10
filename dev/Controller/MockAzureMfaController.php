@@ -31,8 +31,10 @@ use Twig\Environment;
 
 class MockAzureMfaController extends AbstractController
 {
-    public function __construct(private readonly MockGateway $mockStepupGateway, private readonly Environment $twig)
-    {
+    public function __construct(
+        private readonly MockGateway $mockStepupGateway,
+        private readonly Environment $twig
+    ) {
     }
 
     /**
