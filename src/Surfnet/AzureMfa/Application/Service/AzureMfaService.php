@@ -164,11 +164,8 @@ class AzureMfaService
 
     public function handleResponse(Request $request): User
     {
-        /**
-         * Load the registering/authenticating user
-         * @var User $user
-         */
         $user = $this->session->get('user');
+        assert($user instanceof User);
 
         // Retrieve its institution and identity provider
         $this->logger->info('Match the user email address to one of the registered institutions');
