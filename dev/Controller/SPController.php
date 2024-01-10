@@ -22,7 +22,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use DOMDocument;
-use SAML2\Assertion;
 use SAML2\Configuration\PrivateKey;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;

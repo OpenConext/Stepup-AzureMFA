@@ -31,8 +31,10 @@ use Surfnet\GsspBundle\Service\AuthenticationService;
  */
 class AuthenticationHelper implements AuthenticationHelperInterface
 {
-    public function __construct(private readonly string $regex, private readonly AuthenticationService $authenticationService)
-    {
+    public function __construct(
+        private readonly string $regex,
+        private readonly AuthenticationService $authenticationService
+    ) {
     }
 
     public function useForceAuthn(): bool
