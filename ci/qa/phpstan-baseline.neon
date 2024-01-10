@@ -49,8 +49,3 @@ parameters:
 			message: "#^Method Surfnet\\\\AzureMfa\\\\Infrastructure\\\\Institution\\\\ConfigurationValidator\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../../src/Surfnet/AzureMfa/Infrastructure/Institution/ConfigurationValidator.php
-
-		-
-			message: "#^Generator expects value type Symfony\\\\Component\\\\HttpKernel\\\\Bundle\\\\BundleInterface, object given\\.$#"
-			count: 1
-			path: ../../src/Surfnet/AzureMfa/Infrastructure/Kernel.php
