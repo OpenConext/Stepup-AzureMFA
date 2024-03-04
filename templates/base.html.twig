@@ -29,58 +29,49 @@
     </script>
 </head>
 <body>
-<div class="header-container">
-    <div class="header">
-        <a class="logo" href="{{ url('homepage') }}">
-            <img src="{{ asset('build/images/header-logo.png') }}" alt="SURFconext"/>
-        </a>
-        <ul class="links">
-        {% if app.environment == 'dev' or app.environment == 'test' %}
-            <li class="title"><span>{% block header_title %}{{ 'page.title'|trans }}{% endblock %}</span></li>
-        {% endif %}
-        </ul>
+<div class="container">
+
+    <div class="content">
+        <div class="page-header container-fluid">
+            <img class="pull-right logo" src="{{ asset('build/images/header-logo.png') }}"/>
+            <h1>{% block header_title %}{{ 'page.title'|trans }}{% endblock %}</h1>
+        </div>
     </div>
-</div>
 
-{% if app.environment == 'prod' %}
-    {% set pages = ['gssp_saml_metadata'] %}
-{% else %}
-    {% set pages = ['homepage', 'gssp_saml_metadata'] %}
-{% endif %}
 
-<div class="navigation-container">
-    <div class="navigation">
-        {% for route in pages %}
-            {% set translatekey = "page.navigation.route." ~ route %}
-            <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
-        {% endfor %}
-
-        {% if app.environment == 'dev' or app.environment == 'test' %}
-        <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
+    <div class="main-content">
+        {% if app.environment == 'dev' %}
+            <div class="navigation-container">
+                <div class="navigation">
+                    {% for route in ['homepage', 'gssp_saml_metadata'] %}
+                        {% set translatekey = "page.navigation.route." ~ route %}
+                        <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
+                    {% endfor %}
+                    <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
+                </div>
+            </div>
         {% endif %}
 
+        {# stepup-gssp-bundle and stepup-tiqr use 'body' #}
+        {% block body %}{% endblock %}
+
+        {# stepup-bundle 'content', don't bother, just define them both #}
+        {% block content %}{% endblock %}
     </div>
+
+    <hr>
+
+    {% block footer %}
+        <footer>
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="{{ global_view_parameters.supportUrl }}" target="_blank">Help</a>
+                </div>
+            </div>
+        </footer>
+    {% endblock %}
+
+    {% block javascripts %}{% endblock %}
 </div>
-
-<div class="page-container">
-{# stepup-gssp-bundle and stepup-tiqr use 'body' #}
-{% block body %}{% endblock %}
-
-{# stepup-bundle 'content', don't bother, just define them both #}
-{% block content %}{% endblock %}
-</div>
-
-{% block footer %}
-<div class="footer">
-    <div class="footer-inner">
-        <span>
-            <a href="{{ global_view_parameters.supportUrl }}" target="_blank">Help</a>
-        </span>
-    </div>
-</div>
-{% endblock %}
-
-{% block javascripts %}{% endblock %}
-
 </body>
 </html>
