@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "327dec3b5f0862d7ac9b9d61b55301bd",
+    "content-hash": "2b77c0eefb79efa2260f28d087e2c03d",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1517,20 +1517,20 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "4.0.2",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
-                "reference": "5aab82ce7935a0c99901f123e52174db1ca52403"
+                "reference": "9fad7f1c77c53fdc1fd4040a34ad4a4e0073f225"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/5aab82ce7935a0c99901f123e52174db1ca52403",
-                "reference": "5aab82ce7935a0c99901f123e52174db1ca52403",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/9fad7f1c77c53fdc1fd4040a34ad4a4e0073f225",
+                "reference": "9fad7f1c77c53fdc1fd4040a34ad4a4e0073f225",
                 "shasum": ""
             },
             "require": {
-                "doctrine/orm": "^2.9",
+                "doctrine/orm": "^2.9|^3.0",
                 "php": ">=8.2, <9.0-dev",
                 "symfony/dependency-injection": "^5.4|^6.3|^7.0",
                 "symfony/framework-bundle": "^5.4|^6.3|^7.0",
@@ -1542,7 +1542,7 @@
                 "mockery/mockery": "^1.3.5|^1.4.4",
                 "php-parallel-lint/php-parallel-lint": "^1.3",
                 "phpdocumentor/reflection-docblock": "^5.2",
-                "phpmd/phpmd": "^2.6",
+                "phpmd/phpmd": "^2.13",
                 "phpunit/php-token-stream": "^3.1.3|^4.0.4",
                 "phpunit/phpunit": "^9.6|^10.4",
                 "sebastian/phpcpd": "^4.1|^5.0|^6.0",
@@ -1568,9 +1568,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Monitor-bundle/issues",
-                "source": "https://github.com/OpenConext/Monitor-bundle/tree/4.0.2"
+                "source": "https://github.com/OpenConext/Monitor-bundle/tree/4.1.2"
             },
-            "time": "2023-11-09T10:06:21+00:00"
+            "time": "2024-02-28T14:23:16+00:00"
         },
         {
             "name": "psr/cache",
