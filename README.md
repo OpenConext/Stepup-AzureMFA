@@ -1,8 +1,8 @@
-Stepup-Azure-MFA
+Stepup-AzureMFA
 ===================
 
-[![Run QA tests (static analysis, lint and unit tests)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-integration.yml/badge.svg)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-integration.yml)
-[![Run acceptance tests (Behat)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/OpenConext/Stepup-Azure-MFA/actions/workflows/test-acceptance.yml)
+[![Run QA tests (static analysis, lint and unit tests)](https://github.com/OpenConext/Stepup-AzureMFA/actions/workflows/test-integration.yml/badge.svg)](https://github.com/OpenConext/Stepup-AzureMFA/actions/workflows/test-integration.yml)
+[![Run acceptance tests (Behat)](https://github.com/OpenConext/Stepup-AzureMFA/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/OpenConext/Stepup-AzureMFA/actions/workflows/test-acceptance.yml)
 
 GSSP for Microsoft Azure MFA (Multi-factor authentication)
 
@@ -79,7 +79,7 @@ For example:
 
 ```bash
 cd stepup
-./start-dev-env.sh azuremfa:../../OpenConext-stepup/Stepup-Azure-MFA
+./start-dev-env.sh azuremfa:../../OpenConext-stepup/Stepup-AzureMFA
 ```
 
 **Building frontend assets:**
