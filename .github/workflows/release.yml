@@ -9,4 +9,5 @@ jobs:
   build-release-and-push-container:
     uses: openconext/openconext-githubactions/.github/workflows/symfony-release.yml@main
     with:
-      component_name: "Stepup-Azure-MFA"
+      component_name: "Stepup-AzureMFA"
+
