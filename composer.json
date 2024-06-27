@@ -24,7 +24,7 @@
     "ext-openssl": "*",
     "ext-zlib": "*",
     "incenteev/composer-parameter-handler": "^2.1",
-    "openconext/monitor-bundle": "^4.1",
+    "openconext/monitor-bundle": "^4.3",
     "surfnet/stepup-bundle": "^6.0",
     "surfnet/stepup-gssp-bundle": "^5.0",
     "surfnet/stepup-saml-bundle": "^6.0",
@@ -44,8 +44,8 @@
     "symfony/validator": "^6.4",
     "symfony/webpack-encore-bundle": "^2.1",
     "symfony/yaml": "^6.4",
-    "twig/extra-bundle": "^2.12|^3.0",
-    "twig/twig": "^2.12|^3.0"
+    "twig/extra-bundle": "^3.0",
+    "twig/twig": "^3.0"
   },
   "require-dev": {
     "behat/mink": "^1.9",
@@ -153,7 +153,8 @@
     "allow-plugins": {
       "symfony/flex": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "symfony/runtime": true
+      "symfony/runtime": true,
+      "endroid/installer": false
     }
   },
   "extra": {
