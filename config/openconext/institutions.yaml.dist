@@ -37,6 +37,7 @@ parameters:
             - 'stepup.example.com'
             - 'institution-a.example.com'
             - '*.dev.openconext.local' # Wildcards are allowed
+          is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
         institution-b.example.com: # The institution identifier (schacHomeOrganization)
           entity_id: 'https://azuremfa.dev.openconext.local/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
           sso_location: 'https://azuremfa.dev.openconext.local/mock/sso' # Location of the Azure MFA endpoint
@@ -69,7 +70,7 @@ parameters:
               -----END CERTIFICATE-----
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-b.example.com'
-          is_azure_ad: true
+          is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
         harting-college.nl:
           sso_location: 'https://adfs.harting-college.nl/adfs/ls/'
           entity_id: 'https://azuremfa.dev.openconext.local/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
@@ -101,3 +102,4 @@ parameters:
               qC042apoIDQV
               -----END CERTIFICATE-----
           email_domains: ['harting-college.nl'] # Shorthand notation
+          is_azure_ad: false # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
