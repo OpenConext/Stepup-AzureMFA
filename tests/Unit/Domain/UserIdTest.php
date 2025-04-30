@@ -20,7 +20,6 @@ namespace Surfnet\AzureMfa\Test\Unit\Domain;
 
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
-use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\Exception\InvalidUserIdException;
 
@@ -30,9 +29,22 @@ class UserIdTest extends TestCase
     {
         $userId = new UserId('q2b27d-0000|user@stepup.example.com');
         $this->assertInstanceOf(UserId::class, $userId);
+        $this->assertSame('user@stepup.example.com', $userId->getEmailAddress()->getEmailAddress());
+        $this->assertSame('q2b27d-0000|user@stepup.example.com', $userId->getUserId());
 
         $userId = new UserId('q2b27d-0000||user@stepup.example.com');
         $this->assertInstanceOf(UserId::class, $userId);
+        $this->assertSame('|user@stepup.example.com', $userId->getEmailAddress()->getEmailAddress());
+        $this->assertSame('q2b27d-0000||user@stepup.example.com', $userId->getUserId());
+    }
+
+    public function test_email_only() : void
+    {
+        $userId = new UserId('user@stepup.example.com');
+        $this->assertInstanceOf(UserId::class, $userId);
+
+        $this->assertSame('user@stepup.example.com', $userId->getEmailAddress()->getEmailAddress());
+        $this->assertSame('user@stepup.example.com', $userId->getUserId());
     }
 
     public function test_generate() : void {
@@ -95,8 +107,6 @@ class UserIdTest extends TestCase
             ["q2b27d-|test@stepup.example.com"],
             ["q2b27d0000|test@stepup.example.com"],
             ["q2b27-|test@stepup.example.com"],
-            ["q2b27d-0000-user@stepup.example.com"],
-            ["q2b27d-0000+user@stepup.example.com"],
             ["q2b27d-0000 user@stepup.example.com"],
         ];
     }

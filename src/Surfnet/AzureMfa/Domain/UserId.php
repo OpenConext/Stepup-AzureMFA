@@ -44,16 +44,17 @@ class UserId
             throw new InvalidUserIdException('An empty id was specified');
         }
 
-        $pos = strpos($userId, self::SEPARATOR);
-        if ($pos === false) {
-            throw new InvalidUserIdException('An invalid id was specified');
-        }
-        $emailAddress = substr($userId, $pos + 1);
-        $uniquePrefix = substr($userId, 0, $pos);
+        $emailAddress = $this->userId;
 
-        $match = preg_match(self::VALID_UNIQUE_ID, $uniquePrefix);
-        if ($match !== 1) {
-            throw new InvalidUserIdException('An invalid id was specified');
+        $pos = strpos($userId, self::SEPARATOR);
+        if ($pos !== false) {
+            $emailAddress = substr($userId, $pos + 1);
+            $uniquePrefix = substr($userId, 0, $pos);
+
+            $match = preg_match(self::VALID_UNIQUE_ID, $uniquePrefix);
+            if ($match !== 1) {
+                throw new InvalidUserIdException('An invalid id was specified');
+            }
         }
 
         try {
