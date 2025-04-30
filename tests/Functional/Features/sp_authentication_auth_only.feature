@@ -16,6 +16,7 @@ Feature: When an user needs to authenticate
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                     |
       | urn:mace:dir:attribute-def:mail                            | user@dev.openconext.local |
+      | http://schemas.microsoft.com/claims/authnmethodsreferences | http://schemas.microsoft.com/claims/multipleauthn |
 
     # The MFA acs page.
     Then I should be on "https://azuremfa.dev.openconext.local/saml/sso_return"

@@ -23,6 +23,7 @@ Feature: When an user needs to register for a new token
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                     |
       | urn:mace:dir:attribute-def:mail                            | user@dev.openconext.local |
+      | http://schemas.microsoft.com/claims/authnmethodsreferences | http://schemas.microsoft.com/claims/multipleauthn |
 
     # The GSSP acs page.
     Then I should be on "https://azuremfa.dev.openconext.local/saml/sso_return"

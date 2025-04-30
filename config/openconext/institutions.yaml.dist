@@ -34,7 +34,7 @@ parameters:
                 -----END CERTIFICATE-----
 
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
-            - 'stepup.example.com'
+            - 'dev.openconext.local'
             - 'institution-a.example.com'
             - '*.dev.openconext.local' # Wildcards are allowed
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this

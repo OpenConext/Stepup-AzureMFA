@@ -11,6 +11,7 @@ Feature: When an user needs to register for a new token
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                               |
       | urn:mace:dir:attribute-def:mail                            | test-user@institution-a.example.com |
+      | http://schemas.microsoft.com/claims/authnmethodsreferences | http://schemas.microsoft.com/claims/multipleauthn |
     Then I should be on "https://azuremfa.dev.openconext.local/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:Success"
     And the SAML Response should contain element "NameID" with value containing "test-user@institution-a.example.com"
@@ -66,7 +67,7 @@ Feature: When an user needs to register for a new token
 #    And I should see "The provided email address did not match any of our configured email domains."
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page
-    Given a normal SAML 2.0 AuthnRequest form a unknown service provider
+    Given a normal SAML 2.0 AuthnRequest from an unknown service provider
     Then the response status code should be 500
     And I should see "Something went wrong. Please try again"
 
