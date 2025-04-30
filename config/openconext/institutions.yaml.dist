@@ -9,30 +9,30 @@ parameters:
           certificates:
             - |
                 -----BEGIN CERTIFICATE-----
-                MIIEJTCCAw2gAwIBAgIJANug+o++1X5IMA0GCSqGSIb3DQEBCwUAMIGoMQswCQYD
-                VQQGEwJOTDEQMA4GA1UECAwHVXRyZWNodDEQMA4GA1UEBwwHVXRyZWNodDEVMBMG
-                A1UECgwMU1VSRm5ldCBCLlYuMRMwEQYDVQQLDApTVVJGY29uZXh0MRwwGgYDVQQD
-                DBNTVVJGbmV0IERldmVsb3BtZW50MSswKQYJKoZIhvcNAQkBFhxzdXJmY29uZXh0
-                LWJlaGVlckBzdXJmbmV0Lm5sMB4XDTE0MTAyMDEyMzkxMVoXDTE0MTExOTEyMzkx
-                MVowgagxCzAJBgNVBAYTAk5MMRAwDgYDVQQIDAdVdHJlY2h0MRAwDgYDVQQHDAdV
-                dHJlY2h0MRUwEwYDVQQKDAxTVVJGbmV0IEIuVi4xEzARBgNVBAsMClNVUkZjb25l
-                eHQxHDAaBgNVBAMME1NVUkZuZXQgRGV2ZWxvcG1lbnQxKzApBgkqhkiG9w0BCQEW
-                HHN1cmZjb25leHQtYmVoZWVyQHN1cmZuZXQubmwwggEiMA0GCSqGSIb3DQEBAQUA
-                A4IBDwAwggEKAoIBAQDXuSSBeNJY3d4p060oNRSuAER5nLWT6AIVbv3XrXhcgSwc
-                9m2b8u3ksp14pi8FbaNHAYW3MjlKgnLlopYIylzKD/6Ut/clEx67aO9Hpqsc0HmI
-                P0It6q2bf5yUZ71E4CN2HtQceO5DsEYpe5M7D5i64kS2A7e2NYWVdA5Z01DqUpQG
-                RBc+uMzOwyif6StBiMiLrZH3n2r5q5aVaXU4Vy5EE4VShv3Mp91sgXJj/v155fv0
-                wShgl681v8yf2u2ZMb7NKnQRA4zM2Ng2EUAyy6PQ+Jbn+rALSm1YgiJdVuSlTLhv
-                gwbiHGO2XgBi7bTHhlqSrJFK3Gs4zwIsop/XqQRBAgMBAAGjUDBOMB0GA1UdDgQW
-                BBQCJmcoa/F7aM3jIFN7Bd4uzWRgzjAfBgNVHSMEGDAWgBQCJmcoa/F7aM3jIFN7
-                Bd4uzWRgzjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBd80GpWKjp
-                1J+Dgp0blVAox1s/WPWQlex9xrx1GEYbc5elp3svS+S82s7dFm2llHrrNOBt1HZV
-                C+TdW4f+MR1xq8O5lOYjDRsosxZc/u9jVsYWYc3M9bQAx8VyJ8VGpcAK+fLqRNab
-                YlqTnj/t9bzX8fS90sp8JsALV4g84Aj0G8RpYJokw+pJUmOpuxsZN5U84MmLPnVf
-                mrnuCVh/HkiLNV2c8Pk8LSomg6q1M1dQUTsz/HVxcOhHLj/owwh3IzXf/KXV/E8v
-                SYW8o4WWCAnruYOWdJMI4Z8NG1Mfv7zvb7U3FL1C/KLV04DqzALXGj+LVmxtDvux
-                qC042apoIDQV
+                MIIEEzCCAnsCFEow2E90q1t//LDuqkgF2zo7VNo4MA0GCSqGSIb3DQEBCwUAMEYx
+                GzAZBgNVBAMMEkF6dXJlLU1GQSBHU1NQIElkUDEnMCUGA1UECgweRGV2ZWxvcG1l
+                bnQgRG9ja2VyIGVudmlyb25tZW50MB4XDTIzMDUyNTA5MzMyM1oXDTI4MDUyMzA5
+                MzMyM1owRjEbMBkGA1UEAwwSQXp1cmUtTUZBIEdTU1AgSWRQMScwJQYDVQQKDB5E
+                ZXZlbG9wbWVudCBEb2NrZXIgZW52aXJvbm1lbnQwggGiMA0GCSqGSIb3DQEBAQUA
+                A4IBjwAwggGKAoIBgQCWaoXdTdU3N0RL2jK/88PEN3jwyyz7AFJX64Rfx48CtCsI
+                3Hze+0i+0KQgILsVU91kKujllFBM6N4V5PKQ+9Z5zafJeuhT80zQ9jcHVxyQoKi3
+                0438fBGzlAKD9hGojG7DwjKopK+96Eawvu90KCxf8q7STh50n8dO6hnxWtE8RGk5
+                a9R2cMDxEuOlvrW2B8Ih+EVCT3OmOsCQdp31TuTt5x3xLxmY/04mGGPpQi9PBV38
+                O2uTd4G2mbqGqNGx6S6iPAMgh6u4NVmg03iqBKkFJgQvNRCdif+gMQTKEW0mJwr6
+                2PrEQrPBoBphgCpJNF9pnEy/+mdWiKCo8lvVxiPGQaaKyoNvZEt1IROwp8Ga2gLE
+                oFjtcMcodnLgudusDOCH6Idp0CtuTkrf3hLIxKjQMOFTCiCmOCtMlJZa9+l7Lbhz
+                EGcJUcHH0i1k+ufqUhOSBrrfKoiohixAnW+bayqymef+Zy32YoT+/LDjoP/vyMrN
+                nRwpwqguPMwBF+HWgwUCAwEAATANBgkqhkiG9w0BAQsFAAOCAYEAReFJH/X+PyA8
+                cFe6RdCgyTbuRuq2rTgadKpqfhhbXlwcOTh8rEpevqFf8tequegCj7fFZgz+hIL0
+                75ZsEcZwk2N8F8m32cVjmYHar2rLsYEkqhEc/yCUjyGffqUeZBVmdUnUM6ggGsIH
+                qcjTvrNhmFrh3ManebvZkjvDyJCkrwUOGYvCpbFjXa4CW1Rp+I0+e7HnQeyFW3p+
+                3T0SAmdo3eJEZLhRsMm/YLcyCW7IRTVvpTvGoxhbvQU1k6EtkhLcahA+MWVzNbgi
+                IdHP/otSQnaLW243sxoxYm7EiuAihnQ0iRaNEzsFrx/W06G0e5rmTbWPGc4LZj6Y
+                DKd7531SGIwqOOC1wrzrZ36iuwPm5PrZReCWH3ptR6bSszQerbQsx6wkumYN7iDZ
+                g9EK9ADHRzfovbqOPad2s+N5iVWAOfEXGqItZcrLdW53vUOqbfXXuFt7szhtdvTW
+                RWWQQJryrg61UmLgJcLb3xMMdZZ+D6mcXqa3v2cSzGdfO932xUzq
                 -----END CERTIFICATE-----
+
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'stepup.example.com'
             - 'institution-a.example.com'
@@ -43,31 +43,31 @@ parameters:
           sso_location: 'https://azuremfa.dev.openconext.local/mock/sso' # Location of the Azure MFA endpoint
           certificates:
             - |
-              -----BEGIN CERTIFICATE-----
-              MIIEJTCCAw2gAwIBAgIJANug+o++1X5IMA0GCSqGSIb3DQEBCwUAMIGoMQswCQYD
-              VQQGEwJOTDEQMA4GA1UECAwHVXRyZWNodDEQMA4GA1UEBwwHVXRyZWNodDEVMBMG
-              A1UECgwMU1VSRm5ldCBCLlYuMRMwEQYDVQQLDApTVVJGY29uZXh0MRwwGgYDVQQD
-              DBNTVVJGbmV0IERldmVsb3BtZW50MSswKQYJKoZIhvcNAQkBFhxzdXJmY29uZXh0
-              LWJlaGVlckBzdXJmbmV0Lm5sMB4XDTE0MTAyMDEyMzkxMVoXDTE0MTExOTEyMzkx
-              MVowgagxCzAJBgNVBAYTAk5MMRAwDgYDVQQIDAdVdHJlY2h0MRAwDgYDVQQHDAdV
-              dHJlY2h0MRUwEwYDVQQKDAxTVVJGbmV0IEIuVi4xEzARBgNVBAsMClNVUkZjb25l
-              eHQxHDAaBgNVBAMME1NVUkZuZXQgRGV2ZWxvcG1lbnQxKzApBgkqhkiG9w0BCQEW
-              HHN1cmZjb25leHQtYmVoZWVyQHN1cmZuZXQubmwwggEiMA0GCSqGSIb3DQEBAQUA
-              A4IBDwAwggEKAoIBAQDXuSSBeNJY3d4p060oNRSuAER5nLWT6AIVbv3XrXhcgSwc
-              9m2b8u3ksp14pi8FbaNHAYW3MjlKgnLlopYIylzKD/6Ut/clEx67aO9Hpqsc0HmI
-              P0It6q2bf5yUZ71E4CN2HtQceO5DsEYpe5M7D5i64kS2A7e2NYWVdA5Z01DqUpQG
-              RBc+uMzOwyif6StBiMiLrZH3n2r5q5aVaXU4Vy5EE4VShv3Mp91sgXJj/v155fv0
-              wShgl681v8yf2u2ZMb7NKnQRA4zM2Ng2EUAyy6PQ+Jbn+rALSm1YgiJdVuSlTLhv
-              gwbiHGO2XgBi7bTHhlqSrJFK3Gs4zwIsop/XqQRBAgMBAAGjUDBOMB0GA1UdDgQW
-              BBQCJmcoa/F7aM3jIFN7Bd4uzWRgzjAfBgNVHSMEGDAWgBQCJmcoa/F7aM3jIFN7
-              Bd4uzWRgzjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBd80GpWKjp
-              1J+Dgp0blVAox1s/WPWQlex9xrx1GEYbc5elp3svS+S82s7dFm2llHrrNOBt1HZV
-              C+TdW4f+MR1xq8O5lOYjDRsosxZc/u9jVsYWYc3M9bQAx8VyJ8VGpcAK+fLqRNab
-              YlqTnj/t9bzX8fS90sp8JsALV4g84Aj0G8RpYJokw+pJUmOpuxsZN5U84MmLPnVf
-              mrnuCVh/HkiLNV2c8Pk8LSomg6q1M1dQUTsz/HVxcOhHLj/owwh3IzXf/KXV/E8v
-              SYW8o4WWCAnruYOWdJMI4Z8NG1Mfv7zvb7U3FL1C/KLV04DqzALXGj+LVmxtDvux
-              qC042apoIDQV
-              -----END CERTIFICATE-----
+                -----BEGIN CERTIFICATE-----
+                MIIEEzCCAnsCFEow2E90q1t//LDuqkgF2zo7VNo4MA0GCSqGSIb3DQEBCwUAMEYx
+                GzAZBgNVBAMMEkF6dXJlLU1GQSBHU1NQIElkUDEnMCUGA1UECgweRGV2ZWxvcG1l
+                bnQgRG9ja2VyIGVudmlyb25tZW50MB4XDTIzMDUyNTA5MzMyM1oXDTI4MDUyMzA5
+                MzMyM1owRjEbMBkGA1UEAwwSQXp1cmUtTUZBIEdTU1AgSWRQMScwJQYDVQQKDB5E
+                ZXZlbG9wbWVudCBEb2NrZXIgZW52aXJvbm1lbnQwggGiMA0GCSqGSIb3DQEBAQUA
+                A4IBjwAwggGKAoIBgQCWaoXdTdU3N0RL2jK/88PEN3jwyyz7AFJX64Rfx48CtCsI
+                3Hze+0i+0KQgILsVU91kKujllFBM6N4V5PKQ+9Z5zafJeuhT80zQ9jcHVxyQoKi3
+                0438fBGzlAKD9hGojG7DwjKopK+96Eawvu90KCxf8q7STh50n8dO6hnxWtE8RGk5
+                a9R2cMDxEuOlvrW2B8Ih+EVCT3OmOsCQdp31TuTt5x3xLxmY/04mGGPpQi9PBV38
+                O2uTd4G2mbqGqNGx6S6iPAMgh6u4NVmg03iqBKkFJgQvNRCdif+gMQTKEW0mJwr6
+                2PrEQrPBoBphgCpJNF9pnEy/+mdWiKCo8lvVxiPGQaaKyoNvZEt1IROwp8Ga2gLE
+                oFjtcMcodnLgudusDOCH6Idp0CtuTkrf3hLIxKjQMOFTCiCmOCtMlJZa9+l7Lbhz
+                EGcJUcHH0i1k+ufqUhOSBrrfKoiohixAnW+bayqymef+Zy32YoT+/LDjoP/vyMrN
+                nRwpwqguPMwBF+HWgwUCAwEAATANBgkqhkiG9w0BAQsFAAOCAYEAReFJH/X+PyA8
+                cFe6RdCgyTbuRuq2rTgadKpqfhhbXlwcOTh8rEpevqFf8tequegCj7fFZgz+hIL0
+                75ZsEcZwk2N8F8m32cVjmYHar2rLsYEkqhEc/yCUjyGffqUeZBVmdUnUM6ggGsIH
+                qcjTvrNhmFrh3ManebvZkjvDyJCkrwUOGYvCpbFjXa4CW1Rp+I0+e7HnQeyFW3p+
+                3T0SAmdo3eJEZLhRsMm/YLcyCW7IRTVvpTvGoxhbvQU1k6EtkhLcahA+MWVzNbgi
+                IdHP/otSQnaLW243sxoxYm7EiuAihnQ0iRaNEzsFrx/W06G0e5rmTbWPGc4LZj6Y
+                DKd7531SGIwqOOC1wrzrZ36iuwPm5PrZReCWH3ptR6bSszQerbQsx6wkumYN7iDZ
+                g9EK9ADHRzfovbqOPad2s+N5iVWAOfEXGqItZcrLdW53vUOqbfXXuFt7szhtdvTW
+                RWWQQJryrg61UmLgJcLb3xMMdZZ+D6mcXqa3v2cSzGdfO932xUzq
+                -----END CERTIFICATE-----
+
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-b.example.com'
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this

@@ -19,7 +19,7 @@ parameters:
     saml_idp_publickey: '/config/azuremfa/azuremfa_idp.crt'
     saml_idp_privatekey: '/config/azuremfa/azuremfa_idp.key'
     saml_metadata_publickey: '/config/azuremfa/azuremfa_idp.crt'
-    saml_metadata_privatekey: '/config/axuremfa/azuremfa_idp.key'
+    saml_metadata_privatekey: '/config/azuremfa/azuremfa_idp.key'
     saml_remote_sp_entity_id: 'https://gateway.dev.openconext.local/gssp/azuremfa/metadata'
     saml_remote_sp_certificate: '/config/gateway/gateway_gssp_sp.crt'
     saml_remote_sp_acs: 'https://gateway.dev.openconext.local/gssp/azuremfa/consume-assertion'

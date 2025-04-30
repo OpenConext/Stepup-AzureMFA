@@ -28,6 +28,7 @@ use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressDto;
 use Surfnet\AzureMfa\Infrastructure\Form\EmailAddressType;
+use Surfnet\GsspBundle\Exception\NotFound;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -80,11 +81,15 @@ class DefaultController extends AbstractController
             return $this->registrationService->replyToServiceProvider();
         }
 
-        $attribs = $this->authenticationService->getGsspUserAttributes();
-        if ($attribs && $attribs->getAttributeValue('urn:mace:dir:attribute-def:mail')) {
-            $emailAddr = new EmailAddress($attribs->getAttributeValue('urn:mace:dir:attribute-def:mail'));
-            $user = $this->azureMfaService->startRegistration($emailAddr);
-            return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
+        try {
+            $attribs = $this->authenticationService->getGsspUserAttributes();
+            if ($attribs && $attribs->getAttributeValue('urn:mace:dir:attribute-def:mail')) {
+                $emailAddr = new EmailAddress($attribs->getAttributeValue('urn:mace:dir:attribute-def:mail'));
+                $user = $this->azureMfaService->startRegistration($emailAddr);
+                return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
+            }
+        } catch (NotFound $e) {
+            $this->logger->info('No GSSP attributes were found, so we should ask for an email address');
         }
 
         $requiresRegistration = $this->registrationService->registrationRequired();
