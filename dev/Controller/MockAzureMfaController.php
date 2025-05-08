@@ -43,7 +43,7 @@ class MockAzureMfaController extends AbstractController
     #[Route(path: '/mock/sso', name: 'mock_sso')]
     public function sso(Request $request): SymfonyResponse
     {
-        if (!in_array($this->getParameter('kernel.environment'), ['test', 'dev'])) {
+        if (!in_array($this->getParameter('kernel.environment'), ['test', 'dev', 'smoketest'])) {
             throw new Exception('Invalid environment encountered.');
         }
 
