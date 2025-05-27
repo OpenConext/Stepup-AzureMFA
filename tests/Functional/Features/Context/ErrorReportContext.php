@@ -32,7 +32,7 @@ use Behat\Testwork\Tester\Result\TestResult;
 /**
  * Generates a HTML/png error output report when a build fails.
  */
-final class ErrorReportContext implements Context
+class ErrorReportContext implements Context
 {
 
     /**

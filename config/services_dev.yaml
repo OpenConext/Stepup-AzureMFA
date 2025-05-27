@@ -18,8 +18,8 @@ services:
 
   Dev\Mock\MockConfiguration:
     arguments:
-      $identityProviderEntityId: 'https://azuremfa.stepup.example.com/mock/idp/metadata'
-      $serviceProviderEntityId: 'https://azuremfa.stepup.example.com/saml/metadata'
+      $identityProviderEntityId: 'https://azuremfa.dev.openconext.local/mock/idp/metadata'
+      $serviceProviderEntityId: 'https://azuremfa.dev.openconext.local/saml/metadata'
       $privateKeyPath: '%saml_idp_privatekey%'
       $publicCertPath: '%saml_idp_publickey%'
 

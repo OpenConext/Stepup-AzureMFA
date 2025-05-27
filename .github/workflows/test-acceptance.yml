@@ -30,3 +30,6 @@ jobs:
       
       - name: Run PHPUnit WebTests
         run: composer web-tests
+
+      - name: Run Behat tests
+        run: composer behat

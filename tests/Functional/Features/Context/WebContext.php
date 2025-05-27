@@ -59,7 +59,6 @@ class WebContext implements Context
 
     public function __construct(
         private readonly KernelInterface $kernel,
-        private readonly IdentityProvider $identityProvider,
         BridgeContainer $bridgeContainer
     ) {
         ContainerSingleton::setContainer($bridgeContainer);
@@ -111,11 +110,6 @@ class WebContext implements Context
         $this->minkContext->pressButton('Login');
     }
 
-    public function getIdentityProvider(): IdentityProvider
-    {
-        return $this->identityProvider;
-    }
-
     /**
      * @return \Surfnet\SamlBundle\Entity\ServiceProvider
      *
@@ -130,23 +124,22 @@ class WebContext implements Context
     }
 
     /**
-     * @Given /^a normal SAML 2.0 AuthnRequest form a unknown service provider$/
+     * @Given /^a normal SAML 2.0 AuthnRequest from an unknown service provider$/
      *
      * @throws \Exception
      */
-    public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider()
+    public function aNormalSAMLAuthnRequestFromAnUnknownServiceProvider()
     {
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://unkown_service_provider/saml/acs');
-        $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
+        $authnRequest->setDestination('/saml/sso');
         $issuer = new Issuer();
         $issuer->setValue('https://unkown_service_provider/saml/metadata');
         $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
-        // Sign with random key, does not mather for now.
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
+            $this->loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
         );
 
         $request = Saml2AuthnRequest::createNew($authnRequest);
@@ -183,9 +176,8 @@ class WebContext implements Context
         $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
-        // Sign with random key, does not mather for now.
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
+            $this->loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
         );
 
         $request = Saml2AuthnRequest::createNew($authnRequest);
@@ -209,9 +201,9 @@ class WebContext implements Context
         $authnRequest->setNameId($nameIdVo);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
         $authnRequest->setRequesterID(['https://azuremfa.dev.openconext.local/saml/metadata']);
-        // Sign with random key, does not mather for now.
+
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
+            $this->loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
         );
 
         $request = Saml2AuthnRequest::createNew($authnRequest);
