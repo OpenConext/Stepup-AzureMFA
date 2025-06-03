@@ -21,6 +21,7 @@ use Dev\Mock\MockGateway;
 use Exception;
 use SAML2\Constants;
 use SAML2\Response as SamlResponse;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -92,6 +93,23 @@ class MockAzureMfaController extends AbstractController
         } catch (Exception $e) {
             return new Response($e->getMessage(), SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    /**
+     * This is the metadata action used
+     */
+    #[Route(path: '/mock/metadata', name: 'mock_metadata')]
+    public function metadata(Request $request): SymfonyResponse
+    {
+        $cert = new Certificate($this->mockStepupGateway->getPublicCertificate());
+        $body = $this->twig->render(
+            'dev/mock-metadata.xml.twig',
+            [
+                'publickey' => $cert->getCertData(),
+            ]
+        );
+        return new Response($body);
     }
 
     private function getSelectedResponse(Request $request, string $status): array

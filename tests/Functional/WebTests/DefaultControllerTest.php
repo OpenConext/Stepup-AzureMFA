@@ -21,6 +21,17 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Ensure the cache directory exists
+        $cacheDir = __DIR__ . '/../../../var/cache/test/federation-metadata';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0777, true);
+        }
+    }
+
     public function testIndex()
     {
         $client = static::createClient();

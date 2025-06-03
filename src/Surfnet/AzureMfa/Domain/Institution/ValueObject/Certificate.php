@@ -60,4 +60,11 @@ class Certificate
         $certData = str_replace(sprintf($stripFormat, 'END'), '', $certData);
         return str_replace(PHP_EOL, '', $certData);
     }
+
+    public static function toPem(string $data): string
+    {
+        return "-----BEGIN CERTIFICATE-----\n" .
+            chunk_split(trim($data), 64, "\n") .
+            "-----END CERTIFICATE-----\n";
+    }
 }

@@ -26,6 +26,11 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
 
 class CertificateCollectionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow()
     {
         $collection = new CertificateCollection();
@@ -69,12 +74,12 @@ class CertificateCollectionTest extends TestCase
         $certificateMock
             ->shouldReceive('getFingerprint')
             ->andReturn(hash('sha256', $certificate))
-            ->once();
+            ->atLeast(1);
 
         $certificateMock
             ->shouldReceive('getCertdata')
             ->andReturn($certificate)
-            ->once();
+            ->atLeast(1);
 
         return $certificateMock;
     }

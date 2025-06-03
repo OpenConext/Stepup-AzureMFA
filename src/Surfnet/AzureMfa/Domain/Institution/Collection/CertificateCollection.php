@@ -31,6 +31,21 @@ class CertificateCollection
      */
     private array $certificates = [];
 
+    /**
+     * @param string[] $certificates
+     */
+    public static function fromStringArray(array $certificates): self
+    {
+        $certCollection = new self();
+        foreach ($certificates as $certData) {
+            if (!is_string($certData)) {
+                throw new InvalidCertificateException('This certificate should be a string');
+            }
+            $certCollection->add(new Certificate($certData));
+        }
+        return $certCollection;
+    }
+
     public function add(Certificate $certificate): void
     {
         if (array_key_exists($certificate->getFingerprint(), $this->certificates)) {
@@ -51,5 +66,13 @@ class CertificateCollection
             );
         }
         return $first;
+    }
+
+    /**
+     * @return Certificate[]
+     */
+    public function getCertificates(): array
+    {
+        return $this->certificates;
     }
 }

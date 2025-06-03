@@ -67,9 +67,13 @@ parameters:
                 g9EK9ADHRzfovbqOPad2s+N5iVWAOfEXGqItZcrLdW53vUOqbfXXuFt7szhtdvTW
                 RWWQQJryrg61UmLgJcLb3xMMdZZ+D6mcXqa3v2cSzGdfO932xUzq
                 -----END CERTIFICATE-----
-
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-b.example.com'
+          is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+        institution-c.example.com: # The institution identifier (schacHomeOrganization)
+          metadata_url: 'https://azuremfa.dev.openconext.local/mock/metadata'
+          email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
+            - 'institution-c.example.com'
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
         harting-college.nl:
           sso_location: 'https://adfs.harting-college.nl/adfs/ls/'

@@ -28,6 +28,11 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainWildcard;
 
 class EmailDomainCollectionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow()
     {
         $items = [

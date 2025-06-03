@@ -24,13 +24,11 @@ use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 interface IdentityProviderFactoryInterface
 {
     public function build(
-        EntityId $entityId,
-        Destination $ssoLocation,
-        CertificateCollection $certificates,
-        bool $isAzureAD
+        InstitutionName $institutionName,
     ): IdentityProviderInterface;
 }

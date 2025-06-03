@@ -31,6 +31,10 @@ framework:
             - en_GB
     validation:
         email_validation_mode: html5
+    http_client:
+        default_options:
+            max_redirects: 3
+            max_duration: 10
 imports:
     - { resource: ../openconext/*.yaml }
 
@@ -55,3 +59,5 @@ when@test:
             strict_requirements: true
         validation:
             not_compromised_password: false
+        http_client:
+            mock_response_factory: Surfnet\AzureMfa\Application\Service\Metadata\MockMetadataClientCallback

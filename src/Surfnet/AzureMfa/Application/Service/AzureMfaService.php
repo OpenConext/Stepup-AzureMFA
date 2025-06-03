@@ -31,15 +31,18 @@ use Surfnet\AzureMfa\Domain\Exception\MissingMailAttributeException;
 use Surfnet\AzureMfa\Domain\User;
 use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
+use Surfnet\AzureMfa\Infrastructure\Cache\IdentityProviderFactoryCache;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Exception;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  */
 class AzureMfaService
 {
@@ -49,6 +52,7 @@ class AzureMfaService
 
     public function __construct(
         private readonly EmailDomainMatchingService $matchingService,
+        private readonly IdentityProviderFactoryCache $identityProviderCache,
         private readonly ServiceProvider $serviceProvider,
         private readonly PostBinding $postBinding,
         RequestStack $requestStack,
@@ -131,7 +135,7 @@ class AzureMfaService
             throw new InstitutionNotFoundException($message);
         }
 
-        $azureMfaIdentityProvider = $institution->getIdentityProvider();
+        $azureMfaIdentityProvider = $this->identityProviderCache->build($institution->getName());
         $destination = $azureMfaIdentityProvider->getSsoLocation();
 
         $authnRequest = AuthnRequestFactory::createNewRequest(
@@ -173,14 +177,34 @@ class AzureMfaService
         if (is_null($institution)) {
             throw new AzureADException('The Institution could not be found using the users mail address');
         }
-        $azureMfaIdentityProvider = $institution->getIdentityProvider();
+        $azureMfaIdentityProvider = $this->identityProviderCache->build($institution->getName());
 
-        $this->logger->info('Process the SAML Response');
-        $assertion = $this->postBinding->processResponse(
-            $request,
-            $azureMfaIdentityProvider,
-            $this->serviceProvider
-        );
+        try {
+            $this->logger->info('Process the SAML Response');
+            $assertion = $this->postBinding->processResponse(
+                $request,
+                $azureMfaIdentityProvider,
+                $this->serviceProvider
+            );
+        } catch (Exception $e) {
+            // If the signature validation fails, we try to rebuild the identity provider
+            // This will effectively refresh the metadata for the institution
+            // Todo: refactor this to be more robust, e.g. by checking the exception type
+            if (!$institution->supportsMetadataUpdate() || $e->getMessage() !== 'Unable to validate Signature') {
+                throw $e;
+            }
+
+            $this->logger->info(sprintf('Unable to validate signature refreshing metadata for %s', $institution->getName()->getInstitutionName()));
+
+            $azureMfaIdentityProvider = $this->identityProviderCache->rebuild($institution->getName());
+
+            $this->logger->info('Reprocess the SAML Response after updating the metadata');
+            $assertion = $this->postBinding->processResponse(
+                $request,
+                $azureMfaIdentityProvider,
+                $this->serviceProvider
+            );
+        }
 
         $attributes = $assertion->getAttributes();
 

@@ -29,6 +29,7 @@ when@dev:
         channels: ["!event", "!doctrine", "!deprecation", "!console"]
 
 when@test:
+when@smoketest:
   monolog:
     handlers:
       main:

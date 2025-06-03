@@ -23,9 +23,15 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionConfigurationException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 class InstitutionConfigurationTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow() : void
     {
         $institutions = [
@@ -56,7 +62,7 @@ class InstitutionConfigurationTest extends TestCase
         $institution = m::mock(Institution::class);
         $institution
             ->shouldReceive('getName')
-            ->andReturn($name);
+            ->andReturn(new InstitutionName($name));
         return $institution;
     }
 }

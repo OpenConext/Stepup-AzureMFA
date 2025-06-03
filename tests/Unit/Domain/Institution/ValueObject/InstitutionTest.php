@@ -20,41 +20,28 @@ namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\ValueObject;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 class InstitutionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow()
     {
-        $idp = m::mock(IdentityProviderInterface::class);
         $emailDomainCollection = m::mock(EmailDomainCollection::class);
-        $institution = new Institution('stepup.example.com', $idp, $emailDomainCollection);
+
+        $institutionName = new InstitutionName('stepup.example.com');
+        $institution = new Institution($institutionName, $emailDomainCollection, true);
 
         $this->assertInstanceOf(Institution::class, $institution);
-        $this->assertEquals('stepup.example.com', $institution->getName());
+        $this->assertEquals($institutionName, $institution->getName());
         $this->assertEquals($emailDomainCollection, $institution->getEmailDomainCollection());
+        $this->assertEquals(true, $institution->supportsMetadataUpdate());
     }
 
-    public function test_empty_name_not_allowed()
-    {
-        $idp = m::mock(IdentityProviderInterface::class);
-        $emailDomainCollection = m::mock(EmailDomainCollection::class);
-
-        $this->expectException(InvalidInstitutionException::class);
-        $this->expectExceptionMessage('The name for the institution can not be an empty string.');
-        new Institution('', $idp, $emailDomainCollection);
-    }
-
-    public function test_retrieve_idenitty_provider()
-    {
-        $idp = m::mock(IdentityProviderInterface::class);
-        $emailDomainCollection = m::mock(EmailDomainCollection::class);
-        $institution = new Institution('stepup.example.com', $idp, $emailDomainCollection);
-
-        $this->assertInstanceOf(IdentityProviderInterface::class, $institution->getIdentityProvider());
-        $this->assertEquals($idp, $institution->getIdentityProvider());
-    }
 }

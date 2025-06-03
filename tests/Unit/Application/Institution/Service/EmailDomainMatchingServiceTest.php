@@ -30,33 +30,26 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
 class EmailDomainMatchingServiceTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow()
     {
         $email = m::mock(EmailAddress::class);
-        $institutionConfig = m::mock(InstitutionConfiguration::class);
-
-        $institutionCollection = m::mock(InstitutionCollection::class);
-        $institution = m::mock(Institution::class);
-
-        $institutionCollection
-            ->shouldReceive('getByEmailDomain')
-            ->with($email)
-            ->once()
-            ->andReturn($institution);
-
-        $institutionConfig
-            ->shouldReceive('getInstitutions')
-            ->andReturn($institutionCollection);
-
-        $factory = m::mock(ConfigurationFactory::class);
-        $factory
-            ->shouldReceive('build')
-            ->andReturn($institutionConfig);
 
         $factory = $this->buildConfigurationFactory($email);
         $matcher = new EmailDomainMatchingService($factory);
 
-        $this->assertInstanceOf(Institution::class, $matcher->findInstitutionByEmail($email));
+        $institution = $matcher->findInstitutionByEmail($email);
+
+        $this->assertInstanceOf(Institution::class, $institution);
     }
 
     public function test_not_found()
@@ -65,7 +58,6 @@ class EmailDomainMatchingServiceTest extends TestCase
         $institutionConfig = m::mock(InstitutionConfiguration::class);
 
         $institutionCollection = m::mock(InstitutionCollection::class);
-        $institution = m::mock(Institution::class);
 
         $institutionCollection
             ->shouldReceive('getByEmailDomain')

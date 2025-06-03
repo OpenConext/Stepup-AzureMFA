@@ -25,6 +25,7 @@ use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
 use Surfnet\AzureMfa\Domain\Exception\InvalidInstitutionException;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 class InstitutionCollection
 {
@@ -35,23 +36,23 @@ class InstitutionCollection
 
     public function add(Institution $institution): void
     {
-        if (array_key_exists($institution->getName(), $this->institutions)) {
+        if (array_key_exists($institution->getName()->getInstitutionName(), $this->institutions)) {
             throw new InvalidInstitutionException(
                 sprintf(
                     'An institution with this name ("%s") has already been added to the collection.',
-                    $institution->getName()
+                    $institution->getName()->getInstitutionName()
                 )
             );
         }
-        $this->institutions[$institution->getName()] = $institution;
+        $this->institutions[$institution->getName()->getInstitutionName()] = $institution;
     }
 
-    public function getByName(string $name): Institution
+    public function getByName(InstitutionName $name): Institution
     {
-        if (array_key_exists($name, $this->institutions) === false) {
-            throw new InstitutionNotFoundException(sprintf('Unable to get the institution identified by "%s".', $name));
+        if (array_key_exists($name->getInstitutionName(), $this->institutions) === false) {
+            throw new InstitutionNotFoundException(sprintf('Unable to get the institution identified by "%s".', $name->getInstitutionName()));
         }
-        return $this->institutions[$name];
+        return $this->institutions[$name->getInstitutionName()];
     }
 
     public function getByEmailDomain(EmailAddress $address): Institution
