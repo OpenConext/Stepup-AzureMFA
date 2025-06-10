@@ -17,9 +17,6 @@
     "behat/symfony2-extension": {
         "version": "2.1.5"
     },
-    "behat/transliterator": {
-        "version": "v1.3.0"
-    },
     "behatch/contexts": {
         "version": "3.3.0"
     },
