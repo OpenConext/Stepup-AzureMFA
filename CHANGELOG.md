@@ -1,3 +1,10 @@
+# 2.2.0
+- Allow metadata url keyrollover #197
+- Update dependencies #198
+
+# 2.1.0
+- Allow validation without registration #190
+
 # 2.0.0
 - Upgrade code to run on Symfony 6.4
 - Updated code to be PHP 8.2 compatible
