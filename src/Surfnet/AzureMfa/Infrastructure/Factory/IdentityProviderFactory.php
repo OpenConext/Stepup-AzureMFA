@@ -20,21 +20,72 @@ declare(strict_types = 1);
 
 namespace Surfnet\AzureMfa\Infrastructure\Factory;
 
+use Psr\Log\LoggerInterface;
+use Surfnet\AzureMfa\Application\Service\Metadata\MetadataIdentityProviderService;
+use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
+use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
 use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
+use Surfnet\AzureMfa\Domain\Institution\Factory\ConfigurationFactory;
 use Surfnet\AzureMfa\Domain\Institution\Factory\IdentityProviderFactoryInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfigurationData;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\MetadataUrl;
 use Surfnet\AzureMfa\Infrastructure\Entity\AzureMfaIdentityProvider;
+use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class IdentityProviderFactory implements IdentityProviderFactoryInterface
 {
+
+    private ConfigurationFactory $configurationFactory;
+    private MetadataIdentityProviderService $metadataIdentityProviderService;
+    private LoggerInterface $logger;
+
+    public function __construct(ConfigurationFactory $configurationFactory, MetadataIdentityProviderService $metadataIdentityProviderService, LoggerInterface $logger)
+    {
+        $this->configurationFactory = $configurationFactory;
+        $this->metadataIdentityProviderService = $metadataIdentityProviderService;
+        $this->logger = $logger;
+    }
+
     public function build(
-        EntityId $entityId,
-        Destination $ssoLocation,
-        CertificateCollection $certificates,
-        bool $isAzureAD
+        InstitutionName $institutionName,
     ): IdentityProviderInterface {
+        $entity = $this->configurationFactory->getEntity($institutionName);
+
+        if (!$entity instanceof InstitutionConfigurationData) {
+            throw new InstitutionNotFoundException('The institution with name "' . $institutionName->getInstitutionName() . '" was not found in the configuration.');
+        }
+
+        if ($entity->hasMetadataUrl()) {
+            $this->logger->info(sprintf('Fetching metadata for institution: %s', $institutionName->getInstitutionName()));
+
+            try {
+                $identityProvider = $this->metadataIdentityProviderService->fetch($entity);
+            } catch (Throwable $e) {
+                $this->logger->info(sprintf('An error occurred while fetching metadata for institution: %s %s', $institutionName->getInstitutionName(), $e->getMessage()));
+                throw $e;
+            }
+
+            $this->logger->info(sprintf('Successfully fetched metadata for institution: %s', $institutionName->getInstitutionName()));
+
+            return $identityProvider;
+        }
+
+        if (!$entity->hasCertificates()) {
+            throw new InvalidCertificateException('The entity provider must have at least one certificate.');
+        }
+
+        $entityId = new EntityId($entity->getEntityId());
+        $ssoLocation = new Destination($entity->getDestination());
+        $certificates = CertificateCollection::fromStringArray($entity->getCertificates());
+        $isAzureAD = $entity->isAzureAd();
+
         return new AzureMfaIdentityProvider($entityId, $ssoLocation, $certificates, $isAzureAD);
     }
 }

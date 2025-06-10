@@ -51,3 +51,7 @@ data:
           mXmePwbNrp+8JXae3AULMa7uR9Ai/eLESFcmIM79duCOrgmm5Nj11kIfHvA2qrfd
           BYY=
           -----END CERTIFICATE-----
+    institution-b.example.com:
+      entity_id: 'https://adfs.harting-college.nl/'
+      email_domains: ['institution-b.example.com']
+      metadata_url: 'https://adfs.harting-college.nl/FederationMetadata/2007-06/FederationMetadata.xml'

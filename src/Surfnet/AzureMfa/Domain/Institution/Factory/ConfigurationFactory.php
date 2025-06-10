@@ -20,18 +20,17 @@ declare(strict_types = 1);
 
 namespace Surfnet\AzureMfa\Domain\Institution\Factory;
 
-use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\ConfigurationValidatorInterface;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\InstitutionConfigurationInterface;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomain;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainInterface;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomainWildcard;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfigurationData;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - This factory, by design has high coupling. Coupling could be
@@ -42,29 +41,38 @@ class ConfigurationFactory
 {
     private readonly array $configurationData;
 
+    /**
+     * @var InstitutionConfigurationData[]
+     */
+    private array $entities;
+
     public function __construct(
         ConfigurationValidatorInterface $validator,
-        private readonly IdentityProviderFactoryInterface $identityProviderFactory
     ) {
         $this->configurationData = $validator->process()['institutions'];
+        $this->entities = [];
     }
 
     public function build(): InstitutionConfigurationInterface
     {
         $institutions = [];
         foreach ($this->configurationData as $institutionName => $institutionData) {
-            $ssoLocation = new Destination($institutionData['sso_location']);
-            $entityId = new EntityId($institutionData['entity_id']);
+            $institutionName = new InstitutionName($institutionName);
 
             $emailDomains = $this->buildEmailDomains($institutionData['email_domains']);
-            $certificates = $this->buildCertificates($institutionData['certificates']);
 
-            $identityProvider = $this->identityProviderFactory->build($entityId, $ssoLocation, $certificates, $institutionData['is_azure_ad']);
-
-            $institutions[$institutionName] = new Institution(
+            $institutions[$institutionName->getInstitutionName()] = new Institution(
                 $institutionName,
-                $identityProvider,
-                $emailDomains
+                $emailDomains,
+                !empty($institutionData['metadata_url']),
+            );
+
+            $this->entities[$institutionName->getInstitutionName()] = new InstitutionConfigurationData(
+                $institutionData['entity_id'] ?? '',
+                $institutionData['sso_location'] ?? '',
+                $institutionData['certificates'] ?? [],
+                $institutionData['is_azure_ad'] ?? false,
+                $institutionData['metadata_url'] ?? '',
             );
         }
 
@@ -92,14 +100,10 @@ class ConfigurationFactory
     }
 
     /**
-     * @param array<string> $certificates
+     * @return InstitutionConfigurationData|null
      */
-    private function buildCertificates(array $certificates): CertificateCollection
+    public function getEntity(InstitutionName $institutionName): ?InstitutionConfigurationData
     {
-        $certCollection = new CertificateCollection();
-        foreach ($certificates as $certData) {
-            $certCollection->add(new Certificate($certData));
-        }
-        return $certCollection;
+        return $this->entities[$institutionName->getInstitutionName()] ?? null;
     }
 }

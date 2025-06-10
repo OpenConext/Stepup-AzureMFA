@@ -27,6 +27,11 @@ class AuthenticationHelperTest extends TestCase
 {
     private $regex = '@^https://(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/vetting-procedure/gssf/azuremfa/metadata$@';
 
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     /**
      * @dataProvider provideValidForceAuthnIssuerEntityIds
      * @param string $domainName

@@ -27,9 +27,15 @@ use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 use Surfnet\AzureMfa\Domain\Institution\Collection\InstitutionCollection;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EmailDomain;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 class InstitutionCollectionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow()
     {
         $collection = new InstitutionCollection();
@@ -56,9 +62,9 @@ class InstitutionCollectionTest extends TestCase
         $collection->add($this->buildInstitutionMock('mock1'));
         $collection->add($this->buildInstitutionMock('mock2'));
 
-        $institution1 = $collection->getByName('mock1');
+        $institution1 = $collection->getByName(new InstitutionName('mock1'));
         $this->assertInstanceOf(Institution::class, $institution1);
-        $this->assertEquals('mock1', $institution1->getName());
+        $this->assertEquals(new InstitutionName('mock1'), $institution1->getName());
     }
 
     public function test_get_by_email_domain()
@@ -75,7 +81,7 @@ class InstitutionCollectionTest extends TestCase
 
         $institution = $collection->getByEmailDomain($emailAddress);
         $this->assertInstanceOf(Institution::class, $institution);
-        $this->assertEquals('mock1', $institution->getName());
+        $this->assertEquals(new InstitutionName('mock1'), $institution->getName());
     }
 
     public function test_get_by_email_domain_no_result()
@@ -103,7 +109,7 @@ class InstitutionCollectionTest extends TestCase
 
         $this->expectException(InstitutionNotFoundException::class);
         $this->expectExceptionMessage('Unable to get the institution identified by "stepup.exampel.com".');
-        $collection->getByName('stepup.exampel.com');
+        $collection->getByName(new InstitutionName('stepup.exampel.com'));
     }
 
     private function buildInstitutionMock(string $name) : Institution
@@ -112,7 +118,7 @@ class InstitutionCollectionTest extends TestCase
         $institution
             ->shouldReceive('getName')
             ->zeroOrMoreTimes()
-            ->andReturn($name);
+            ->andReturn(new InstitutionName($name));
 
         $institution
             ->shouldReceive('getEmailDomainCollection')

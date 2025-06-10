@@ -363,7 +363,7 @@ class MockGateway
         return $xmlSecurityKey;
     }
 
-    private function getPublicCertificate(): string|bool
+    public function getPublicCertificate(): string|bool
     {
         return $this->gatewayConfiguration->getIdentityProviderPublicKeyCertData();
     }

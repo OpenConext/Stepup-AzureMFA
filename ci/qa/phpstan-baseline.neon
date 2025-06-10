@@ -2,13 +2,23 @@ parameters:
 	ignoreErrors:
 		-
 			message: "#^Parameter \\#2 \\$identityProvider of method Surfnet\\\\SamlBundle\\\\Http\\\\PostBinding\\:\\:processResponse\\(\\) expects Surfnet\\\\SamlBundle\\\\Entity\\\\IdentityProvider, Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\ValueObject\\\\IdentityProviderInterface given\\.$#"
-			count: 1
+			count: 2
 			path: ../../src/Surfnet/AzureMfa/Application/Service/AzureMfaService.php
 
 		-
 			message: "#^Parameter \\#2 \\$identityProvider of static method Surfnet\\\\SamlBundle\\\\SAML2\\\\AuthnRequestFactory\\:\\:createNewRequest\\(\\) expects Surfnet\\\\SamlBundle\\\\Entity\\\\IdentityProvider, Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\ValueObject\\\\IdentityProviderInterface given\\.$#"
 			count: 1
 			path: ../../src/Surfnet/AzureMfa/Application/Service/AzureMfaService.php
+
+		-
+			message: "#^Method Surfnet\\\\AzureMfa\\\\Application\\\\Service\\\\Metadata\\\\MockMetadataClientCallback\\:\\:__invoke\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Application/Service/Metadata/MockMetadataClientCallback.php
+
+		-
+			message: "#^Parameter \\#1 \\$body of class Symfony\\\\Component\\\\HttpClient\\\\Response\\\\MockResponse constructor expects iterable\\<string\\|Throwable\\>\\|string, string\\|false given\\.$#"
+			count: 1
+			path: ../../src/Surfnet/AzureMfa/Application/Service/Metadata/MockMetadataClientCallback.php
 
 		-
 			message: "#^Class Surfnet\\\\AzureMfa\\\\Domain\\\\Institution\\\\Collection\\\\EmailDomainCollection implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"

@@ -53,6 +53,11 @@ class EmailDomainInConfigurationValidatorTest extends TestCase
         $this->validator->initialize($this->context);
     }
 
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function test_happy_flow(): void
     {
         $this->service

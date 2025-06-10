@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor ID="_a35331bd-8793-48f6-ba2f-617c3300d903"
+                  entityID="https://institution-c.example.com/"
+                  xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <KeyDescriptor use="signing">
+            <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+                <X509Data>
+                    <X509Certificate>
+                        {{ publickey }}
+                    </X509Certificate>
+                </X509Data>
+            </KeyInfo>
+        </KeyDescriptor>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                             Location="https://azuremfa.dev.openconext.local/mock/sso"/>
+    </IDPSSODescriptor>
+</EntityDescriptor>

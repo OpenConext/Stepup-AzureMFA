@@ -44,12 +44,51 @@ class ConfigurationValidatorTest extends TestCase
         $this->fixtureDirectory = dirname(__DIR__, 3) . '/fixtures/';
     }
 
-    public function test_happy_flow() : void
+    public function test_happy_flow_fixed_cert() : void
     {
-        $data = $this->setUpValidator('vanilla.yaml');
+        $data = $this->setUpValidator('vanilla_fixed.yaml');
         $processedData = $this->validator->process();
         // $data is reset because the root node is chopped of in the validation output.
         $this->assertEquals(reset($data), $processedData);
+    }
+
+    public function test_happy_flow_metadata_cert() : void
+    {
+        $data = $this->setUpValidator('vanilla_metadata_url.yaml');
+        $processedData = $this->validator->process();
+        // $data is reset because the root node is chopped of in the validation output.
+
+
+        $expect = [
+            'institutions' =>
+                [
+                    'institution-a.example.com' =>
+                        [
+                            'entity_id' => 'https://adfs.stepup.example.com/',
+                            'email_domains' =>
+                                [
+                                    'stepup.example.com',
+                                    '*.example.com',
+                                ],
+                            'is_azure_ad' => false,
+                            'metadata_url' => 'https://adfs.stepup.example.com/metadata',
+                            'certificates' => [],
+                        ],
+                    'harting-college.nl' =>
+                        [
+                            'entity_id' => 'https://adfs.harting-college.nl/',
+                            'email_domains' =>
+                                [
+                                    'harting-college.nl',
+                                ],
+                            'is_azure_ad' => false,
+                            'metadata_url' => 'https://adfs.harting-college.nl//metadata',
+                            'certificates' => [],
+                        ],
+                ],
+        ];
+
+        $this->assertEquals($expect, $processedData);
     }
 
     /**
@@ -94,7 +133,7 @@ class ConfigurationValidatorTest extends TestCase
             ],
             'invalid second entry' => [
                 'invalid_second_entry.yaml',
-                'Unrecognized options "hostname, username, password" under "institution_configuration.institutions.institution-b.example.com". Available options are "certificates", "email_domains", "entity_id", "is_azure_ad", "sso_location".'
+                'Unrecognized options "hostname, username, password" under "institution_configuration.institutions.institution-b.example.com". Available options are "certificates", "email_domains", "entity_id", "is_azure_ad", "metadata_url", "sso_location".'
             ],
             'invalid entity id' => [
                 'invalid_entity_id.yaml',
@@ -104,21 +143,9 @@ class ConfigurationValidatorTest extends TestCase
                 'invalid_certificates.yaml',
                 'Invalid type for path "institution_configuration.institutions.institution-a.example.com.certificates". Expected "array", but got "string"'
             ],
-            'missing destination' => [
-                'missing_sso_location.yaml',
-                'The child config "sso_location" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
-            ],
             'missing email domains' => [
                 'missing_email_domains.yaml',
                 'The child config "email_domains" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
-            ],
-            'missing entity_id' => [
-                'missing_entity_id.yaml',
-                'The child config "entity_id" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
-            ],
-            'missing certificates' => [
-                'missing_certificates.yaml',
-                'The child config "certificates" under "institution_configuration.institutions.institution-a.example.com" must be configured.'
             ],
         ];
     }

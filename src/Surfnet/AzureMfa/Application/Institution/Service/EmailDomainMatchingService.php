@@ -25,7 +25,6 @@ use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
 use Surfnet\AzureMfa\Domain\Institution\Configuration\InstitutionConfigurationInterface;
 use Surfnet\AzureMfa\Domain\Institution\Factory\ConfigurationFactory;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfiguration;
 
 class EmailDomainMatchingService
 {

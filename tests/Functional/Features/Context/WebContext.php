@@ -76,6 +76,20 @@ class WebContext implements Context
     }
 
     /**
+     * Init the cache dir.
+     *
+     * @BeforeScenario
+     */
+    public function initCacheDir(BeforeScenarioScope $scope)
+    {
+        // Ensure the cache directory exists
+        $cacheDir = __DIR__ . '/../../../../var/cache/test/federation-metadata';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0777, true);
+        }
+    }
+
+    /**
      * Set mink driver to goutte
      *
      * @BeforeScenario @remote
@@ -209,6 +223,30 @@ class WebContext implements Context
         $request = Saml2AuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath($destination.'?' . $query);
+    }
+
+    /**
+     * @Given /^I have no cached identity provider for "([^"]*)"$/
+     */
+    public function iHaveNoCertificateDataForInstitution($institution)
+    {
+        @unlink(__DIR__ . '/../../../../federation-metadata/' . $institution . '.cache');
+    }
+
+    /**
+     * @Given /^I have an invalid cached identity provider for "([^"]*)"$/
+     */
+    public function iHaveOldCertificateDataForInstitution($institution) {
+        file_put_contents(__DIR__ . '/../../../../federation-metadata/' . $institution . '.cache',
+        '{
+            "updated": "2025-06-05T15:49:55+02:00",
+            "entity_id": "https:\/\/institution-c.example.com\/",
+            "sso_location": "https:\/\/azuremfa.dev.openconext.local\/mock\/sso",
+            "certificates": [
+                "MIIEEzCCAnsCFEow2E90q1t\/\/LDuqkgF2zo7VNo4MA0GCSqGSIb3DQEBCwUAMEYxGzAZBgNVBAMMEkF6dXJlLU1GQSBHU1NQIElkUDEnMCUGA1UECgweRGV2ZWxvcG1lbnQgRG9ja2VyIGVudmlyb25tZW50MB4XDTIzMDUyNTA5MzMyM1oXDTI4MDUyMzA5MzMyM1owRjEbMBkGA1UEAwwSQXp1cmUtTUZBIEdTU1AgSWRQMScwJQYDVQQKDB5EZXZlbG9wbWVudCBEb2NrZXIgZW52aXJvbm1lbnQwggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGKAoIBgQCWaoXdTdU3N0RL2jK\/88PEN3jwyyz7AFJX64Rfx48CtCsI3Hze+0i+0KQgILsVU91kKujllFBM6N4V5PKQ+9Z5zafJeuhT80zQ9jcHVxyQoKi30438fBGzlAKD9hGojG7DwjKopK+96Eawvu90KCxf8q7STh50n8dO6hnxWtE8RGk5a9R2cMDxEuOlvrW2B8Ih+EVCT3OmOsCQdp31TuTt5x3xLxmY\/04mGGPpQi9PBV38O2uTd4G2mbqGqNGx6S6iPAMgh6u4NVmg03iqBKkFJgQvNRCdif+gMQTKEW0mJwr62PrEQrPBoBphgCpJNF9pnEy\/+mdWiKCo8lvVxiPGQaaKyoNvZEt1IROwp8Ga2gLEoFjtcMcodnLgudusDOCH6Idp0CtuTkrf3hLIxKjQMOFTCiCmOCtMlJZa9+l7LbhzEGcJUcHH0i1k+ufqUhOSBrrfKoiohixAnW+bayqymef+Zy32YoT+\/LDjoP\/vyMrNnRwpwqguPMwBF+HWgwUCAwEAATANBgkqhkiG9w0BAQsFAAOCAYEAReFJH\/X+PyA8cFe6RdCgyTbuRuq2rTgadKpqfhhbXlwcOTh8rEpevqFf8tequegCj7fFZgz+hIL075ZsEcZwk2N8F8m32cVjmYHar2rLsYEkqhEc\/yCUjyGffqUeZBVmdUnUM6ggGsIHqcjTvrNhmFrh3ManebvZkjvDyJCkrwUOGYvCpbFjXa4CW1Rp+I0+e7HnQeyFW3p+3T0SAmdo3eJEZLhRsMm\/YLcyCW7IRTVvpTvGoxhbvQU1k6EtkhLcahA+MWVzNbgiIdHP\/otSQnaLW243sxoxYm7EiuAihnQ0iRaNEzsFrx\/W06G0e5rmTbWPGc4LZj6YDKd7531SGIwqOOC1wrzrZ36iuwPm5PrZReCWH3ptR6bSszQerbQsx6wkumYN7iDZg9EK9ADHRzfovbqOPad2s+N5iVWAOfEXGqItZcrLdW53vUOqbfXXuFt7szhtdvTWRWWQQJryrg61UmLgJcLb3xMMdZZ+D6mcXqa3v2cSzGdfO9123456"
+            ],
+            "is_azure_ad": true
+        }');
     }
 
     /**

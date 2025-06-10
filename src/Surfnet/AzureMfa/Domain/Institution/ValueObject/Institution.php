@@ -26,29 +26,24 @@ use Surfnet\AzureMfa\Domain\Institution\Collection\EmailDomainCollection;
 class Institution
 {
     public function __construct(
-        private string $name,
-        private readonly IdentityProviderInterface $identityProvider,
-        private readonly EmailDomainCollection $emailDomainCollection
+        private readonly InstitutionName $name,
+        private readonly EmailDomainCollection $emailDomainCollection,
+        private readonly bool $supportsMetadataUpdate,
     ) {
-        if ($name === '') {
-            throw new InvalidInstitutionException('The name for the institution can not be an empty string.');
-        }
-
-        $this->name = $name;
     }
 
-    public function getName(): string
+    public function getName(): InstitutionName
     {
         return $this->name;
-    }
-
-    public function getIdentityProvider(): IdentityProviderInterface
-    {
-        return $this->identityProvider;
     }
 
     public function getEmailDomainCollection(): EmailDomainCollection
     {
         return $this->emailDomainCollection;
+    }
+
+    public function supportsMetadataUpdate(): bool
+    {
+        return $this->supportsMetadataUpdate;
     }
 }

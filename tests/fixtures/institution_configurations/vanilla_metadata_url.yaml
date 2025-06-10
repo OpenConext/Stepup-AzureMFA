@@ -1,0 +1,14 @@
+data:
+  institutions:
+    institution-a.example.com:
+      entity_id: 'https://adfs.stepup.example.com/'
+      email_domains:
+        - 'stepup.example.com'
+        - '*.example.com'
+      is_azure_ad: false
+      metadata_url: https://adfs.stepup.example.com/metadata
+    harting-college.nl:
+      entity_id: 'https://adfs.harting-college.nl/'
+      email_domains: ['harting-college.nl']
+      is_azure_ad: false
+      metadata_url: https://adfs.harting-college.nl//metadata

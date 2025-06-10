@@ -10,6 +10,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $identityProviderCacheDir: '%federation_metadata_cache_location%'
 
     Surfnet\AzureMfa\:
         resource: '../src/Surfnet/AzureMfa/*'
