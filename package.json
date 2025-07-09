@@ -1,11 +1,11 @@
 {
     "browserslist": "last 2 versions, ie 11, > 1%",
     "devDependencies": {
-        "@babel/core": "^7.27",
-        "@babel/preset-env": "^7.27",
+        "@babel/core": "^7.28",
+        "@babel/preset-env": "^7.28",
         "@symfony/webpack-encore": "^4.7",
         "compass-mixins": "^0.12",
-        "core-js": "^3.42",
+        "core-js": "^3.44",
         "css-loader": "^6.11",
         "file-loader": "^6.0.0",
         "import-glob-loader": "^1.1",
@@ -13,7 +13,7 @@
         "regenerator-runtime": "^0.14",
         "sass": "^1.89",
         "sass-loader": "^13.3",
-        "webpack": "^5.99",
+        "webpack": "^5.100",
         "webpack-cli": "^5.1",
         "webpack-import-glob-loader": "^1.6.3",
         "webpack-notifier": "^1.15"
