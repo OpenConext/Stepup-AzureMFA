@@ -3,7 +3,7 @@ monolog:
     prod-signaler:
       type: fingers_crossed
       action_level: ERROR
-      passthru_level: NOTICE # this means that all message of level NOTICE or higher are always logged
+      passthru_level: INFO # this means that all message of level INFO or higher are always logged
       handler: main_syslog
       bubble: false # if we handle it, nothing else should
     main_syslog:
