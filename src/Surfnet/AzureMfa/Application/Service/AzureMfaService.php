@@ -160,7 +160,7 @@ class AzureMfaService
         $query = $authnRequest->buildRequestQuery();
 
         // For Azure, add a "whr" query parameter with the domain of the user we want to authenticate.
-        if (!$azureMfaIdentityProvider->isAzureAD()) {
+        if ($azureMfaIdentityProvider->isAzureAD()) {
             // EntraID does not accept a Subject like ADFS does, and there is no other way to pass the full user ID.
             // The Windows home realm hint (whr) parameter can help bypass the Microsoft Account Picker
             // (Home Realm Discovery) when the user has multiple accounts, thereby improving the user (SSO) experience.
