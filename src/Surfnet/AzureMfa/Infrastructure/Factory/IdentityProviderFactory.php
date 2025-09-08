@@ -56,6 +56,8 @@ class IdentityProviderFactory implements IdentityProviderFactoryInterface
     public function build(
         InstitutionName $institutionName,
     ): IdentityProviderInterface {
+        $this->logger->info(sprintf('Start updating the identity configuration for: %s', $institutionName->getInstitutionName()));
+
         $entity = $this->configurationFactory->getEntity($institutionName);
 
         if (!$entity instanceof InstitutionConfigurationData) {
@@ -63,7 +65,7 @@ class IdentityProviderFactory implements IdentityProviderFactoryInterface
         }
 
         if ($entity->hasMetadataUrl()) {
-            $this->logger->info(sprintf('Fetching metadata for institution: %s', $institutionName->getInstitutionName()));
+            $this->logger->info(sprintf('Update configuration for institution with the metadata url: %s', $institutionName->getInstitutionName()));
 
             try {
                 $identityProvider = $this->metadataIdentityProviderService->fetch($entity);
@@ -72,10 +74,12 @@ class IdentityProviderFactory implements IdentityProviderFactoryInterface
                 throw $e;
             }
 
-            $this->logger->info(sprintf('Successfully fetched metadata for institution: %s', $institutionName->getInstitutionName()));
+            $this->logger->info(sprintf('Successfully updated with metadata for institution: %s, %d certificates found', $institutionName->getInstitutionName(), count($identityProvider->getCertificates()->getCertificates())));
 
             return $identityProvider;
         }
+
+        $this->logger->info(sprintf('Update configuration for institution with the application config: %s', $institutionName->getInstitutionName()));
 
         if (!$entity->hasCertificates()) {
             throw new InvalidCertificateException('The entity provider must have at least one certificate.');
@@ -86,6 +90,10 @@ class IdentityProviderFactory implements IdentityProviderFactoryInterface
         $certificates = CertificateCollection::fromStringArray($entity->getCertificates());
         $isAzureAD = $entity->isAzureAd();
 
-        return new AzureMfaIdentityProvider($entityId, $ssoLocation, $certificates, $isAzureAD);
+        $identityProvider = new AzureMfaIdentityProvider($entityId, $ssoLocation, $certificates, $isAzureAD);
+
+        $this->logger->info(sprintf('Successfully updated with config for institution: %s, %d certificates found', $institutionName->getInstitutionName(), count($identityProvider->getCertificates()->getCertificates())));
+
+        return $identityProvider;
     }
 }
