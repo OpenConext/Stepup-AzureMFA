@@ -20,7 +20,9 @@ declare(strict_types = 1);
 
 namespace Surfnet\AzureMfa\Infrastructure\Entity;
 
+use SAML2\Certificate\X509;
 use Surfnet\AzureMfa\Domain\Institution\Collection\CertificateCollection;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
@@ -34,11 +36,17 @@ class AzureMfaIdentityProvider extends IdentityProvider implements IdentityProvi
         private readonly CertificateCollection $certificates,
         bool $isAzureAD
     ) {
+        $keys = array_map(fn (Certificate $cert) => [
+            'encryption'      => false,
+            'signing'         => true,
+            'type'            => 'X509Certificate',
+            'X509Certificate' => $cert->getCertData(),
+        ], $certificates->getCertificates());
+
         $configuration = [
-            // The entityId is not configured in the
             'entityId' => $entityId->getEntityId(),
             'ssoUrl' => $destination->getUrl(),
-            'certificateData' => $certificates->first()->getCertData(),
+            'keys' => $keys,
             'isAzureAD' => $isAzureAD,
         ];
 

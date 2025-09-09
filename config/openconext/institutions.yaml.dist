@@ -75,6 +75,11 @@ parameters:
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-c.example.com'
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+        institution-d.example.com: # The institution identifier (schacHomeOrganization)
+          metadata_url: 'https://azuremfa.dev.openconext.local/mock/metadata-rollover'
+          email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
+            - 'institution-d.example.com'
+          is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
         harting-college.nl:
           sso_location: 'https://adfs.harting-college.nl/adfs/ls/'
           entity_id: 'https://azuremfa.dev.openconext.local/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
