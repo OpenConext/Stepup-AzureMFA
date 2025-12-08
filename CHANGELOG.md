@@ -1,3 +1,6 @@
+# 2.2.1
+- Update xmlseclibs to 3.1.4 to fix canonicalization bypass error (security)
+
 # 2.2.0
 - Allow metadata url keyrollover #197
 - Update dependencies #198
