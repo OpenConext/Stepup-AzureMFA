@@ -24,13 +24,13 @@ use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaMetadataUrlResponseException;
 use Surfnet\AzureMfa\Application\Service\Metadata\MetadataIdentityProviderService;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfigurationData;
-use Surfnet\AzureMfa\Domain\Institution\ValueObject\MetadataUrl;
 use Surfnet\AzureMfa\Infrastructure\Entity\AzureMfaIdentityProvider;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 class MetadataIdentityProviderServiceTest extends TestCase
 {
+    private string $fixtureDirectory;
 
     protected function setUp() : void
     {

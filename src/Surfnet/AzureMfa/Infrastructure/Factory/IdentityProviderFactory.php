@@ -37,7 +37,7 @@ use Surfnet\AzureMfa\Infrastructure\Entity\AzureMfaIdentityProvider;
 use Throwable;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class IdentityProviderFactory implements IdentityProviderFactoryInterface
 {

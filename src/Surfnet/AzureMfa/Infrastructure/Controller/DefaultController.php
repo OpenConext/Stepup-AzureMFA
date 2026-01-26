@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - A higher level of coupling is favoured over having business
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") - A higher level of coupling is favoured over having business
  * logic in the controller
  */
 class DefaultController extends AbstractController

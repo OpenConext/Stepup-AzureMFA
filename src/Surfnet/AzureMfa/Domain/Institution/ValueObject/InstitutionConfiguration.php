@@ -34,6 +34,7 @@ class InstitutionConfiguration implements InstitutionConfigurationInterface
     public function __construct(array $institutions)
     {
         $this->institutions = new InstitutionCollection();
+        /** @var array<mixed> $institutions */
         foreach ($institutions as $institution) {
             if (!$institution instanceof Institution) {
                 throw new InvalidInstitutionConfigurationException('Every entry of the institution array must be of type: Institution');

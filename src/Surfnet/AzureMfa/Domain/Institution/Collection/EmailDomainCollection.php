@@ -37,6 +37,7 @@ class EmailDomainCollection implements IteratorAggregate
      */
     public function __construct(array $domains)
     {
+        /** @var array<mixed> $domains */
         foreach ($domains as $domain) {
             if (!$domain instanceof EmailDomainInterface) {
                 throw new InvalidEmailDomainException(
@@ -44,6 +45,8 @@ class EmailDomainCollection implements IteratorAggregate
                 );
             }
         }
+
+        /** @var array<EmailDomainInterface> $domains */
         $this->emailDomains = $domains;
     }
 

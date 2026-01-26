@@ -26,7 +26,6 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\EntityId;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
 use Surfnet\AzureMfa\Infrastructure\Entity\AzureMfaIdentityProvider;
-use InvalidArgumentException;
 use DateTimeImmutable;
 use DateTimeInterface;
 use RuntimeException;
@@ -59,7 +58,7 @@ class IdentityProviderCacheItem
             $updated->format(DateTimeInterface::ATOM),
             (string)$identityProvider->getEntityId(),
             $identityProvider->getSsoLocation()->getUrl(),
-            array_values(array_map(fn(Certificate $cert) => $cert->getCertData(), $identityProvider->getCertificates()->getCertificates())),
+            array_values(array_map(static fn(Certificate $cert) => $cert->getCertData(), $identityProvider->getCertificates()->getCertificates())),
             $identityProvider->isAzureAD(),
         );
     }
@@ -72,8 +71,16 @@ class IdentityProviderCacheItem
             throw new RuntimeException("invalid idp cache data encountered");
         }
 
+        if (!$object['updated']) {
+            $object['updated'] = '';
+        }
+
+        if (!is_string($object['updated'])) {
+            throw new RuntimeException("'updated' must be a string");
+        }
+
         return new self(
-            $object['updated'] ?? '',
+            $object['updated'],
             $object['entity_id'] ?? '',
             $object['sso_location'] ?? '',
             $object['certificates'] ?? [],

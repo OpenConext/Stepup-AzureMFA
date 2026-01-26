@@ -35,7 +35,7 @@ use Throwable;
 use DOMXPath;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class MetadataIdentityProviderService
 {

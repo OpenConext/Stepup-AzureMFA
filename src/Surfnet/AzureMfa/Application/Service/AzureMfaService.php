@@ -41,8 +41,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Exception;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
  */
 class AzureMfaService
 {
