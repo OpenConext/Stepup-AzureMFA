@@ -57,9 +57,10 @@
     "mockery/mockery": "^1.6",
     "overtrue/phplint": "*",
     "phpmd/phpmd": "^2.14",
-    "phpstan/phpstan": "^1.10",
-    "phpstan/phpstan-symfony": "^1.3",
+    "phpstan/phpstan": "^2.1.37",
+    "phpstan/phpstan-symfony": "^2.0",
     "phpunit/phpunit": "^9.6",
+    "rector/rector": "^2.3",
     "sebastian/phpcpd": "^6.0",
     "slevomat/coding-standard": "^8.13",
     "soyuka/contexts": "^3.3",
@@ -72,6 +73,10 @@
   },
   "scripts": {
     "check": [
+      "@check-ci",
+      "@rector"
+    ],
+    "check-ci": [
       "@composer-validate",
       "@docheader",
       "@lint",
@@ -84,6 +89,8 @@
     "behat": "./ci/qa/behat",
     "composer-validate": "./ci/qa/validate",
     "docheader": "./ci/qa/docheader",
+    "rector": "./ci/qa/rector.sh --dry-run",
+    "rector-fix": "./ci/qa/rector.sh",
     "lint": "./ci/qa/lint",
     "phpcs": "./ci/qa/phpcs",
     "phpcpd": "./ci/qa/phpcpd",
