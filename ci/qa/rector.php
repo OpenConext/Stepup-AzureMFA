@@ -10,7 +10,7 @@ return RectorConfig::configure()
          __DIR__ . '/../../tests',
     ])
 //    ->withPhpSets()
-//    ->withAttributesSets(all: true)
+    ->withAttributesSets(all: true)
     ->withComposerBased(twig: true, phpunit: true, symfony: true)
     ->withPHPStanConfigs([__DIR__.'/phpstan.neon'])
 //    ->withPreparedSets(deadCode: true)
