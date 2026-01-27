@@ -20,7 +20,6 @@ namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Hook\AfterScenario;
 use Behat\Hook\BeforeScenario;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
@@ -52,10 +51,6 @@ class WebContext implements Context
      */
     protected $minkContext;
 
-    /**
-     * @var string
-     */
-    protected $previousMinkSession;
 
     public function __construct(
         private readonly KernelInterface $kernel,
@@ -87,24 +82,6 @@ class WebContext implements Context
         }
     }
 
-    /**
-     * Set mink driver to goutte @remote
-     */
-    #[BeforeScenario]
-    public function setGoutteDriver()
-    {
-        $this->previousMinkSession = $this->minkContext->getMink()->getDefaultSessionName();
-        $this->minkContext->getMink()->setDefaultSessionName('goutte');
-    }
-
-    /**
-     * Set mink driver to goutte @remote
-     */
-    #[AfterScenario]
-    public function resetGoutteDriver()
-    {
-        $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
-    }
 
     /**
      * Create AuthnRequest from demo IdP.
