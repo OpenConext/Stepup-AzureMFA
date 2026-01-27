@@ -45,7 +45,10 @@ when@dev:
     framework:
         router:
             strict_requirements: true
-        profiler: { only_exceptions: false }
+        profiler:
+            only_exceptions: false
+            collect_serializer_data: true
+
     imports:
         - { resource: ../services_dev.yaml }
 
@@ -58,6 +61,7 @@ when@test:
             storage_factory_id: session.storage.factory.mock_file
         profiler:
             collect: false
+            collect_serializer_data: true
         router:
             strict_requirements: true
         validation:
