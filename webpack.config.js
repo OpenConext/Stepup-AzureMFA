@@ -12,13 +12,16 @@ Encore
     .addLoader({test: /\.scss$/, loader: 'webpack-import-glob-loader'})
     // Convert sass files.
     .enableSassLoader(function (options) {
+        options.api = 'modern';
         options.sassOptions = {
             outputStyle: 'expanded',
             includePaths: ['public'],
         };
     })
-    .autoProvidejQuery()
-    .cleanupOutputBeforeBuild()
+    .autoProvideVariables({
+        $: 'jquery',
+        jQuery: 'jquery'
+    })
     .enableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
