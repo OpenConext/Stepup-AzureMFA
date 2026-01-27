@@ -18,6 +18,7 @@
 
 namespace Surfnet\AzureMfa\Test\Unit\Domain;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InvalidEmailAddressException;
@@ -37,9 +38,7 @@ class EmailAddressTest extends TestCase
         new EmailAddress('');
     }
 
-    /**
-     * @dataProvider provideInvalidEmailAddresses
-     */
+    #[DataProvider('provideInvalidEmailAddresses')]
     public function test_it_rejects_invalid_email_addresses($invalidAddress) : void
     {
         $this->expectException(InvalidEmailAddressException::class);
@@ -47,9 +46,7 @@ class EmailAddressTest extends TestCase
         new EmailAddress($invalidAddress);
     }
 
-    /**
-     * @dataProvider provideDomainTestAddresses
-     */
+    #[DataProvider('provideDomainTestAddresses')]
     public function test_get_domain($emailAddress, $expectedDomain) : void
     {
         $email = new EmailAddress($emailAddress);
@@ -60,7 +57,7 @@ class EmailAddressTest extends TestCase
      * Thanks: cjaoude https://gist.github.com/cjaoude/fd9910626629b53c4d25#file-gistfile1-txt
      * @return array
      */
-    public function provideInvalidEmailAddresses() : array
+    public static function provideInvalidEmailAddresses() : array
     {
         return [
             ["plainaddress"],
@@ -84,7 +81,7 @@ class EmailAddressTest extends TestCase
         ];
     }
 
-    public function provideDomainTestAddresses() : array
+    public static function provideDomainTestAddresses() : array
     {
         return [
             ['stybar@example.com', 'example.com'],

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\AzureMfa\Test\Unit\Application\Institution\Service;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaMetadataUrlResponseException;
 use Surfnet\AzureMfa\Application\Service\Metadata\MetadataIdentityProviderService;
@@ -66,9 +67,7 @@ cmN+8BiQ/FXlF8xjuNq5LSLRiawSe8ut81Lhv5tjZgKWwmiR
     }
 
 
-    /**
-     * @dataProvider provideInvalidMetadata
-     */
+    #[DataProvider('provideInvalidMetadata')]
     public function test_metadata_identity_provider_failures(string $input, string $expectedException, string $expectedMessage) : void
     {
         $this->expectException($expectedException);
@@ -102,35 +101,35 @@ cmN+8BiQ/FXlF8xjuNq5LSLRiawSe8ut81Lhv5tjZgKWwmiR
         return  $identityProvider;
     }
 
-    public function provideInvalidMetadata(): array {
+    public static function provideInvalidMetadata(): array {
         return [
             'invalid xml' => [
-                'fixture' => 'metadata_invalid_xml.xml',
+                'input' => 'metadata_invalid_xml.xml',
                 'expectedException' => InvalidMfaMetadataUrlResponseException::class,
                 'expectedMessage' => 'Failed to parse metadata XML.'
             ],
             'missing entity descriptor' => [
-                'fixture' => 'metadata_missing_entity_descriptor.xml',
+                'input' => 'metadata_missing_entity_descriptor.xml',
                 'expectedException' => InvalidMfaMetadataUrlResponseException::class,
                 'expectedMessage' => 'EntityDescriptor not found in metadata.'
             ],
             'missing entity id' => [
-                'fixture' => 'metadata_missing_entity_id.xml',
+                'input' => 'metadata_missing_entity_id.xml',
                 'expectedException' => InvalidMfaMetadataUrlResponseException::class,
                 'expectedMessage' => 'EntityID not found in metadata.'
             ],
             'missing certs' => [
-                'fixture' => 'metadata_missing_certs.xml',
+                'input' => 'metadata_missing_certs.xml',
                 'expectedException' => InvalidMfaMetadataUrlResponseException::class,
                 'expectedMessage' => 'Certificates not found in metadata.'
             ],
             'missing sso location' => [
-                'fixture' => 'metadata_missing_sso_location.xml',
+                'input' => 'metadata_missing_sso_location.xml',
                 'expectedException' => InvalidMfaMetadataUrlResponseException::class,
                 'expectedMessage' => 'A valid SingleSignOnService Location with post binding not found in metadata.'
             ],
             'invalid sso_location' => [
-                'fixture' => 'metadata_invalid_sso_location.xml',
+                'input' => 'metadata_invalid_sso_location.xml',
                 'expectedException' => InvalidMfaMetadataUrlResponseException::class,
                 'expectedMessage' => 'A valid SingleSignOnService Location with post binding not found in metadata.'
             ],

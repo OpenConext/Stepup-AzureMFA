@@ -18,6 +18,7 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain;
 
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\UserId;
@@ -81,9 +82,7 @@ class UserIdTest extends TestCase
         new UserId('');
     }
 
-    /**
-     * @dataProvider provideInvalidUserIds
-     */
+    #[DataProvider('provideInvalidUserIds')]
     public function test_it_rejects_invalid_email_ids($invalidAddress) : void
     {
         $this->expectException(InvalidUserIdException::class);
@@ -95,7 +94,7 @@ class UserIdTest extends TestCase
      * Thanks: cjaoude https://gist.github.com/cjaoude/fd9910626629b53c4d25#file-gistfile1-txt
      * @return array
      */
-    public function provideInvalidUserIds() : array
+    public static function provideInvalidUserIds() : array
     {
         return [
             ["q2b27d-0000|plainaddress"],

@@ -19,6 +19,7 @@
 namespace Surfnet\AzureMfa\Test\Unit\Application\Institution\Service;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Application\Service\AuthenticationHelper;
 use Surfnet\GsspBundle\Service\AuthenticationService;
@@ -33,9 +34,9 @@ class AuthenticationHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider provideValidForceAuthnIssuerEntityIds
      * @param string $domainName
      */
+    #[DataProvider('provideValidForceAuthnIssuerEntityIds')]
     public function test_domain_matching_works_as_intended(string $domainName) : void
     {
         $authService = m::mock(AuthenticationService::class);
@@ -47,9 +48,9 @@ class AuthenticationHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider provideInvalidForceAuthnIssuerEntityIds
      * @param string $domainName
      */
+    #[DataProvider('provideInvalidForceAuthnIssuerEntityIds')]
     public function test_domain_matching_works_as_intended_on_invalid_uris(string $domainName) : void
     {
         $authService = m::mock(AuthenticationService::class);
@@ -60,7 +61,7 @@ class AuthenticationHelperTest extends TestCase
         $this->assertFalse($helper->useForceAuthn());
     }
 
-    public function provideValidForceAuthnIssuerEntityIds()
+    public static function provideValidForceAuthnIssuerEntityIds()
     {
         yield ['https://example.com/vetting-procedure/gssf/azuremfa/metadata'];
         yield ['https://foobar.example.com/vetting-procedure/gssf/azuremfa/metadata'];
@@ -69,7 +70,7 @@ class AuthenticationHelperTest extends TestCase
         yield ['https://foobar.example.pizza/vetting-procedure/gssf/azuremfa/metadata'];
     }
 
-    public function provideInvalidForceAuthnIssuerEntityIds()
+    public static function provideInvalidForceAuthnIssuerEntityIds()
     {
         yield ['https://example.com/vetting-procedure/gssf/azuremfa'];
         yield ['http://example.com/vetting-procedure/gssf/azuremfa/metadata'];

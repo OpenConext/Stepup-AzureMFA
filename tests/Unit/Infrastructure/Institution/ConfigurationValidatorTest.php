@@ -18,6 +18,7 @@
 
 namespace Surfnet\AzureMfa\Test\Unit\Infrastructure\Institution;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationDefinition;
 use Surfnet\AzureMfa\Infrastructure\Institution\ConfigurationValidator;
@@ -91,9 +92,7 @@ class ConfigurationValidatorTest extends TestCase
         $this->assertEquals($expect, $processedData);
     }
 
-    /**
-     * @dataProvider provideInvalidConfigurations
-     */
+    #[DataProvider('provideInvalidConfigurations')]
     public function test_configuration_failures($fileName, $expectedExceptionMessage) : void
     {
         $this->setUpValidator($fileName);
@@ -120,7 +119,7 @@ class ConfigurationValidatorTest extends TestCase
         return $data;
     }
 
-    public function provideInvalidConfigurations() : array
+    public static function provideInvalidConfigurations() : array
     {
         return [
             'invalid destination' => [
