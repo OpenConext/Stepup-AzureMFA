@@ -84,18 +84,12 @@ cd stepup
 
 **Building frontend assets:**
 
-`$ yarn encore dev` 
-
-or 
-
-`$ yarn encore prod` 
-
-for production 
+Run `composer frontend-install` and optionally after that: `yarn encore watch` for a development build 
 
 
 If everything goes as planned you can go to:
 
-[https://azuremfa.dev.stepup.local](https://azuremfa.dev.stepup.local/)
+[https://azuremfa.dev.openconext.local](https://azuremfa.dev.openconext.local/)
 
 
 Configuring institutions using Azure MFA 

@@ -74,7 +74,8 @@
   "scripts": {
     "check": [
       "@check-ci",
-      "@rector"
+      "@rector",
+      "@web-tests"
     ],
     "check-ci": [
       "@composer-validate",
@@ -101,6 +102,17 @@
     "test": "./ci/qa/phpunit",
     "unit-tests": "./ci/qa/phpunit --testsuite=UnitTests",
     "web-tests": "./ci/qa/phpunit --testsuite=WebTests",
+    "frontend-install": [
+      "yarn install --frozen-lockfile",
+      "yarn encore production",
+      "./bin/console cache:clear",
+      "@fix-dev-permissions"
+    ],
+    "fix-dev-permissions": [
+      "chown -R www-data:www-data /var/www/html/var/log",
+      "chown -R www-data:www-data /var/www/html/var/cache",
+      "chown -R www-data:www-data /var/www/html/federation-metadata"
+    ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"

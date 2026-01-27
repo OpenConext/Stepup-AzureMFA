@@ -52,18 +52,6 @@ class DefaultController extends AbstractController
     ) {
     }
 
-    /**
-     * Replace this example code with whatever you need/
-     */
-    #[Route(
-        path: '/',
-        name: 'homepage',
-        condition: "'%app_env%' in ['dev', 'test']"
-    )]
-    public function index(): Response
-    {
-        return $this->render('default/index.html.twig');
-    }
 
     /**
      * Replace this example code with whatever you need.
