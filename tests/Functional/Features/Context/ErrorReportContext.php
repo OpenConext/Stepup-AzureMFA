@@ -44,8 +44,6 @@ class ErrorReportContext implements Context
 
     /**
      * Fetch the required contexts.
-     *
-     * @param BeforeScenarioScope $scope
      */
     #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope)
@@ -57,8 +55,6 @@ class ErrorReportContext implements Context
 
     /**
      * This will print the failed html result.
-     *
-     * @param AfterStepScope $scope
      */
     #[AfterStep]
     public function dumpInfoAfterFailedStep(AfterStepScope $scope)
@@ -108,7 +104,6 @@ class ErrorReportContext implements Context
     /**
      * Save the page result file to disk.
      *
-     * @param AfterStepScope $scope
      * @param string $fileName
      */
     private function saveErrorFile(AfterStepScope $scope, $fileName)
@@ -142,7 +137,6 @@ TEXT;
     /**
      * Returns the scenaro for a given step.
      *
-     * @param StepScope $scope
      *
      * @return ScenarioInterface
      */
@@ -165,7 +159,6 @@ TEXT;
     /**
      * Returns the scenario for a given step.
      *
-     * @param StepScope $scope
      *
      * @return NodeInterface|null
      */

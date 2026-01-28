@@ -33,9 +33,6 @@ class AuthenticationHelperTest extends TestCase
         m::close();
     }
 
-    /**
-     * @param string $domainName
-     */
     #[DataProvider('provideValidForceAuthnIssuerEntityIds')]
     public function test_domain_matching_works_as_intended(string $domainName) : void
     {
@@ -47,9 +44,6 @@ class AuthenticationHelperTest extends TestCase
         $this->assertTrue($helper->useForceAuthn());
     }
 
-    /**
-     * @param string $domainName
-     */
     #[DataProvider('provideInvalidForceAuthnIssuerEntityIds')]
     public function test_domain_matching_works_as_intended_on_invalid_uris(string $domainName) : void
     {

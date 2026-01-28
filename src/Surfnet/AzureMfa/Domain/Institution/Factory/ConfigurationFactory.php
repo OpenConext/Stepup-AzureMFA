@@ -99,9 +99,6 @@ class ConfigurationFactory
         return new EmailDomain($domain);
     }
 
-    /**
-     * @return InstitutionConfigurationData|null
-     */
     public function getEntity(InstitutionName $institutionName): ?InstitutionConfigurationData
     {
         return $this->entities[$institutionName->getInstitutionName()] ?? null;

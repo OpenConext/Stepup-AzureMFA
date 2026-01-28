@@ -55,7 +55,6 @@ class EmailAddressTest extends TestCase
     
     /**
      * Thanks: cjaoude https://gist.github.com/cjaoude/fd9910626629b53c4d25#file-gistfile1-txt
-     * @return array
      */
     public static function provideInvalidEmailAddresses() : array
     {

@@ -55,7 +55,7 @@ class ConfigurationValidatorTest extends TestCase
 
     public function test_happy_flow_metadata_cert() : void
     {
-        $data = $this->setUpValidator('vanilla_metadata_url.yaml');
+        $this->setUpValidator('vanilla_metadata_url.yaml');
         $processedData = $this->validator->process();
         // $data is reset because the root node is chopped of in the validation output.
 

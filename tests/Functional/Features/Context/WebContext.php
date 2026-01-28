@@ -134,7 +134,6 @@ class WebContext implements Context
     }
 
     /**
-     * @param PrivateKey $key
      * @return XMLSecurityKey
      * @throws \Exception
      */
@@ -313,9 +312,8 @@ class WebContext implements Context
         }
         $responseValue = $samlResponse->getValue();
         $response = base64_decode($responseValue);
-        $responseXml = DOMDocumentFactory::fromString($response);
 
-        return $responseXml;
+        return DOMDocumentFactory::fromString($response);
     }
 
     private function getElementsByName(\DOMDocument $responseXml, $elementName): DOMNodeList
