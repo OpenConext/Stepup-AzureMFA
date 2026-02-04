@@ -41,7 +41,11 @@ class MockAzureMfaController extends AbstractController
     /**
      * This is the sso action used to mock a GSSP callout
      */
-    #[Route(path: '/mock/sso', name: 'mock_sso')]
+    #[Route(
+        path: '/mock/sso',
+        name: 'mock_sso',
+        methods: ['POST', 'GET']
+    )]
     public function sso(Request $request): SymfonyResponse
     {
         if (!in_array($this->getParameter('kernel.environment'), ['test', 'dev', 'smoketest'])) {
@@ -49,19 +53,8 @@ class MockAzureMfaController extends AbstractController
         }
 
         try {
-            $status = $request->get('status');
-
-            // Check binding
-            if (!$request->isMethod(Request::METHOD_GET) &&  !$status) {
-                throw new BadRequestHttpException(sprintf(
-                    'Could not receive AuthnRequest from HTTP Request: expected a GET method, got %s',
-                    $request->getMethod()
-                ));
-            }
-
-            // show possible saml response status to return
-            if (!$status) {
-                // Present response
+            // GET requests show the response selection form
+            if ($request->isMethod(Request::METHOD_GET)) {
                 $body = $this->twig->render(
                     'dev/mock-acs.html.twig',
                     [
@@ -74,6 +67,11 @@ class MockAzureMfaController extends AbstractController
                     ]
                 );
                 return new Response($body);
+            }
+
+            $status = $request->request->getString('status');
+            if ($status === '') {
+                throw new BadRequestHttpException('Status is required for POST requests.');
             }
 
             // Parse available responses
@@ -136,15 +134,15 @@ class MockAzureMfaController extends AbstractController
     private function getSelectedResponse(Request $request, string $status): array
     {
         switch (true) {
-            case ($status == 'success'):
+            case ($status === 'success'):
                 // Parse successful
-                $rawAttributes = $request->get('attributes');
+                $rawAttributes = $request->request->get('attributes');
                 $attributes = $this->parseAttributes($rawAttributes);
 
                 $samlResponse = $this->mockStepupGateway->handleSsoSuccess($request, $this->getFullRequestUri($request), $attributes);
                 return $this->getResponseData($request, $samlResponse);
 
-            case ($status == 'user-cancelled'):
+            case ($status === 'user-cancelled'):
                 // Parse user cancelled
                 $samlResponse = $this->mockStepupGateway->handleSsoFailure(
                     $request,
@@ -155,7 +153,7 @@ class MockAzureMfaController extends AbstractController
                 );
                 return $this->getResponseData($request, $samlResponse);
 
-            case ($status == 'unknown'):
+            case ($status === 'unknown'):
                 // Parse unknown
                 $samlResponse = $this->mockStepupGateway->handleSsoFailure(
                     $request,
