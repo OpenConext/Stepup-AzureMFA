@@ -25,6 +25,7 @@ use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Step\Given;
+use Behat\Step\Then;
 use Behat\Step\When;
 use DOMNode;
 use DOMNodeList;
@@ -218,7 +219,7 @@ class WebContext implements Context
         $this->iSendAnAuthenticationRequestRequestToWithNameID($destination);
     }
 
-    #[\Behat\Step\Then('the SAML Response should contain element :elementName with value :value')]
+    #[Then('the SAML Response should contain element :elementName with value :value')]
     public function theSamlResponseShouldContainElementWithValue($elementName, $value)
     {
         $responseXml = $this->receiveResponse();
