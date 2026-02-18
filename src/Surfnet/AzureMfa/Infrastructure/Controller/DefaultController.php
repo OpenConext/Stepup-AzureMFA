@@ -35,10 +35,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - A higher level of coupling is favoured over having business
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") - A higher level of coupling is favoured over having business
  * logic in the controller
  */
 class DefaultController extends AbstractController
@@ -52,18 +52,6 @@ class DefaultController extends AbstractController
     ) {
     }
 
-    /**
-     * Replace this example code with whatever you need/
-     */
-    #[Route(
-        path: '/',
-        name: 'homepage',
-        condition: "'%app_env%' in ['dev', 'test']"
-    )]
-    public function index(): Response
-    {
-        return $this->render('default/index.html.twig');
-    }
 
     /**
      * Replace this example code with whatever you need.
@@ -112,7 +100,7 @@ class DefaultController extends AbstractController
         $this->logger->info('Asking the user for its email address in order to match it to his/her institution');
         return $this->render('default/registration.html.twig', [
             'requiresRegistration' => $requiresRegistration,
-            'form' => $form->createView()
+            'form' => $form
         ], $response);
     }
 

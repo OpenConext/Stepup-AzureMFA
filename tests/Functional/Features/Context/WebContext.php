@@ -20,13 +20,16 @@ namespace Surfnet\AzureMfa\Test\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\BeforeScenario;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use DOMNode;
 use DOMNodeList;
 use Exception;
-use PhpParser\Node\Name;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
@@ -37,11 +40,8 @@ use SAML2\DOMDocumentFactory;
 use SAML2\Message;
 use SAML2\XML\saml\Issuer;
 use SAML2\XML\saml\NameID;
-use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\SAML2\AuthnRequest as Saml2AuthnRequest;
 use Surfnet\SamlBundle\SAML2\BridgeContainer;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 use function parse_str;
 
@@ -52,10 +52,6 @@ class WebContext implements Context
      */
     protected $minkContext;
 
-    /**
-     * @var string
-     */
-    protected $previousMinkSession;
 
     public function __construct(
         private readonly KernelInterface $kernel,
@@ -66,9 +62,8 @@ class WebContext implements Context
 
     /**
      * Fetch the required contexts.
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         $environment = $scope->getEnvironment();
@@ -77,9 +72,8 @@ class WebContext implements Context
 
     /**
      * Init the cache dir.
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function initCacheDir(BeforeScenarioScope $scope)
     {
         // Ensure the cache directory exists
@@ -89,34 +83,14 @@ class WebContext implements Context
         }
     }
 
-    /**
-     * Set mink driver to goutte
-     *
-     * @BeforeScenario @remote
-     */
-    public function setGoutteDriver()
-    {
-        $this->previousMinkSession = $this->minkContext->getMink()->getDefaultSessionName();
-        $this->minkContext->getMink()->setDefaultSessionName('goutte');
-    }
-
-    /**
-     * Set mink driver to goutte
-     *
-     * @AfterScenario @remote
-     */
-    public function resetGoutteDriver()
-    {
-        $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
-    }
 
     /**
      * Create AuthnRequest from demo IdP.
      *
-     * @When the service provider send the AuthnRequest with HTTP-Redirect binding
      *
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      */
+    #[When('the service provider send the AuthnRequest with HTTP-Redirect binding')]
     public function callIdentityProviderSSOActionWithAuthnRequest()
     {
         $this->minkContext->visit('https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp');
@@ -138,10 +112,9 @@ class WebContext implements Context
     }
 
     /**
-     * @Given /^a normal SAML 2.0 AuthnRequest from an unknown service provider$/
-     *
      * @throws \Exception
      */
+    #[Given('/^a normal SAML 2.0 AuthnRequest from an unknown service provider$/')]
     public function aNormalSAMLAuthnRequestFromAnUnknownServiceProvider()
     {
         $authnRequest = new AuthnRequest();
@@ -162,7 +135,6 @@ class WebContext implements Context
     }
 
     /**
-     * @param PrivateKey $key
      * @return XMLSecurityKey
      * @throws \Exception
      */
@@ -177,9 +149,7 @@ class WebContext implements Context
         return $key;
     }
 
-    /**
-     * @Given /^I send a registration request to "(?P<destination>(?:[^"]|\\")*)"$/
-     */
+    #[Given('/^I send a registration request to "(?P<destination>(?:[^"]|\\\\")*)"$/')]
     public function iSendARegistrationRequestRequestTo($destination)
     {
         $authnRequest = new AuthnRequest();
@@ -199,9 +169,7 @@ class WebContext implements Context
         $this->minkContext->visitPath($destination.'?' . $query);
     }
 
-    /**
-     * @Given I send an authentication request to :destination with NameID :nameId
-     */
+    #[Given('I send an authentication request to :destination with NameID :nameId')]
     public function iSendAnAuthenticationRequestRequestToWithNameID($destination, $nameId = "")
     {
         $authnRequest = new AuthnRequest();
@@ -225,17 +193,13 @@ class WebContext implements Context
         $this->minkContext->visitPath($destination.'?' . $query);
     }
 
-    /**
-     * @Given /^I have no cached identity provider for "([^"]*)"$/
-     */
+    #[Given('/^I have no cached identity provider for "([^"]*)"$/')]
     public function iHaveNoCertificateDataForInstitution($institution)
     {
         @unlink(__DIR__ . '/../../../../federation-metadata/' . $institution . '.cache');
     }
 
-    /**
-     * @Given /^I have an invalid cached identity provider for "([^"]*)"$/
-     */
+    #[Given('/^I have an invalid cached identity provider for "([^"]*)"$/')]
     public function iHaveAnInvalidCertificateDataForInstitution($institution) {
         file_put_contents(__DIR__ . '/../../../../federation-metadata/' . $institution . '.cache',
         '{
@@ -249,17 +213,13 @@ class WebContext implements Context
         }');
     }
 
-    /**
-     * @Given I send an authentication request to :destination without NameID
-     */
+    #[Given('I send an authentication request to :destination without NameID')]
     public function iSendAnAuthenticationRequestRequestToWithoutNameID($destination, $nameId = "")
     {
         $this->iSendAnAuthenticationRequestRequestToWithNameID($destination);
     }
 
-    /**
-     * @Then the SAML Response should contain element :elementName with value :value
-     */
+    #[Then('the SAML Response should contain element :elementName with value :value')]
     public function theSamlResponseShouldContainElementWithValue($elementName, $value)
     {
         $responseXml = $this->receiveResponse();
@@ -278,9 +238,7 @@ class WebContext implements Context
         );
     }
 
-    /**
-     * @Given the SAML Response should contain element :elementName with attribute :attributeName with attribute value :expectedAttributeValue
-     */
+    #[Given('the SAML Response should contain element :elementName with attribute :attributeName with attribute value :expectedAttributeValue')]
     public function theSAMLResponseShouldContainElementWithAttributeWithAttributeValue(
         $elementName,
         $attributeName,
@@ -308,9 +266,7 @@ class WebContext implements Context
         );
     }
 
-    /**
-     * @Given the SAML Response should contain element :elementName with value containing :value
-     */
+    #[Given('the SAML Response should contain element :elementName with value containing :value')]
     public function theSamlResponseShouldContainElementWithValueContaining($elementName, $value) {
         $responseXml = $this->receiveResponse();
         $elementSearchResult = $this->getElementByName($responseXml, $elementName);
@@ -328,9 +284,7 @@ class WebContext implements Context
         );
     }
 
-    /**
-     * @Given /^I should see a NameID with email address "(?P<emailAddress>(?:[^"]|\\")*)"$/
-     */
+    #[Given('/^I should see a NameID with email address "(?P<emailAddress>(?:[^"]|\\\\")*)"$/')]
     public function iShouldSeeANameIDWithEmailAddress($emailAddress){
 
         $quotedEmailAddress = preg_quote($emailAddress);
@@ -345,9 +299,7 @@ class WebContext implements Context
         }
     }
 
-    /**
-     * @Given I have :language set as my stepup-locale cookie value
-     */
+    #[Given('I have :language set as my stepup-locale cookie value')]
     public function iHaveSetAsMyPreference($language)
     {
         $this->minkContext->getSession()->setCookie('stepup_locale', $language);
@@ -361,9 +313,8 @@ class WebContext implements Context
         }
         $responseValue = $samlResponse->getValue();
         $response = base64_decode($responseValue);
-        $responseXml = DOMDocumentFactory::fromString($response);
 
-        return $responseXml;
+        return DOMDocumentFactory::fromString($response);
     }
 
     private function getElementsByName(\DOMDocument $responseXml, $elementName): DOMNodeList
@@ -394,9 +345,7 @@ class WebContext implements Context
         return $elementSearchResults->item(0);
     }
 
-    /**
-     * @Given /^the received AuthNRequest should have the ForceAuthn attribute$/
-     */
+    #[Given('/^the received AuthNRequest should have the ForceAuthn attribute$/')]
     public function theReceivedAuthNRequestShouldHaveTheForceAuthnAttribute()
     {
         // Get the AuthNRequest from the current URL, so only redirect binding is supported here!

@@ -52,12 +52,14 @@ class InstitutionConfigurationData
                 throw new InvalidInstitutionException('The destination cannot be an empty string when no metadata URL is provided.');
             }
 
+            /** @var array<mixed> $certificates */
             foreach ($certificates as $certificate) {
                 if (!is_string($certificate) || trim($certificate) === '') {
                     throw new InvalidInstitutionException('Each certificate must be a non-empty string.');
                 }
             }
 
+            /** @var array<string> $certificates */
             $this->entityId = $entityId;
             $this->destination = $destination;
             $this->certificates = $certificates;

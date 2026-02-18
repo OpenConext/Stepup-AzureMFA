@@ -21,7 +21,9 @@ namespace Surfnet\AzureMfa\Test\Features\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Hook\BeforeScenario;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Step\Then;
 
 class MockIDPContext implements Context
 {
@@ -32,18 +34,15 @@ class MockIDPContext implements Context
 
     /**
      * Fetch the required contexts.
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         $environment = $scope->getEnvironment();
         $this->minkContext = $environment->getContext(MinkContext::class);
     }
 
-    /**
-     * @Then /^the login with Azure MFA succeeds and the following attributes are released:$/
-     */
+    #[Then('/^the login with Azure MFA succeeds and the following attributes are released:$/')]
     public function theLoginToAzureMFASucceeds(TableNode $table)
     {
         $attributes = [];
@@ -69,18 +68,14 @@ class MockIDPContext implements Context
         $this->minkContext->pressButton('Submit assertion');
     }
 
-    /**
-     * @Then /^the login with Azure MFA gets cancelled$/
-     */
+    #[Then('/^the login with Azure MFA gets cancelled$/')]
     public function theLoginToAzureMFAGetsCancelled(){
 
         $this->minkContext->pressButton('user-cancel');
         $this->minkContext->pressButton('Submit assertion');
     }
 
-    /**
-     * @Then /^the login with Azure MFA fails$/
-     */
+    #[Then('/^the login with Azure MFA fails$/')]
     public function theLoginToAzureMFAFails(){
 
         $this->minkContext->pressButton('unknown');

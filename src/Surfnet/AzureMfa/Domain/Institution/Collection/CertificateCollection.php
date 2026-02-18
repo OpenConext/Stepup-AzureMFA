@@ -37,6 +37,8 @@ class CertificateCollection
     public static function fromStringArray(array $certificates): self
     {
         $certCollection = new self();
+
+        /** @var mixed[] $certificates */
         foreach ($certificates as $certData) {
             if (!is_string($certData)) {
                 throw new InvalidCertificateException('This certificate should be a string');

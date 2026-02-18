@@ -18,6 +18,7 @@
 
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\ValueObject;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\EmailAddress;
 use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
@@ -32,9 +33,7 @@ class EmailDomainTest extends TestCase
         $this->assertEquals('test.example.com', $domain->getEmailDomain());
     }
 
-    /**
-     * @dataProvider provideInvalidDomains
-     */
+    #[DataProvider('provideInvalidDomains')]
     public function test_misuse(string $input, string $expectedMessage) : void
     {
         $this->expectException(InvalidEmailDomainException::class);
@@ -42,9 +41,7 @@ class EmailDomainTest extends TestCase
         new EmailDomain($input);
     }
 
-    /**
-     * @dataProvider provideDomainMatches
-     */
+    #[DataProvider('provideDomainMatches')]
     public function test_domain_matches($configuredDomain, $testedEmail)
     {
         $domain = new EmailDomain($configuredDomain);
@@ -52,9 +49,7 @@ class EmailDomainTest extends TestCase
         $this->assertTrue($domain->domainMatches($email));
     }
 
-    /**
-     * @dataProvider provideDomainMismatches
-     */
+    #[DataProvider('provideDomainMismatches')]
     public function test_domain_mismatches($configuredDomain, $testedEmail)
     {
         $domain = new EmailDomain($configuredDomain);
@@ -62,7 +57,7 @@ class EmailDomainTest extends TestCase
         $this->assertFalse($domain->domainMatches($email));
     }
 
-    public function provideInvalidDomains() : array
+    public static function provideInvalidDomains() : array
     {
         return [
             'empty domain' => ['', 'The email domain can not be an empty string.'],
@@ -74,7 +69,7 @@ class EmailDomainTest extends TestCase
         ];
     }
 
-    public function provideDomainMatches() : array
+    public static function provideDomainMatches() : array
     {
         return [
             ['example.com', 'stybar@example.com'],
@@ -85,7 +80,7 @@ class EmailDomainTest extends TestCase
         ];
     }
 
-    public function provideDomainMismatches() : array
+    public static function provideDomainMismatches() : array
     {
         return [
             ['example.com', 'wout@van.aeart.be'],

@@ -33,7 +33,7 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionConfigurationData
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) - This factory, by design has high coupling. Coupling could be
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") - This factory, by design has high coupling. Coupling could be
  * reduced by introducing additional factories, but this would only complicate the simple creation logic that is now
  * used
  */
@@ -99,9 +99,6 @@ class ConfigurationFactory
         return new EmailDomain($domain);
     }
 
-    /**
-     * @return InstitutionConfigurationData|null
-     */
     public function getEntity(InstitutionName $institutionName): ?InstitutionConfigurationData
     {
         return $this->entities[$institutionName->getInstitutionName()] ?? null;

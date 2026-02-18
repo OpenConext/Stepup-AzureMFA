@@ -67,8 +67,8 @@ final class SPController extends AbstractController
         $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->identityProvider);
 
         // Set nameId when we want to authenticate.
-        if ($request->get('action') === 'authenticate') {
-            $authnRequest->setSubject($request->get('NameID'));
+        if ($request->request->get('action') === 'authenticate') {
+            $authnRequest->setSubject($request->request->get('NameID'));
         }
 
         // Create redirect response.
@@ -77,7 +77,7 @@ final class SPController extends AbstractController
         $response = new RedirectResponse($url);
 
         // Set Stepup request id header.
-        $stepupRequestId = $request->get('X-Stepup-Request-Id');
+        $stepupRequestId = $request->request->get('X-Stepup-Request-Id');
         if (!empty($stepupRequestId)) {
             $response->headers->set('X-Stepup-Request-Id', $stepupRequestId);
         }

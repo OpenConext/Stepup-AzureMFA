@@ -19,6 +19,7 @@
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\ValueObject;
 
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Certificate;
@@ -42,9 +43,7 @@ class CertificateTest extends TestCase
         $this->assertEquals('5e12a02a08a65c97535adf9792fb6c2bd16cb286529a15efc97cf9ddd3db67c0', $cert->getFingerprint());
     }
 
-    /**
-     * @dataProvider provideInvalidCertificates
-     */
+    #[DataProvider('provideInvalidCertificates')]
     public function test_misuse(string $input, string $expectedMessage) : void
     {
         $this->expectException(InvalidCertificateException::class);
@@ -52,7 +51,7 @@ class CertificateTest extends TestCase
         new Certificate($input);
     }
 
-    public function provideInvalidCertificates() : Generator
+    public static function provideInvalidCertificates() : Generator
     {
         yield ['', 'The IdP certificate can not be an empty string.'];
         yield ['foobar', 'Invalid X509 certificate, please configure the certificate in PEM formatting (with header and footer)'];

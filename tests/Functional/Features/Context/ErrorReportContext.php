@@ -24,6 +24,8 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\StepScope;
 use Behat\Gherkin\Node\NodeInterface;
 use Behat\Gherkin\Node\ScenarioInterface;
+use Behat\Hook\AfterStep;
+use Behat\Hook\BeforeScenario;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
 use Behat\MinkExtension\Context\MinkContext;
@@ -42,11 +44,8 @@ class ErrorReportContext implements Context
 
     /**
      * Fetch the required contexts.
-     *
-     * @param BeforeScenarioScope $scope
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope)
     {
 
@@ -56,11 +55,8 @@ class ErrorReportContext implements Context
 
     /**
      * This will print the failed html result.
-     *
-     * @param AfterStepScope $scope
-     *
-     * @AfterStep
      */
+    #[AfterStep]
     public function dumpInfoAfterFailedStep(AfterStepScope $scope)
     {
         if ($this->stepIsSuccessful($scope)) {
@@ -108,7 +104,6 @@ class ErrorReportContext implements Context
     /**
      * Save the page result file to disk.
      *
-     * @param AfterStepScope $scope
      * @param string $fileName
      */
     private function saveErrorFile(AfterStepScope $scope, $fileName)
@@ -142,7 +137,6 @@ TEXT;
     /**
      * Returns the scenaro for a given step.
      *
-     * @param StepScope $scope
      *
      * @return ScenarioInterface
      */
@@ -165,7 +159,6 @@ TEXT;
     /**
      * Returns the scenario for a given step.
      *
-     * @param StepScope $scope
      *
      * @return NodeInterface|null
      */

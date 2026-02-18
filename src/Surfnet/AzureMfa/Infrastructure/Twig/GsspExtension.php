@@ -24,18 +24,15 @@ use RuntimeException;
 use Surfnet\SamlBundle\Entity\HostedEntities;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\Attribute\AsTwigFunction;
 
-final class GsspExtension extends AbstractExtension
+final class GsspExtension
 {
     public function __construct(private readonly HostedEntities $hostedEntities)
     {
     }
 
-    public function getFunctions(): array
-    {
-        return [new TwigFunction('demoSpUrl', $this->generateDemoSPUrl(...))];
-    }
-
+    #[AsTwigFunction(name: 'demoSpUrl')]
     public function generateDemoSPUrl(): string
     {
         $idp = $this->hostedEntities->getIdentityProvider();

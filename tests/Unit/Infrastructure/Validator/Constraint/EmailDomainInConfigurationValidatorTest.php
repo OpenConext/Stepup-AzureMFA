@@ -21,6 +21,7 @@ namespace Surfnet\AzureMfa\Infrastructure\Validator\Constraint;
 use Generator;
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
@@ -84,16 +85,14 @@ class EmailDomainInConfigurationValidatorTest extends TestCase
         $this->assertNull($this->validator->validate('foobar@stepup.example.com', new EmailDomainInConfiguration()));
     }
 
-    /**
-     * @dataProvider provideInvalidInput
-     */
+    #[DataProvider('provideInvalidInput')]
     public function test_invalid_input($invalidValue, $constraint): void
     {
         $this->expectException(UnexpectedTypeException::class);
         $this->validator->validate($invalidValue, $constraint);
     }
 
-    public function provideInvalidInput(): Generator
+    public static function provideInvalidInput(): Generator
     {
         yield ['foobar@inval$d', new EmailDomainInConfiguration()];
         yield ['foobar@example.com', new Isbn()];

@@ -41,7 +41,6 @@ class EmailAddress
 
     /**
      * Returns the lower cased domain name of the email address
-     * @return string
      */
     public function getDomain(): string
     {

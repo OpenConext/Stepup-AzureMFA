@@ -18,6 +18,7 @@
 
 namespace Surfnet\AzureMfa\Test\Unit\Domain\Institution\ValueObject;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\AzureMfa\Domain\Exception\InvalidDestinationException;
 use Surfnet\AzureMfa\Domain\Institution\ValueObject\Destination;
@@ -30,9 +31,7 @@ class DestinationTest extends TestCase
         $this->assertEquals('https://test.example.com/adfs', $destination->getUrl());
     }
 
-    /**
-     * @dataProvider provideInvalidDestinations
-     */
+    #[DataProvider('provideInvalidDestinations')]
     public function test_misuse(string $input, string $expectedMessage) : void
     {
         $this->expectException(InvalidDestinationException::class);
@@ -40,7 +39,7 @@ class DestinationTest extends TestCase
         new Destination($input);
     }
 
-    public function provideInvalidDestinations() : array
+    public static function provideInvalidDestinations() : array
     {
         return [
             'empty destination' => ['', 'The destination URL can not be an empty string.'],

@@ -183,10 +183,7 @@ class MockAzureMfaControllerTest extends WebTestCase
     }
 
     /**
-     * @param ServiceProvider $serviceProvider
-     * @param IdentityProvider $identityProvider
      * @param string $url
-     * @param string $emailAddress
      * @return string
      */
     private function createAuthnRequestUrl(ServiceProvider $serviceProvider, IdentityProvider $identityProvider, string $emailAddress)
@@ -211,7 +208,6 @@ class MockAzureMfaControllerTest extends WebTestCase
 
     private function createServiceProvider(): ServiceProvider
     {
-        $samlBundle = '';
         return new ServiceProvider(
             [
                 'entityId' => 'https://azuremfa.dev.openconext.local/saml/metadata',
@@ -250,8 +246,6 @@ class MockAzureMfaControllerTest extends WebTestCase
     /**
      * Sign AuthnRequest query parameters.
      *
-     * @param array $queryParams
-     * @param ServiceProvider $serviceProvider
      * @return string
      *
      * @throws Exception
@@ -270,9 +264,7 @@ class MockAzureMfaControllerTest extends WebTestCase
     /**
      * Loads the private key from the service provider.
      *
-     * @param ServiceProvider $serviceProvider
      * @return XMLSecurityKey
-     *
      * @throws Exception
      */
     private function loadServiceProviderPrivateKey(ServiceProvider $serviceProvider)
@@ -288,7 +280,6 @@ class MockAzureMfaControllerTest extends WebTestCase
     }
 
     /**
-     * @param Crawler $crawler
      * @param string $state State button to press
      * @param string[]|null $emailAddresses
      * @return Crawler
