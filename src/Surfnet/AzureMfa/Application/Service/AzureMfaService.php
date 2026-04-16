@@ -64,7 +64,7 @@ class AzureMfaService
     public function startRegistration(EmailAddress $emailAddress): User
     {
         // TODO: test attempts / blocked
-        $this->logger->info('Generating a new UserId based on the user email address');
+        $this->logger->info('Generating a new UserId based on the user email address '.$emailAddress->getEmailAddress());
         $userId = UserId::generate($emailAddress);
         $user = new User($userId, $emailAddress, UserStatus::pending());
 
@@ -76,16 +76,16 @@ class AzureMfaService
 
     public function finishRegistration(UserId $userId): UserId
     {
-        $this->logger->info('Finishing the registration');
+        $this->logger->info('Finishing the registration for userId '.$userId->getUserId());
         /** @var User $user */
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
             throw new InvalidMfaAuthenticationContextException(
-                'Unknown registration context another process is started in the meantime'
+                'Unknown registration context another process is started in the meantime for userId '. $userId->getUserId()
             );
         }
-        $this->logger->info('Updating user session: removing');
+        $this->logger->info('removing user session for '.$userId->getUserId());
         $this->session->remove('user');
 
         return $userId;
@@ -93,10 +93,10 @@ class AzureMfaService
 
     public function startAuthentication(UserId $userId): User
     {
-        $this->logger->info('Starting an authentication based on the provided UserId');
+        $this->logger->info('Starting an authentication based on the provided UserId:'.$userId->getUserId());
         $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
 
-        $this->logger->info('Updating user session: status registered');
+        $this->logger->info('Updating user session: status registered for userId:'.$userId->getUserId());
         $this->session->set('user', $user);
 
         return $user;
@@ -104,17 +104,17 @@ class AzureMfaService
 
     public function finishAuthentication(UserId $userId): UserId
     {
-        $this->logger->info('Finishing the authentication');
+        $this->logger->info('Finishing the authenticationfor userId: '.$userId->getUserId());
         /** @var User $user */
         $user = $this->session->get('user');
 
         if (!$userId->isEqual($user->getUserId())) {
             throw new InvalidMfaAuthenticationContextException(
-                'Unknown authentication context another process is started in the meantime'
+                'Unknown authentication context another process is started in the meantime for userId:'.$userId->getUserId()
             );
         }
 
-        $this->logger->info('Updating user session: removing');
+        $this->logger->info('Removing user session for '.$userId->getUserId());
         $this->session->remove('user');
 
         return $userId;
@@ -122,9 +122,9 @@ class AzureMfaService
 
     public function createAuthnRequest(User $user, bool $forceAuthn = false): string
     {
-        $this->logger->info('Creating a SAML2 AuthnRequest to send to the Azure MFA IdP');
+        $this->logger->info('Creating a SAML2 AuthnRequest to send to the Azure MFA IdP for user:'.$user->getEmailAddress()->getEmailAddress());
 
-        $this->logger->info('Retrieve the institution for the authenticating/registering user');
+        $this->logger->info('Retrieve the institution for the authenticating/registering user: '.$user->getEmailAddress()->getEmailAddress());
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
         if (null === $institution) {
             $message = sprintf(
@@ -146,13 +146,13 @@ class AzureMfaService
 
         // Use email address as subject if not sending to an AzureAD IdP
         if (!$azureMfaIdentityProvider->isAzureAD()) {
-            $this->logger->info('Setting the users email address as the Subject');
+            $this->logger->info('Setting the users email address '.$user->getEmailAddress().' as the Subject for the request to '.$azureMfaIdentityProvider->getEntityId());
             $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
         }
 
         // Set authnContextClassRef to force MFA
         $this->logger->info(
-            'Setting "http://schemas.microsoft.com/claims/multipleauthn" as the authentication context class reference'
+            'Setting "http://schemas.microsoft.com/claims/multipleauthn" as the authentication context class reference for the request to '.$azureMfaIdentityProvider->getEntityId()
         );
         $authnRequest->setAuthenticationContextClassRef('http://schemas.microsoft.com/claims/multipleauthn');
 
@@ -183,7 +183,7 @@ class AzureMfaService
         assert($user instanceof User);
 
         // Retrieve its institution and identity provider
-        $this->logger->info('Match the user email address to one of the registered institutions');
+        $this->logger->info('Match the user email address '.$user->getEmailAddress().'to one of the registered institutions');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
         if (is_null($institution)) {
             throw new AzureADException('The Institution could not be found using the users mail address');
@@ -209,12 +209,20 @@ class AzureMfaService
 
             $azureMfaIdentityProvider = $this->identityProviderCache->rebuild($institution->getName());
 
-            $this->logger->info('Reprocess the SAML Response after updating the metadata');
-            $assertion = $this->postBinding->processResponse(
-                $request,
-                $azureMfaIdentityProvider,
-                $this->serviceProvider
-            );
+            $this->logger->info('Reprocess the SAML Response from '.$institution->getName()->getInstitutionName().' after updating the metadata');
+            try {
+                $assertion = $this->postBinding->processResponse(
+                    $request,
+                    $azureMfaIdentityProvider,
+                    $this->serviceProvider
+                );
+            } catch (Exception $retryException) {
+                $this->logger->error(sprintf(
+                    'Unable to validate signature after refreshing metadata for %s',
+                    $institution->getName()->getInstitutionName()
+                ));
+                throw $retryException;
+            }
         }
 
         $attributes = $assertion->getAttributes();
@@ -223,27 +231,34 @@ class AzureMfaService
         // the SAML response attribute 'http://schemas.microsoft.com/claims/authnmethodsreferences'
         // should contain 'http://schemas.microsoft.com/claims/multipleauthn'
         if ($azureMfaIdentityProvider->isAzureAD()) {
-            $this->logger->info('This is an AzureAD IdP. Validating authnmethodsreferences in the response.');
+            $this->logger->info($institution->getName()->getInstitutionName().' is an AzureAD IdP. Validating authnmethodsreferences in the response.');
             if (!isset($attributes['http://schemas.microsoft.com/claims/authnmethodsreferences']) || !in_array('http://schemas.microsoft.com/claims/multipleauthn', $attributes['http://schemas.microsoft.com/claims/authnmethodsreferences'])) {
                 throw new AzureADException(
-                    'No http://schemas.microsoft.com/claims/multipleauthn in authnmethodsreferences.'
+                    'No http://schemas.microsoft.com/claims/multipleauthn in authnmethodsreferences response from '.$institution->getName()->getInstitutionName()
                 );
             }
         }
 
         if (!isset($attributes[self::SAML_EMAIL_ATTRIBUTE])) {
             throw new MissingMailAttributeException(
-                'The mail attribute in the Azure MFA assertion was missing'
+                'The mail attribute in the Azure MFA assertion from '.$institution->getName()->getInstitutionName(). 'was missing'
             );
         }
 
         if (!in_array(strtolower($user->getEmailAddress()->getEmailAddress()), array_map('strtolower', $attributes[self::SAML_EMAIL_ATTRIBUTE]))) {
-            throw new MailAttributeMismatchException(
-                'The mail attribute from the Azure MFA assertion did not contain the email address provided during registration'
-            );
+            throw new MailAttributeMismatchException(sprintf(
+                'The mail attribute (%s) from the Azure MFA assertion from %s did not contain the email address provided during registration (%s)',
+                $attributes[self::SAML_EMAIL_ATTRIBUTE],
+                $institution->getName()->getInstitutionName(),
+                strtolower($user->getEmailAddress()->getEmailAddress())
+            ));
         }
 
-        $this->logger->info('The mail attribute in the response matched the email address of the registering/authenticating user');
-        return $user;
+            $this->logger->info(sprintf(
+                'The mail attribute in the response %s matched the email address of the registering/authenticating user: %s',
+                $attributes[self::SAML_EMAIL_ATTRIBUTE],
+                $user->getEmailAddress()->getEmailAddress()
+            ));
+            return $user;
     }
 }
