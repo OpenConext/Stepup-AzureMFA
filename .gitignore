@@ -87,3 +87,5 @@ local-php-security-checker
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+.phplint.cache/
