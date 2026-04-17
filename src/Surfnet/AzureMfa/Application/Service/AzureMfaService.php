@@ -24,6 +24,8 @@ use Psr\Log\LoggerInterface;
 use Surfnet\AzureMfa\Application\Exception\InvalidMfaAuthenticationContextException;
 use Surfnet\AzureMfa\Application\Institution\Service\EmailDomainMatchingService;
 use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\IdentityProviderInterface;
+use Surfnet\AzureMfa\Domain\Institution\ValueObject\Institution;
 use Surfnet\AzureMfa\Domain\Exception\AzureADException;
 use Surfnet\AzureMfa\Domain\Exception\InstitutionNotFoundException;
 use Surfnet\AzureMfa\Domain\Exception\MailAttributeMismatchException;
@@ -33,6 +35,7 @@ use Surfnet\AzureMfa\Domain\UserId;
 use Surfnet\AzureMfa\Domain\UserStatus;
 use Surfnet\AzureMfa\Infrastructure\Cache\IdentityProviderFactoryCache;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
+use SAML2\Assertion;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -146,7 +149,7 @@ class AzureMfaService
 
         // Use email address as subject if not sending to an AzureAD IdP
         if (!$azureMfaIdentityProvider->isAzureAD()) {
-            $this->logger->info('Setting the users email address '.$user->getEmailAddress().' as the Subject for the request to '.$azureMfaIdentityProvider->getEntityId());
+            $this->logger->info('Setting the users email address '.$user->getEmailAddress()->getEmailAddress().' as the Subject for the request to '.$azureMfaIdentityProvider->getEntityId());
             $authnRequest->setSubject($user->getEmailAddress()->getEmailAddress());
         }
 
@@ -183,20 +186,35 @@ class AzureMfaService
         assert($user instanceof User);
 
         // Retrieve its institution and identity provider
-        $this->logger->info('Match the user email address '.$user->getEmailAddress().'to one of the registered institutions');
+        $this->logger->info('Match the user email address '.$user->getEmailAddress()->getEmailAddress().' to one of the registered institutions');
         $institution = $this->matchingService->findInstitutionByEmail($user->getEmailAddress());
         if (is_null($institution)) {
             throw new AzureADException('The Institution could not be found using the users mail address');
         }
         $azureMfaIdentityProvider = $this->identityProviderCache->build($institution->getName());
 
+        $assertion = $this->processSamlResponse($request, $institution, $azureMfaIdentityProvider);
+        $attributes = $assertion->getAttributes();
+
+        $this->validateResponseAttributes($attributes, $institution, $azureMfaIdentityProvider, $user);
+
+        $this->logger->info(sprintf(
+            'The mail attribute in the response %s matched the email address of the registering/authenticating user: %s',
+            implode(', ', $attributes[self::SAML_EMAIL_ATTRIBUTE]),
+            $user->getEmailAddress()->getEmailAddress()
+        ));
+
+        return $user;
+    }
+
+    private function processSamlResponse(
+        Request $request,
+        Institution $institution,
+        IdentityProviderInterface $azureMfaIdentityProvider,
+    ): Assertion {
         try {
             $this->logger->info('Process the SAML Response');
-            $assertion = $this->postBinding->processResponse(
-                $request,
-                $azureMfaIdentityProvider,
-                $this->serviceProvider
-            );
+            return $this->postBinding->processResponse($request, $azureMfaIdentityProvider, $this->serviceProvider);
         } catch (Exception $e) {
             // If the signature validation fails, we try to rebuild the identity provider
             // This will effectively refresh the metadata for the institution
@@ -204,29 +222,32 @@ class AzureMfaService
             if (!$institution->supportsMetadataUpdate() || $e->getMessage() !== 'Unable to validate Signature') {
                 throw $e;
             }
-
-            $this->logger->info(sprintf('Unable to validate signature refreshing metadata for %s', $institution->getName()->getInstitutionName()));
-
-            $azureMfaIdentityProvider = $this->identityProviderCache->rebuild($institution->getName());
-
-            $this->logger->info('Reprocess the SAML Response from '.$institution->getName()->getInstitutionName().' after updating the metadata');
-            try {
-                $assertion = $this->postBinding->processResponse(
-                    $request,
-                    $azureMfaIdentityProvider,
-                    $this->serviceProvider
-                );
-            } catch (Exception $retryException) {
-                $this->logger->error(sprintf(
-                    'Unable to validate signature after refreshing metadata for %s',
-                    $institution->getName()->getInstitutionName()
-                ));
-                throw $retryException;
-            }
         }
 
-        $attributes = $assertion->getAttributes();
+        $this->logger->info(sprintf('Unable to validate signature refreshing metadata for %s', $institution->getName()->getInstitutionName()));
+        $azureMfaIdentityProvider = $this->identityProviderCache->rebuild($institution->getName());
 
+        $this->logger->info('Reprocess the SAML Response from '.$institution->getName()->getInstitutionName().' after updating the metadata');
+        try {
+            return $this->postBinding->processResponse($request, $azureMfaIdentityProvider, $this->serviceProvider);
+        } catch (Exception $retryException) {
+            $this->logger->error(sprintf(
+                'Unable to validate signature after refreshing metadata for %s',
+                $institution->getName()->getInstitutionName()
+            ));
+            throw $retryException;
+        }
+    }
+
+    /**
+     * @param array<string, array<string>> $attributes
+     */
+    private function validateResponseAttributes(
+        array $attributes,
+        Institution $institution,
+        IdentityProviderInterface $azureMfaIdentityProvider,
+        User $user,
+    ): void {
         // If the IDP was an AzureAD endpoint (the entityID or Issuer starts with https://login.microsoftonline.com/, or preferably an config parameter in institutions.yaml)
         // the SAML response attribute 'http://schemas.microsoft.com/claims/authnmethodsreferences'
         // should contain 'http://schemas.microsoft.com/claims/multipleauthn'
@@ -241,24 +262,17 @@ class AzureMfaService
 
         if (!isset($attributes[self::SAML_EMAIL_ATTRIBUTE])) {
             throw new MissingMailAttributeException(
-                'The mail attribute in the Azure MFA assertion from '.$institution->getName()->getInstitutionName(). 'was missing'
+                'The mail attribute in the Azure MFA assertion from '.$institution->getName()->getInstitutionName().' was missing'
             );
         }
 
         if (!in_array(strtolower($user->getEmailAddress()->getEmailAddress()), array_map('strtolower', $attributes[self::SAML_EMAIL_ATTRIBUTE]))) {
             throw new MailAttributeMismatchException(sprintf(
                 'The mail attribute (%s) from the Azure MFA assertion from %s did not contain the email address provided during registration (%s)',
-                $attributes[self::SAML_EMAIL_ATTRIBUTE],
+                implode(', ', $attributes[self::SAML_EMAIL_ATTRIBUTE]),
                 $institution->getName()->getInstitutionName(),
                 strtolower($user->getEmailAddress()->getEmailAddress())
             ));
         }
-
-            $this->logger->info(sprintf(
-                'The mail attribute in the response %s matched the email address of the registering/authenticating user: %s',
-                $attributes[self::SAML_EMAIL_ATTRIBUTE],
-                $user->getEmailAddress()->getEmailAddress()
-            ));
-            return $user;
     }
 }
