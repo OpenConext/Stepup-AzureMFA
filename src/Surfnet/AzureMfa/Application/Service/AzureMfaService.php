@@ -113,7 +113,7 @@ class AzureMfaService
 
         if (!$userId->isEqual($user->getUserId())) {
             throw new InvalidMfaAuthenticationContextException(
-                'Unknown authentication context another process is started in the meantime for userId:'.$userId->getUserId()
+                'Unknown authentication context another process is started in the meantime for userId: '.$userId->getUserId()
             );
         }
 
