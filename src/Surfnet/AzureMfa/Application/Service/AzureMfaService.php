@@ -96,7 +96,7 @@ class AzureMfaService
 
     public function startAuthentication(UserId $userId): User
     {
-        $this->logger->info('Starting an authentication based on the provided UserId:'.$userId->getUserId());
+        $this->logger->info('Starting an authentication based on the provided UserId: '.$userId->getUserId());
         $user = new User($userId, $userId->getEmailAddress(), UserStatus::registered());
 
         $this->logger->info('Updating user session: status registered for userId:'.$userId->getUserId());
