@@ -1,5 +1,7 @@
-# 3.0.0
+# Next
 - Upgrade code to run on Symfony 7.4
+- Improve logging
+- Update dependencies #198
 
 # 2.2.0
 - Allow metadata url keyrollover #197
