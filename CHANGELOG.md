@@ -1,4 +1,4 @@
-# Next
+# 3.0.0
 - Upgrade code to run on Symfony 7.4
 - Improve logging
 - Update dependencies #198
