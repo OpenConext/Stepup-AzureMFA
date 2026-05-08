@@ -61,7 +61,7 @@ Feature: When an user needs to register for a new token
     And I fill in "email_address_emailAddress" with "test-user@unknown-domain.example.com"
     When I press "Next"
     Then I should be on "https://azuremfa.dev.openconext.local/registration"
-    And the response status code should be 200
+    And the response status code should be 422
     And I should see "The provided email address did not match any of our configured email domains."
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page
