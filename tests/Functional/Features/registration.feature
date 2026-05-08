@@ -55,16 +55,14 @@ Feature: When an user needs to register for a new token
     Then I should be on "https://azuremfa.dev.openconext.local/saml/sso_return"
     And the SAML Response should contain element "StatusCode" with attribute "Value" with attribute value "urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"
 
-  Scenario: Registration fails when an invalid email address is provided by the user
+  Scenario: Registration shows a validation error when an unknown email domain is provided
     Given I send a registration request to "https://azuremfa.dev.openconext.local/saml/sso"
-    # Fill an email address that does not match any of the configured email domains
     Then I should see "Registration"
-    And I fill in "email_address_emailAddress" with "test-user@institution-xample.com"
+    And I fill in "email_address_emailAddress" with "test-user@unknown-domain.example.com"
     When I press "Next"
     Then I should be on "https://azuremfa.dev.openconext.local/registration"
-    And the response status code should be 500
-# Todo: investigate do we need to show an error page or a validation error?
-#    And I should see "The provided email address did not match any of our configured email domains."
+    And the response status code should be 200
+    And I should see "The provided email address did not match any of our configured email domains."
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page
     Given a normal SAML 2.0 AuthnRequest from an unknown service provider
