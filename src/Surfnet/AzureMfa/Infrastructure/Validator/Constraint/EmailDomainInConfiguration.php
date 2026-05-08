@@ -20,11 +20,10 @@ declare(strict_types = 1);
 
 namespace Surfnet\AzureMfa\Infrastructure\Validator\Constraint;
 
+use Attribute;
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD)]
 class EmailDomainInConfiguration extends Constraint
 {
     public string $message = 'The provided email address did not match any of our configured email domains.';

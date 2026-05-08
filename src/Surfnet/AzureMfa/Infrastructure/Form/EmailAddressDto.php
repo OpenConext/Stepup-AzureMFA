@@ -21,15 +21,14 @@ declare(strict_types = 1);
 namespace Surfnet\AzureMfa\Infrastructure\Form;
 
 use Surfnet\AzureMfa\Domain\EmailAddress;
+use Surfnet\AzureMfa\Infrastructure\Validator\Constraint\EmailDomainInConfiguration;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class EmailAddressDto
 {
-    /**
-     * @Surfnet\AzureMfa\Infrastructure\Validator\Constraint\EmailDomainInConfiguration
-     */
     #[Assert\NotBlank]
     #[Assert\Email]
+    #[EmailDomainInConfiguration]
     private string $emailAddress = '';
 
     public function setEmailAddress(string $emailAddress): void
