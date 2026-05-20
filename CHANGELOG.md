@@ -1,3 +1,7 @@
+# 3.0.1
+- Show a better error is an unknown email domain is used
+- Update dependencies
+
 # 3.0.0
 - Upgrade code to run on Symfony 7.4
 - Improve logging
