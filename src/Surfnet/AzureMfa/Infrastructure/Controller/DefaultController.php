@@ -54,9 +54,9 @@ class DefaultController extends AbstractController
 
 
     /**
-     * Replace this example code with whatever you need.
+     * Handle Azure MFA registration by using available GSSP attributes or asking the user for an email address.
      *
-     * See @see RegistrationService for a more clean example.
+     * Rejects failed registration callbacks and redirects valid registrations to the Azure MFA IdP.
      */
     #[Route(path: '/registration', name: 'azure_mfa_registration')]
     public function registration(Request $request): RedirectResponse|Response
@@ -105,9 +105,9 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * Replace this example code with whatever you need.
+     * Handle Azure MFA authentication by starting an authentication request for the current GSSP user.
      *
-     * See @see AuthenticationService for a more clean example.
+     * Rejects requests when authentication is not required and redirects valid requests to the Azure MFA IdP.
      */
     #[Route(path: '/authentication', name: 'azure_mfa_authentication')]
     public function authentication(): RedirectResponse|Response
@@ -125,7 +125,11 @@ class DefaultController extends AbstractController
         );
     }
 
-    #[Route(path: '/saml/acs', name: 'azure_mfa_acs')]
+    /**
+     * Handle the Azure MFA SAML ACS response from the remote IdP.
+     *
+     * Finishes pending registrations or successful authentications and replies to the service provider.
+     */#[Route(path: '/saml/acs', name: 'azure_mfa_acs')]
     public function acs(Request $request): Response
     {
         $this->logger->info('Receiving response from the Azure MFA remote IdP');
