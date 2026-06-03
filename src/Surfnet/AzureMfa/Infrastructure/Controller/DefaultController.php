@@ -88,10 +88,10 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->logger->info(
-                'Matched the user to an institution, continue registration by sending an ' .
-                'authentication request to the Azure MFA remote IdP'
-            );
+            $this->logger->info(sprintf(
+                'Matched the user "%s" to an institution, continue registration by sending an authentication request to the Azure MFA remote IdP',
+                $emailAddress->getEmailAddress()
+            ));
             $user = $this->azureMfaService->startRegistration(new EmailAddress($emailAddress->getEmailAddress()));
 
             return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
@@ -137,12 +137,18 @@ class DefaultController extends AbstractController
             // Check registration status
             if ($user->getStatus()->isPending()) {
                 // Handle registration, this user is already registered
-                $this->logger->info('Finishing the registration');
+                $this->logger->info(sprintf(
+                    'Finishing the registration for user "%s"',
+                    $user->getEmailAddress()->getEmailAddress()
+                ));
                 $userId = $this->azureMfaService->finishRegistration($user->getUserId());
                 $this->registrationService->register($userId->getUserId());
             } elseif ($user->getStatus()->isRegistered()) {
                 // Handle authentication, this user is already registered
-                $this->logger->info('Process the authentication');
+                $this->logger->info(sprintf(
+                    'Process the authentication for user "%s"',
+                    $user->getEmailAddress()->getEmailAddress()
+                ));
                 $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
