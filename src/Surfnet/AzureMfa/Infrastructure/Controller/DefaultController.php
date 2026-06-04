@@ -134,39 +134,41 @@ class DefaultController extends AbstractController
     {
         $this->logger->info('Receiving response from the Azure MFA remote IdP');
 
+        $userId = 'unknown';
+
         try {
             $this->logger->info('Load the associated Stepup user from this response');
             $user = $this->azureMfaService->handleResponse($request);
+            $userId = $user->getUserId()->getUserId();
 
             // Check registration status
             if ($user->getStatus()->isPending()) {
                 // Handle registration, this user is already registered
                 $this->logger->info(sprintf(
                     'Finishing the registration for user "%s"',
-                    $user->getEmailAddress()->getEmailAddress()
-                ));
+                    $userId                ));
                 $userId = $this->azureMfaService->finishRegistration($user->getUserId());
                 $this->registrationService->register($userId->getUserId());
             } elseif ($user->getStatus()->isRegistered()) {
                 // Handle authentication, this user is already registered
                 $this->logger->info(sprintf(
                     'Process the authentication for user "%s"',
-                    $user->getEmailAddress()->getEmailAddress()
-                ));
+                    $userId                ));
                 $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf(
-                    'The authentication or registration failed. Rejecting the Azure MFA response. Error message: "%s"',
+                    'The authentication or registration for user %s failed. Rejecting the Azure MFA response. Error message: "%s"',
+                    $userId,
                     $e->getMessage()
                 )
             );
             $this->registrationService->reject($request->get('message', ''));
         }
 
-        $this->logger->info('Sending a SAML response to the SP');
+        $this->logger->info(sprintf('Sending a SAML response to the SP for userId "%s"', $userId));
         return $this->registrationService->replyToServiceProvider();
     }
 }
