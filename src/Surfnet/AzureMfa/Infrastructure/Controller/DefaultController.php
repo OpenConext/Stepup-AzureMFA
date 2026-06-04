@@ -135,16 +135,12 @@ class DefaultController extends AbstractController
     {
         $this->logger->info('Receiving response from the Azure MFA remote IdP');
 
-        $userId = null;
-
         try {
             $this->logger->info('Load the associated Stepup user from this response');
             $user = $this->azureMfaService->handleResponse($request);
             $userId = $user->getUserId()->getUserId();
 
-            // Check registration status
             if ($user->getStatus()->isPending()) {
-                // Handle registration — user has completed Azure MFA, finalise the registration
                 $this->logger->info(sprintf(
                     'Finishing the registration for user "%s"',
                     $userId
@@ -152,7 +148,6 @@ class DefaultController extends AbstractController
                 $registeredUserId = $this->azureMfaService->finishRegistration($user->getUserId());
                 $this->registrationService->register($registeredUserId->getUserId());
             } elseif ($user->getStatus()->isRegistered()) {
-                // Handle authentication, this user is already registered
                 $this->logger->info(sprintf(
                     'Process the authentication for user "%s"',
                     $userId
@@ -170,7 +165,7 @@ class DefaultController extends AbstractController
             $this->registrationService->reject($request->get('message', ''));
         }
 
-        $this->logger->info(sprintf('Sending a SAML response to the SP for userId "%s"', $userId ?? 'unknown'));
+        $this->logger->info('Sending a SAML response to the SP');
         return $this->registrationService->replyToServiceProvider();
     }
 }
