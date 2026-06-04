@@ -129,12 +129,13 @@ class DefaultController extends AbstractController
      * Handle the Azure MFA SAML ACS response from the remote IdP.
      *
      * Finishes pending registrations or successful authentications and replies to the service provider.
-     */#[Route(path: '/saml/acs', name: 'azure_mfa_acs')]
+     */
+    #[Route(path: '/saml/acs', name: 'azure_mfa_acs')]
     public function acs(Request $request): Response
     {
         $this->logger->info('Receiving response from the Azure MFA remote IdP');
 
-        $userId = 'unknown';
+        $userId = null;
 
         try {
             $this->logger->info('Load the associated Stepup user from this response');
@@ -143,32 +144,33 @@ class DefaultController extends AbstractController
 
             // Check registration status
             if ($user->getStatus()->isPending()) {
-                // Handle registration, this user is already registered
+                // Handle registration — user has completed Azure MFA, finalise the registration
                 $this->logger->info(sprintf(
                     'Finishing the registration for user "%s"',
-                    $userId                ));
-                $userId = $this->azureMfaService->finishRegistration($user->getUserId());
-                $this->registrationService->register($userId->getUserId());
+                    $userId
+                ));
+                $registeredUserId = $this->azureMfaService->finishRegistration($user->getUserId());
+                $this->registrationService->register($registeredUserId->getUserId());
             } elseif ($user->getStatus()->isRegistered()) {
                 // Handle authentication, this user is already registered
                 $this->logger->info(sprintf(
                     'Process the authentication for user "%s"',
-                    $userId                ));
+                    $userId
+                ));
                 $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf(
-                    'The authentication or registration for user %s failed. Rejecting the Azure MFA response. Error message: "%s"',
-                    $userId,
+                    'The authentication or registration failed. Rejecting the Azure MFA response. Error message: "%s"',
                     $e->getMessage()
                 )
             );
             $this->registrationService->reject($request->get('message', ''));
         }
 
-        $this->logger->info(sprintf('Sending a SAML response to the SP for userId "%s"', $userId));
+        $this->logger->info(sprintf('Sending a SAML response to the SP for userId "%s"', $userId ?? 'unknown'));
         return $this->registrationService->replyToServiceProvider();
     }
 }
