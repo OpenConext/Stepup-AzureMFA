@@ -13,7 +13,7 @@ COPY config/openconext/parameters.yaml.dist config/openconext/parameters.yaml
 COPY config/openconext/institutions.yaml.dist config/openconext/institutions.yaml
 COPY config/packages/prod/monolog.yaml.docker config/packages/prod/monolog.yaml
 
-COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chmod=755 ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Add the config files for Apache2
 RUN rm -rf /etc/apache2/sites-enabled/* && rm -rf /var/www/html/output.zip
