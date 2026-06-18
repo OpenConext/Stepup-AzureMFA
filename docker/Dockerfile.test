@@ -13,10 +13,13 @@ COPY config/openconext/parameters.yaml.dist config/openconext/parameters.yaml
 COPY config/openconext/institutions.yaml.dist config/openconext/institutions.yaml
 COPY config/packages/prod/monolog.yaml.docker config/packages/prod/monolog.yaml
 
+COPY --chmod=755 ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
 # Add the config files for Apache2
 RUN rm -rf /etc/apache2/sites-enabled/* && rm -rf /var/www/html/output.zip
 COPY ./docker/conf/azuremfa-apache2.conf /etc/apache2/sites-enabled/azuremfa.conf
 RUN rm -rf /var/www/html/var/cache/prod && chown -R www-data /var/www/html/var
 EXPOSE 80
 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["apache2-foreground"]

@@ -14,6 +14,8 @@ RUN tar -xvjf /tmp/*.tar.bz2 -C /var/www/html/ && \
 COPY config/openconext/parameters.yaml.dist config/openconext/parameters.yaml
 COPY config/openconext/institutions.yaml.dist config/openconext/institutions.yaml
 
+COPY --chmod=755 ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
 # Add the config files for Apache2
 RUN rm -rf /etc/apache2/sites-enabled/*
 COPY ./docker/conf/azuremfa-apache2.conf /etc/apache2/sites-enabled/azuremfa.conf
@@ -23,4 +25,5 @@ EXPOSE 80
 # Set the default workdir
 WORKDIR /var/www/html
 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["apache2-foreground"]
