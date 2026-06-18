@@ -1,7 +1,7 @@
 {
     "browserslist": "last 2 versions, ie 11, > 1%",
     "devDependencies": {
-        "@babel/core": "^7.28",
+        "@babel/core": "^7.29",
         "@babel/preset-env": "^7.28",
         "@symfony/webpack-encore": "^5.0",
         "compass-mixins": "^0.12",
