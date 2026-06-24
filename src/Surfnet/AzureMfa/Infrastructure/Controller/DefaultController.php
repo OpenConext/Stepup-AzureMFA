@@ -54,9 +54,9 @@ class DefaultController extends AbstractController
 
 
     /**
-     * Replace this example code with whatever you need.
+     * Handle Azure MFA registration by using available GSSP attributes or asking the user for an email address.
      *
-     * See @see RegistrationService for a more clean example.
+     * Rejects failed registration callbacks and redirects valid registrations to the Azure MFA IdP.
      */
     #[Route(path: '/registration', name: 'azure_mfa_registration')]
     public function registration(Request $request): RedirectResponse|Response
@@ -88,10 +88,10 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->logger->info(
-                'Matched the user to an institution, continue registration by sending an ' .
-                'authentication request to the Azure MFA remote IdP'
-            );
+            $this->logger->info(sprintf(
+                'Matched the user "%s" to an institution, continue registration by sending an authentication request to the Azure MFA remote IdP',
+                $emailAddress->getEmailAddress()
+            ));
             $user = $this->azureMfaService->startRegistration(new EmailAddress($emailAddress->getEmailAddress()));
 
             return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
@@ -105,9 +105,9 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * Replace this example code with whatever you need.
+     * Handle Azure MFA authentication by starting an authentication request for the current GSSP user.
      *
-     * See @see AuthenticationService for a more clean example.
+     * Rejects requests when authentication is not required and redirects valid requests to the Azure MFA IdP.
      */
     #[Route(path: '/authentication', name: 'azure_mfa_authentication')]
     public function authentication(): RedirectResponse|Response
@@ -125,6 +125,11 @@ class DefaultController extends AbstractController
         );
     }
 
+    /**
+     * Handle the Azure MFA SAML ACS response from the remote IdP.
+     *
+     * Finishes pending registrations or successful authentications and replies to the service provider.
+     */
     #[Route(path: '/saml/acs', name: 'azure_mfa_acs')]
     public function acs(Request $request): Response
     {
@@ -133,16 +138,20 @@ class DefaultController extends AbstractController
         try {
             $this->logger->info('Load the associated Stepup user from this response');
             $user = $this->azureMfaService->handleResponse($request);
+            $userId = $user->getUserId()->getUserId();
 
-            // Check registration status
             if ($user->getStatus()->isPending()) {
-                // Handle registration, this user is already registered
-                $this->logger->info('Finishing the registration');
-                $userId = $this->azureMfaService->finishRegistration($user->getUserId());
-                $this->registrationService->register($userId->getUserId());
+                $this->logger->info(sprintf(
+                    'Finishing the registration for user "%s"',
+                    $userId
+                ));
+                $registeredUserId = $this->azureMfaService->finishRegistration($user->getUserId());
+                $this->registrationService->register($registeredUserId->getUserId());
             } elseif ($user->getStatus()->isRegistered()) {
-                // Handle authentication, this user is already registered
-                $this->logger->info('Process the authentication');
+                $this->logger->info(sprintf(
+                    'Process the authentication for user "%s"',
+                    $userId
+                ));
                 $this->azureMfaService->finishAuthentication($user->getUserId());
                 $this->authenticationService->authenticate();
             }
