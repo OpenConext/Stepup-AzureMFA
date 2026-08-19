@@ -59,7 +59,7 @@ class InstitutionConfigurationData
                 }
             }
 
-            /** @var array<string> $certificates */
+            /** @var array<non-empty-string> $certificates */
             $this->entityId = $entityId;
             $this->destination = $destination;
             $this->certificates = $certificates;
