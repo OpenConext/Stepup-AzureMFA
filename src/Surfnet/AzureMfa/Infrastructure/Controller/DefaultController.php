@@ -76,7 +76,7 @@ class DefaultController extends AbstractController
                 $user = $this->azureMfaService->startRegistration($emailAddr);
                 return new RedirectResponse($this->azureMfaService->createAuthnRequest($user));
             }
-        } catch (NotFound $e) {
+        } catch (NotFound) {
             $this->logger->info('No GSSP attributes were found, so we should ask for an email address');
         }
 

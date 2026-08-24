@@ -32,8 +32,8 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidUserIdException;
  */
 class UserId
 {
-    final public const SEPARATOR = '|';
-    final public const VALID_UNIQUE_ID = '/^[a-z0-9]{1,6}-[a-z0-9]{1,4}$/';
+    final public const string SEPARATOR = '|';
+    final public const string VALID_UNIQUE_ID = '/^[a-z0-9]{1,6}-[a-z0-9]{1,4}$/';
 
 
     private EmailAddress $emailAddress;

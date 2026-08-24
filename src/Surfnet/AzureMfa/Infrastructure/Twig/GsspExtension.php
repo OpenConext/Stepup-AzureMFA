@@ -26,9 +26,9 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig\Attribute\AsTwigFunction;
 
-final class GsspExtension
+final readonly class GsspExtension
 {
-    public function __construct(private readonly HostedEntities $hostedEntities)
+    public function __construct(private HostedEntities $hostedEntities)
     {
     }
 

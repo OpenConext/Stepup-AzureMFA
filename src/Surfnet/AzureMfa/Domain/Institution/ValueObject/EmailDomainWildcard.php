@@ -50,7 +50,7 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidEmailDomainException;
  */
 class EmailDomainWildcard implements EmailDomainInterface
 {
-    final public const WILDCARD_CHARACTER = '*';
+    final public const string WILDCARD_CHARACTER = '*';
 
     private string $regexTemplate = '/.+%s$/';
 

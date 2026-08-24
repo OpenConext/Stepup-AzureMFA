@@ -284,7 +284,7 @@ class MockAzureMfaControllerTest extends WebTestCase
      * @param string[]|null $emailAddresses
      * @return Crawler
      */
-    private function postMockIdpForm(Crawler $crawler, $state, array $emailAddresses = null)
+    private function postMockIdpForm(Crawler $crawler, $state, ?array $emailAddresses = null)
     {
         $data = '[]';
         if (is_array($emailAddresses)) {

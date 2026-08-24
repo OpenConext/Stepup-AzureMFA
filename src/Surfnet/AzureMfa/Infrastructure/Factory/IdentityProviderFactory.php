@@ -42,15 +42,8 @@ use Throwable;
 class IdentityProviderFactory implements IdentityProviderFactoryInterface
 {
 
-    private ConfigurationFactory $configurationFactory;
-    private MetadataIdentityProviderService $metadataIdentityProviderService;
-    private LoggerInterface $logger;
-
-    public function __construct(ConfigurationFactory $configurationFactory, MetadataIdentityProviderService $metadataIdentityProviderService, LoggerInterface $logger)
+    public function __construct(private readonly ConfigurationFactory $configurationFactory, private readonly MetadataIdentityProviderService $metadataIdentityProviderService, private readonly LoggerInterface $logger)
     {
-        $this->configurationFactory = $configurationFactory;
-        $this->metadataIdentityProviderService = $metadataIdentityProviderService;
-        $this->logger = $logger;
     }
 
     public function build(

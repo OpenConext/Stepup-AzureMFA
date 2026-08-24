@@ -24,9 +24,9 @@ use Surfnet\AzureMfa\Domain\Exception\InvalidCertificateException;
 
 class Certificate
 {
-    private string $certData;
+    private readonly string $certData;
 
-    private const DIGEST_ALGORITHM = 'sha256';
+    private const string DIGEST_ALGORITHM = 'sha256';
 
     public function __construct(string $certData)
     {

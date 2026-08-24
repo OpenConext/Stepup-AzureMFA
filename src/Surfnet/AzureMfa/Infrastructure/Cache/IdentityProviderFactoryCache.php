@@ -28,13 +28,8 @@ use Surfnet\AzureMfa\Infrastructure\Factory\IdentityProviderFactory;
 class IdentityProviderFactoryCache implements IdentityProviderFactoryInterface
 {
 
-    private IdentityProviderFactory $providerFactory;
-    private IdentityProviderCache $identityProviderCache;
-
-    public function __construct(IdentityProviderFactory $providerFactory, IdentityProviderCache $identityProviderCache)
+    public function __construct(private readonly IdentityProviderFactory $providerFactory, private readonly IdentityProviderCache $identityProviderCache)
     {
-        $this->providerFactory = $providerFactory;
-        $this->identityProviderCache = $identityProviderCache;
     }
 
     public function build(

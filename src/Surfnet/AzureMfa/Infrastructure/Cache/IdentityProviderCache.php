@@ -29,13 +29,10 @@ use Surfnet\AzureMfa\Domain\Institution\ValueObject\InstitutionName;
 
 class IdentityProviderCache
 {
-    private string $cacheDir;
-    private LoggerInterface $logger;
+    private readonly string $cacheDir;
 
-    public function __construct(string $identityProviderCacheDir, LoggerInterface $logger)
+    public function __construct(string $identityProviderCacheDir, private readonly LoggerInterface $logger)
     {
-        $this->logger = $logger;
-
         $identityProviderCacheDir = realpath($identityProviderCacheDir);
 
         if (!$identityProviderCacheDir) {

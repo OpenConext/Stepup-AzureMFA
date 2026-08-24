@@ -73,13 +73,11 @@ class CertificateCollectionTest extends TestCase
         $certificateMock = m::mock(Certificate::class);
         $certificateMock
             ->shouldReceive('getFingerprint')
-            ->andReturn(hash('sha256', $certificate))
-            ->atLeast(1);
+            ->andReturn(hash('sha256', $certificate))->atLeast();
 
         $certificateMock
             ->shouldReceive('getCertdata')
-            ->andReturn($certificate)
-            ->atLeast(1);
+            ->andReturn($certificate)->atLeast();
 
         return $certificateMock;
     }

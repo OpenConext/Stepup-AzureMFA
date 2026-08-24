@@ -49,7 +49,7 @@ use Exception;
  */
 class AzureMfaService
 {
-    final public const SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
+    final public const string SAML_EMAIL_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
 
     private readonly SessionInterface $session;
 
@@ -266,7 +266,7 @@ class AzureMfaService
             );
         }
 
-        if (!in_array(strtolower($user->getEmailAddress()->getEmailAddress()), array_map('strtolower', $attributes[self::SAML_EMAIL_ATTRIBUTE]))) {
+        if (!in_array(strtolower($user->getEmailAddress()->getEmailAddress()), array_map(strtolower(...), $attributes[self::SAML_EMAIL_ATTRIBUTE]))) {
             throw new MailAttributeMismatchException(sprintf(
                 'The mail attribute (%s) from the Azure MFA assertion from %s did not contain the email address provided during registration (%s)',
                 implode(', ', $attributes[self::SAML_EMAIL_ATTRIBUTE]),

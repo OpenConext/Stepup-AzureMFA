@@ -28,7 +28,7 @@ class InstitutionName
      * Valid characters for an institution name because it is used in filenames for the identity provider cache.
      * It should resemble domain names, because that is how institutions are identified in the Azure MFA
      */
-    private const VALID_CHARACTERS = '/^[a-zA-Z0-9&._-]+$/';
+    private const string VALID_CHARACTERS = '/^[a-zA-Z0-9&._-]+$/';
 
     private readonly string $institutionName;
 

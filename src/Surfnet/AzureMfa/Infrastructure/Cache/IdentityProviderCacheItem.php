@@ -32,23 +32,11 @@ use RuntimeException;
 
 class IdentityProviderCacheItem
 {
-    private string $updated;
-    private string $entityId;
-    private string $ssoLocation;
-    /** @var string[] */
-    private array $certificates;
-    private bool $isAzureAd;
-
     /**
      * @param string[] $certificates
      */
-    private function __construct(string $updated, string $entityId, string $ssoLocation, array $certificates, bool $isAzureAd)
+    private function __construct(private readonly string $updated, private readonly string $entityId, private readonly string $ssoLocation, private readonly array $certificates, private readonly bool $isAzureAd)
     {
-        $this->updated = $updated;
-        $this->entityId = $entityId;
-        $this->ssoLocation = $ssoLocation;
-        $this->certificates = $certificates;
-        $this->isAzureAd = $isAzureAd;
     }
 
 
@@ -127,7 +115,7 @@ class IdentityProviderCacheItem
             new Destination($this->ssoLocation),
             CertificateCollection::fromStringArray(
                 array_map(
-                    fn(string $certData) => Certificate::toPem($certData),
+                    Certificate::toPem(...),
                     $this->certificates,
                 )
             ),

@@ -39,7 +39,7 @@ use DOMXPath;
  */
 class MetadataIdentityProviderService
 {
-    public function __construct(private HttpClientInterface $client)
+    public function __construct(private readonly HttpClientInterface $client)
     {
     }
 
