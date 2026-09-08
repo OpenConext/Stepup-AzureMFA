@@ -32,23 +32,11 @@ use RuntimeException;
 
 class IdentityProviderCacheItem
 {
-    private string $updated;
-    private string $entityId;
-    private string $ssoLocation;
-    /** @var string[] */
-    private array $certificates;
-    private bool $isAzureAd;
-
     /**
      * @param string[] $certificates
      */
-    private function __construct(string $updated, string $entityId, string $ssoLocation, array $certificates, bool $isAzureAd)
+    private function __construct(private readonly string $updated, private readonly string $entityId, private readonly string $ssoLocation, private readonly array $certificates, private readonly bool $isAzureAd)
     {
-        $this->updated = $updated;
-        $this->entityId = $entityId;
-        $this->ssoLocation = $ssoLocation;
-        $this->certificates = $certificates;
-        $this->isAzureAd = $isAzureAd;
     }
 
 
@@ -75,16 +63,47 @@ class IdentityProviderCacheItem
             $object['updated'] = '';
         }
 
-        if (!is_string($object['updated'])) {
-            throw new RuntimeException("'updated' must be a string");
-        }
-
         return new self(
-            $object['updated'],
-            $object['entity_id'] ?? '',
-            $object['sso_location'] ?? '',
-            $object['certificates'] ?? [],
-            $object['is_azure_ad'] ?? false,
+            self::requireString($object['updated'], 'updated'),
+            self::requireString($object['entity_id'] ?? '', 'entity_id'),
+            self::requireString($object['sso_location'] ?? '', 'sso_location'),
+            self::requireStringArray($object['certificates'] ?? [], 'certificates'),
+            self::requireBool($object['is_azure_ad'] ?? false, 'is_azure_ad'),
+        );
+    }
+
+    private static function requireString(mixed $value, string $field): string
+    {
+        if (!is_string($value)) {
+            throw new RuntimeException(sprintf("'%s' must be a string", $field));
+        }
+        return $value;
+    }
+
+    private static function requireBool(mixed $value, string $field): bool
+    {
+        if (!is_bool($value)) {
+            throw new RuntimeException(sprintf("'%s' must be a boolean", $field));
+        }
+        return $value;
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function requireStringArray(mixed $value, string $field): array
+    {
+        if (!is_array($value)) {
+            throw new RuntimeException(sprintf("'%s' must be an array", $field));
+        }
+        return array_map(
+            static function ($item) use ($field): string {
+                if (!is_string($item)) {
+                    throw new RuntimeException(sprintf("'%s' must be an array of strings", $field));
+                }
+                return $item;
+            },
+            $value,
         );
     }
 
@@ -96,7 +115,7 @@ class IdentityProviderCacheItem
             new Destination($this->ssoLocation),
             CertificateCollection::fromStringArray(
                 array_map(
-                    fn(string $certData) => Certificate::toPem($certData),
+                    Certificate::toPem(...),
                     $this->certificates,
                 )
             ),
@@ -114,10 +133,6 @@ class IdentityProviderCacheItem
             'is_azure_ad' => $this->isAzureAd,
         ];
 
-        $data = json_encode($object, JSON_PRETTY_PRINT, JSON_THROW_ON_ERROR);
-        if ($data === false) {
-            throw new RuntimeException('Failed to encode IdentityProviderCacheItem to JSON: ' . json_last_error_msg());
-        }
-        return $data;
+        return json_encode($object, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
     }
 }

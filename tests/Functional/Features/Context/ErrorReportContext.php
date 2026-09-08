@@ -74,7 +74,7 @@ class ErrorReportContext implements Context
 
             $this->saveErrorFile($scope, $filename);
             $this->takeScreenShotAfterFailedStep($filename);
-        } catch (DriverException $exception) {
+        } catch (DriverException) {
             return;
         }
     }

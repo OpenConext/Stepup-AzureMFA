@@ -75,9 +75,4 @@ final class ExceptionController extends BaseExceptionController
     {
         return parent::getPageTitleAndDescription($exception);
     }
-
-    protected function getStatusCode(Throwable $exception): int
-    {
-        return parent::getStatusCode($exception);
-    }
 }

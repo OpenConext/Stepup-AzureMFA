@@ -30,7 +30,7 @@ class EmailDomainCollection implements IteratorAggregate
     /**
      * @var EmailDomainInterface[]
      */
-    private array $emailDomains = [];
+    private readonly array $emailDomains;
 
     /**
      * @param EmailDomainInterface[] $domains

@@ -126,7 +126,7 @@ class WebContext implements Context
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
+            self::loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
         );
 
         $request = Saml2AuthnRequest::createNew($authnRequest);
@@ -161,7 +161,7 @@ class WebContext implements Context
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
+            self::loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
         );
 
         $request = Saml2AuthnRequest::createNew($authnRequest);
@@ -185,7 +185,7 @@ class WebContext implements Context
         $authnRequest->setRequesterID(['https://azuremfa.dev.openconext.local/saml/metadata']);
 
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
+            self::loadPrivateKey(new PrivateKey('/config/azuremfa/azuremfa_idp.key', 'default'))
         );
 
         $request = Saml2AuthnRequest::createNew($authnRequest);
@@ -271,7 +271,7 @@ class WebContext implements Context
         $responseXml = $this->receiveResponse();
         $elementSearchResult = $this->getElementByName($responseXml, $elementName);
 
-        if (strstr($elementSearchResult->nodeValue, $value) !== false) {
+        if (str_contains($elementSearchResult->nodeValue, $value)) {
             return;
         }
         throw new Exception(
