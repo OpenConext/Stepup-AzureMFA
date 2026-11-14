@@ -3,6 +3,48 @@ parameters:
   institution_configuration: # Configuration identifier
     data: # The root node
       institutions:
+
+        # Configuration for the OpenConext-devconf stepup environment. This makes AzureMFA use an EntraID mock IdP
+        # hosed by OpenConext-devssp (https://ssp.dev.openconext.local/entra-mock/saml2/idp/metadata.php)
+        # All devssp test accounts have an email address in the dev.openconext.local domain:
+        # E.g. "jane-a1" has email "jane+jane-a1@dev.openconext.local".
+        # So all AzureMFA registrations and authentications from the devconf environment match this configuration entry
+        # in institutions.yaml.
+        dev.openconext.local:
+          entity_id: 'https://ssp.dev.openconext.local/entra-mock/saml2/idp/metadata.php'
+          sso_location: 'https://ssp.dev.openconext.local/entra-mock/module.php/saml/idp/singleSignOnService'
+          certificates: # The stepup/ssp/entra-mock-idp.crt certificate in OpenConext-devconf
+            - |
+                -----BEGIN CERTIFICATE-----
+                MIIEaTCCAtGgAwIBAgIUJMIyy4Cnz1if3CasoLChoWcIg5swDQYJKoZIhvcNAQEL
+                BQAwRDEZMBcGA1UEAwwQRW50cmFJRCBtb2NrIElkUDEnMCUGA1UECgweRGV2ZWxv
+                cG1lbnQgRG9ja2VyIGVudmlyb25tZW50MB4XDTI2MTExMzE0MTYyM1oXDTMxMTEx
+                MjE0MTYyM1owRDEZMBcGA1UEAwwQRW50cmFJRCBtb2NrIElkUDEnMCUGA1UECgwe
+                RGV2ZWxvcG1lbnQgRG9ja2VyIGVudmlyb25tZW50MIIBojANBgkqhkiG9w0BAQEF
+                AAOCAY8AMIIBigKCAYEA1V2+fFS2nFsdFTTuHore5n9N6jYPKtDAplUz6xgbZCyy
+                fw3eLwWhbEEPruthgXlBsru8cufvnXCm+laAtetYN/c1HA7QVl41XY82aSJzRb5P
+                cXZ5GWp2vN299LHnHZ13eHDz7kVQoogRhfucQWITS0QjmEChqgKaN2aeIogZQ7t0
+                X0L+uhEReIWCMDMrvb5FelRxmzSf1psCn66YDKF1bGVI7P9zauiDqCjRvZudPXPA
+                OOUoMK1ki7+D3SkKUeu1u+K/Jqqr8ii6EVO7cRP6BkT7o3yIe8DPwbeAK9llypGf
+                u2vYPmSdX1JnyAjCoO+MNcM/tNsf1NWVYLUuIPXzTgSw8d1F/BJy0z+dBmIa3lwp
+                sJPxzAcdebzB5s7gLE/d9TkvAJwSfIPAlXt0ANLlJb1tUcclrSVHgO/etCvKVYfe
+                HZgVWQU8D4c+hy7uxLj87cvWSZGUSrtsyItkY8esRYSl0tKNyPVItx0U5+Y1tQzw
+                Gv6rypvOUoNsEIzpXmI3AgMBAAGjUzBRMB0GA1UdDgQWBBQZs8R/XU681IfVFUKn
+                sXFGZmln5jAfBgNVHSMEGDAWgBQZs8R/XU681IfVFUKnsXFGZmln5jAPBgNVHRMB
+                Af8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBgQCouznYPy1ji85Tyud9fPTY4Qyi
+                HkkxFc+FGjs+QkOVH/5yUyKY5fsDscZYpDNjQWmru/WSCHsVDa43ow7qN+1GbvEw
+                sE/PZsFLqQU2CFVJKB2tm16omm6Y4Mgmx7JNfo2h3EKu/SCe87iVeQSdmSjwn4KN
+                Cjzs8wZJ6zPIpautp3lqUOD2T1xr/JFF/2vGEHNNk54+b2tIFiEcVQ5AqFFLubqt
+                7jIjkABaoqR/oTZpxYABi4dUQHp0Ie2J4CEcOctc2gtl/GXJUw1GkW78TZ8imkVR
+                VB3ObPwdeoVGLnScfkfEukpg/i8O7Ecaur3eZsRKc15ZU+Fqe2JQ9F3VRpGsP4Hz
+                B6kT1ZYCNMmSZwvn0q1Edo+eJwMqCW9dtzJb577C+1pIYFUROkZ9GKAdhMmRmqKL
+                QJ3AVgvg6UrDib6gkq04ZfBe77VRc4GqxIHf878fziXlUXhZAH2ge7CEqUU/zoXr
+                jbcu5Y7B9hFq1t3+GOQenSsPHa06zvP3wucjUk4=
+                -----END CERTIFICATE-----
+          email_domains:
+            - 'dev.openconext.local'
+          is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+
         institution-a.example.com: # The institution identifier (schacHomeOrganization)
           entity_id: 'https://azuremfa.dev.openconext.local/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
           sso_location: 'https://azuremfa.dev.openconext.local/mock/sso' # Location of the Azure MFA endpoint
@@ -34,10 +76,9 @@ parameters:
                 -----END CERTIFICATE-----
 
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
-            - 'dev.openconext.local'
             - 'institution-a.example.com'
-            - '*.dev.openconext.local' # Wildcards are allowed
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+
         institution-b.example.com: # The institution identifier (schacHomeOrganization)
           entity_id: 'https://azuremfa.dev.openconext.local/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
           sso_location: 'https://azuremfa.dev.openconext.local/mock/sso' # Location of the Azure MFA endpoint
@@ -70,16 +111,19 @@ parameters:
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-b.example.com'
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+
         institution-c.example.com: # The institution identifier (schacHomeOrganization)
           metadata_url: 'https://azuremfa.dev.openconext.local/mock/metadata'
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-c.example.com'
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+
         institution-d.example.com: # The institution identifier (schacHomeOrganization)
           metadata_url: 'https://azuremfa.dev.openconext.local/mock/metadata-rollover'
           email_domains: # A list of email domains that are used to identify registering users (addresses must match the email domain of the institution)
             - 'institution-d.example.com'
           is_azure_ad: true # AzureAD (Entra) does not accept a SAML subject, ADFS does require this
+
         harting-college.nl:
           sso_location: 'https://adfs.harting-college.nl/adfs/ls/'
           entity_id: 'https://azuremfa.dev.openconext.local/mock/metadata' # The Entity Id of the remote Azure MFA endpoint
