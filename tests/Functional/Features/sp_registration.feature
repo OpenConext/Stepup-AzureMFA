@@ -15,14 +15,14 @@ Feature: When an user needs to register for a new token
     And I should see "Registration"
 
     # GSSP assigns a subject name id to the user
-    Given I fill in "email_address_emailAddress" with "user@dev.openconext.local"
+    Given I fill in "email_address_emailAddress" with "user@institution-a.example.com"
     When I press "email_address_submit"
 
     # The MFA SSO page
     Then I should be on "https://azuremfa.dev.openconext.local/mock/sso"
     Given the login with Azure MFA succeeds and the following attributes are released:
       | name                                                       | value                     |
-      | urn:mace:dir:attribute-def:mail                            | user@dev.openconext.local |
+      | urn:mace:dir:attribute-def:mail                            | user@institution-a.example.com |
       | http://schemas.microsoft.com/claims/authnmethodsreferences | http://schemas.microsoft.com/claims/multipleauthn |
 
     # The GSSP acs page.
@@ -33,4 +33,4 @@ Feature: When an user needs to register for a new token
     Then I should be on "https://azuremfa.dev.openconext.local/demo/sp/acs"
     And I should see "Demo Service provider ConsumerAssertionService endpoint"
     And I should see "urn:oasis:names:tc:SAML:2.0:status:Succes"
-    And I should see a NameID with email address "user@dev.openconext.local"
+    And I should see a NameID with email address "user@institution-a.example.com"
