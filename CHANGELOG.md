@@ -1,11 +1,23 @@
+# 3.1.0
+- Upgrade to PHP 8.5 (Docker images, Composer and npm dependencies, Rector cleanup) #268
+- Set a global ServerName in the Apache config of the Docker image #276
+- Add configuration to `institutions.yaml.dist` to use the EntraID mock IdP from OpenConext-devssp in the
+  OpenConext-devconf environment #278
+- Update dependencies #243 #246 #247 #260 #263 #277
+
 # 3.0.1
-- Show a better error is an unknown email domain is used
-- Update dependencies
+- Show a better error if an unknown email domain is used #238 (issue #160)
+- Update dependencies #239 #240 #241
 
 # 3.0.0
-- Upgrade code to run on Symfony 7.4
-- Improve logging
-- Update dependencies #198
+- Upgrade code to run on Symfony 7.4 (and PHPUnit 11, updated frontend tooling) #220
+- Remove import-glob-loader to fix a JavaScript dependency vulnerability #224
+- Improve logging when handling users and institutions #236
+- Update robrichards/xmlseclibs to 3.1.4 to fix a canonicalization bypass (security) #233
+- Update dependencies #216 #223 #227 #228 #229 #230 #232 #234 #235 #237
+
+# 2.2.1
+- Update robrichards/xmlseclibs to 3.1.4 to fix a canonicalization bypass (security).
 
 # 2.2.0
 - Allow metadata url keyrollover #197
