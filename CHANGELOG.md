@@ -13,7 +13,7 @@
 - Upgrade code to run on Symfony 7.4 (and PHPUnit 11, updated frontend tooling) #220
 - Remove import-glob-loader to fix a JavaScript dependency vulnerability #224
 - Improve logging when handling users and institutions #236
-- Update robrichards/xmlseclibs to 3.1.4 to fix a canonicalization bypass (security) #233
+- Update robrichards/xmlseclibs to 3.1.5 to fix a canonicalization bypass (security) #233
 - Update dependencies #216 #223 #227 #228 #229 #230 #232 #234 #235 #237
 
 # 2.2.1
